@@ -3,13 +3,17 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* These variables are set by next/font/google from layout.tsx/_app.tsx */
+  /* --font-inter: 'Inter', sans-serif; */
+  /* --font-space-grotesk: 'Space Grotesk', sans-serif; */
 }
 
-@theme inline {
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-geist-sans); /* Keep as is if part of your setup */
+  --font-mono: var(--font-geist-mono); /* Keep as is if part of your setup */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,8 +23,28 @@
   }
 }
 
+/* Apply Space Grotesk to the body for paragraph and normal text */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-space-grotesk); /* Use Space Grotesk for body */
 }
+
+/* Apply Inter to headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-inter); /* Use Inter for all headings */
+}
+
+/* You might want to define default text sizes for consistency */
+p {
+  font-size: 1rem; /* Example: Default paragraph size */
+  line-height: 1.5;
+}
+
+/* Example: Default heading sizes */
+h1 { font-size: 3rem; }
+h2 { font-size: 2.5rem; }
+h3 { font-size: 2rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
