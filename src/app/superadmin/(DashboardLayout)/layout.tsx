@@ -1,8 +1,8 @@
 "use client";
 import { styled, Container, Box } from "@mui/material";
 import React, { useState } from "react";
-import Header from "@/app/admin/(DashboardLayout)/layout/header/Header";
-import Sidebar from "@/app/admin/(DashboardLayout)/layout/sidebar/Sidebar";
+import Header from "@/app/superadmin/(DashboardLayout)/layout/header/Header";
+import Sidebar from "@/app/superadmin/(DashboardLayout)/layout/sidebar/Sidebar";
 
 import Topbar from "./layout/header/Topbar";
 import theme from "@/utils/theme";

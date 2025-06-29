@@ -1,5 +1,5 @@
 import React from 'react'
-import TopPayingClients from '@/app/admin/(DashboardLayout)/components/dashboard/TopPayingClients'
+import TopPayingClients from '@/app/superadmin/(DashboardLayout)/components/dashboard/TopPayingClients'
 
 function TableExample() {
     return (

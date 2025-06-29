@@ -7,7 +7,7 @@ import {
   Checkbox,
   FormLabel,
 } from "@mui/material";
-import DashboardCard from "@/app/admin/(DashboardLayout)/components/shared/DashboardCard";
+import DashboardCard from "@/app/superadmin/(DashboardLayout)/components/shared/DashboardCard";
 
 const LoginForm = () => {
   const [state, setState] = React.useState({

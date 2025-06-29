@@ -2,7 +2,7 @@ import { IconButton, Box, AppBar, Menu, MenuItem, Typography, useMediaQuery, Too
 import Profile from './Profile';
 import { useEffect, useState, useContext } from 'react';
 import { Icon } from '@iconify/react';
-import { DashboardContext } from '@/app/admin/context/DashboardContext';
+import { DashboardContext } from '@/app/superadmin/context/DashboardContext';
 import { IconBellRinging } from "@tabler/icons-react";
 import Notification from './Notification'
 

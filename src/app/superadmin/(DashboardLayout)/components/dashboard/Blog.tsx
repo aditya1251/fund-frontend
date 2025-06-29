@@ -10,7 +10,7 @@ import {
 
 import { Stack } from '@mui/system'
 import { IconBasket } from '@tabler/icons-react'
-import BlankCard from '@/app/admin/(DashboardLayout)/components/shared/BlankCard'
+import BlankCard from '@/app/superadmin/(DashboardLayout)/components/shared/BlankCard'
 
 const ecoCard = [
   {

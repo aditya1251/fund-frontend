@@ -1,7 +1,7 @@
 'use client'
 import { Paper, Box, Grid } from '@mui/material'
-import PageContainer from '@/app/admin/(DashboardLayout)/components/container/PageContainer'
-import DashboardCard from '@/app/admin/(DashboardLayout)/components/shared/DashboardCard'
+import PageContainer from '@/app/superadmin/(DashboardLayout)/components/container/PageContainer'
+import DashboardCard from '@/app/superadmin/(DashboardLayout)/components/shared/DashboardCard'
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles'
 
 const Item = styled(Paper)(({ theme }) => ({

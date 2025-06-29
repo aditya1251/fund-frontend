@@ -1,8 +1,8 @@
 import { useMediaQuery, Box, Drawer } from "@mui/material";
 import SidebarItems from "./SidebarItems";
 import { useContext } from "react";
-import { DashboardContext } from "@/app/admin/context/DashboardContext";
-import Scrollbar from "@/app/admin/(DashboardLayout)/components/custom-scroll/Scrollbar";
+import { DashboardContext } from "@/app/superadmin/context/DashboardContext";
+import Scrollbar from "@/app/superadmin/(DashboardLayout)/components/custom-scroll/Scrollbar";
 
 
 const Sidebar = (

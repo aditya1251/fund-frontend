@@ -1,7 +1,7 @@
 'use client';
 import { Typography } from '@mui/material';
-import PageContainer from '@/app/admin/(DashboardLayout)/components/container/PageContainer';
-import DashboardCard from '@/app/admin/(DashboardLayout)/components/shared/DashboardCard';
+import PageContainer from '@/app/superadmin/(DashboardLayout)/components/container/PageContainer';
+import DashboardCard from '@/app/superadmin/(DashboardLayout)/components/shared/DashboardCard';
 
 
 const SamplePage = () => {

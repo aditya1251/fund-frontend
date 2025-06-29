@@ -1,4 +1,4 @@
-import DashboardCard from "@/app/admin/(DashboardLayout)/components/shared/DashboardCard";
+import DashboardCard from "@/app/superadmin/(DashboardLayout)/components/shared/DashboardCard";
 import {
   Timeline,
   TimelineItem,

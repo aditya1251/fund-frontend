@@ -1,13 +1,13 @@
 'use client'
 import { Grid, Box } from '@mui/material'
-import PageContainer from '@/app/admin/(DashboardLayout)/components/container/PageContainer'
+import PageContainer from '@/app/superadmin/(DashboardLayout)/components/container/PageContainer'
 // components
-import ProfitExpenses from '@/app/admin/(DashboardLayout)/components/dashboard/ProfitExpenses'
-import TrafficDistribution from '@/app/admin/(DashboardLayout)/components/dashboard/TrafficDistribution'
-import UpcomingSchedules from '@/app/admin/(DashboardLayout)/components/dashboard/UpcomingSchedules'
-import TopPayingClients from '@/app/admin/(DashboardLayout)/components/dashboard/TopPayingClients'
-import Blog from '@/app/admin/(DashboardLayout)/components/dashboard/Blog'
-import ProductSales from '@/app/admin/(DashboardLayout)/components/dashboard/ProductSales'
+import ProfitExpenses from '@/app/superadmin/(DashboardLayout)/components/dashboard/ProfitExpenses'
+import TrafficDistribution from '@/app/superadmin/(DashboardLayout)/components/dashboard/TrafficDistribution'
+import UpcomingSchedules from '@/app/superadmin/(DashboardLayout)/components/dashboard/UpcomingSchedules'
+import TopPayingClients from '@/app/superadmin/(DashboardLayout)/components/dashboard/TopPayingClients'
+import Blog from '@/app/superadmin/(DashboardLayout)/components/dashboard/Blog'
+import ProductSales from '@/app/superadmin/(DashboardLayout)/components/dashboard/ProductSales'
 
 const Dashboard = () => {
   return (
