@@ -7,6 +7,7 @@ import StatsSection from "@/components/square";
 import Mobile from "@/components/mobile";
 import Price from "@/components/plan";
 import Testimonials from "@/components/testimonial";
+import ContactForm from "@/components/ContactForm";
 export default function Home() {
   return (
     <>
@@ -17,6 +18,7 @@ export default function Home() {
       <Price />
       <Testimonials />
       <Journey />
+      <ContactForm/>
       <Footer />
     </>
   );
