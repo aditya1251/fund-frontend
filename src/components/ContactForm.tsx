@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
+import { Label } from "./ui/label";
 import {
   Phone,
   Mail,
@@ -37,7 +37,7 @@ export default function ContactForm() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   
   // Handle input changes
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -45,7 +45,7 @@ export default function ContactForm() {
     }));
     
     // Clear error when field is being edited
-    if (errors[id]) {
+    if (errors[id as keyof typeof errors]) {
       setErrors(prev => ({
         ...prev,
         [id]: null
@@ -55,7 +55,12 @@ export default function ContactForm() {
   
   // Validate form
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: {
+      name?: string;
+      email?: string;
+      phone?: string;
+      message?: string;
+    } = {};
     
     // Name validation
     if (!formData.name.trim()) {
@@ -80,13 +85,13 @@ export default function ContactForm() {
     if (!formData.message.trim()) {
       newErrors.message = "Message is required";
     }
-    
     setErrors(newErrors);
+    
     return Object.keys(newErrors).length === 0;
   };
   
   // Handle form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     // Validate form
