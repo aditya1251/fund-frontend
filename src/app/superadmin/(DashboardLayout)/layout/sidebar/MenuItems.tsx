@@ -26,9 +26,70 @@ const Menuitems: MenuitemsType[] = [
         id: uniqueId(),
         title: "Dashboard",
         icon: "screencast-2-line-duotone",
-        href: "/",
+        href: "/superadmin",
+    },
+    {
+        id: uniqueId(),
+        title: "Users",
+        icon: "user-line-duotone",
+        href: "/superadmin/users",
+    },
+    {
+        id: uniqueId(),
+        title: "Plans",
+        icon: "box-line-duotone",
+        href: "/superadmin/plans",
     },
 
+    {
+        navlabel: true,
+        subheader: "USERS",
+    },
+    
+
+    {
+        id: uniqueId(),
+        title: "Users",
+        icon: "user-line-duotone",
+        href: "/superadmin/users",
+
+        children: [
+            {
+                id: uniqueId(),
+                title: "Add User",
+                href: "/superadmin/users/add",
+            },
+        ]
+    },
+
+    {
+        navlabel: true,
+        subheader: "PLANS",
+    },
+
+    {
+        id: uniqueId(),
+        title: "Plans",
+        icon: "box-line-duotone",
+        href: "/superadmin/plans",
+        children: [
+            {
+                id: uniqueId(),
+                title: "Add Plan",
+                href: "/superadmin/plans/add",
+            },
+        ]
+    },
+    {
+        navlabel: false,
+        subheader: "CONTACTS",
+    },
+    {
+        id: uniqueId(),
+        title: "Contacts",
+        icon: "book-line-duotone",
+        href: "/superadmin/contacts",
+    },
     {
         navlabel: true,
         subheader: "UTILITIES",
@@ -38,39 +99,39 @@ const Menuitems: MenuitemsType[] = [
         id: uniqueId(),
         title: "Icons",
         icon: "smile-circle-linear",
-        href: "/icons",
+        href: "/superadmin/icons",
     },
 
     {
         id: uniqueId(),
         title: "Table",
         icon: "tablet-line-duotone",
-        href: "/table",
+        href: "/superadmin/table",
     },
 
     {
         id: uniqueId(),
         title: "Form",
         icon: "window-frame-broken",
-        href: "/sample-form",
+        href: "/superadmin/sample-form",
     },
     {
         id: uniqueId(),
         title: "Sample Page",
         icon: "window-frame-broken",
-        href: "/sample-page",
+        href: "/superadmin/sample-page",
     },
     {
         id: uniqueId(),
         title: "Typography",
         icon: "text-bold-square-line-duotone",
-        href: "/utilities/typography",
+        href: "/superadmin/utilities/typography",
     },
     {
         id: uniqueId(),
         title: "Shadow",
         icon: "box-minimalistic-broken",
-        href: "/utilities/shadow",
+        href: "/superadmin/utilities/shadow",
     },
     {
         navlabel: true,
@@ -80,13 +141,13 @@ const Menuitems: MenuitemsType[] = [
         id: uniqueId(),
         title: "Login",
         icon: "login-2-broken",
-        href: "/authentication/login",
+        href: "/superadmin/authentication/login",
     },
     {
         id: uniqueId(),
         title: "Register",
         icon: "shield-user-linear",
-        href: "/authentication/register",
+        href: "/superadmin/authentication/register",
     },
 
     {

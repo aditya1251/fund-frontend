@@ -1,9 +1,17 @@
 import { useMediaQuery, Box, Drawer } from "@mui/material";
 import SidebarItems from "./SidebarItems";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { DashboardContext } from "@/app/superadmin/context/DashboardContext";
 import Scrollbar from "@/app/superadmin/(DashboardLayout)/components/custom-scroll/Scrollbar";
 
+
+export const SidebarContext = React.createContext({
+  width: "270px",
+  collapsewidth: "80px",
+  textColor: "#8D939D",
+  isCollapse: false,
+  themeColor: "#5d87ff",
+});
 
 const Sidebar = (
 ) => {

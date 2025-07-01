@@ -75,7 +75,7 @@ export default function RootLayout({
 
 
           </Container>
-          <Footer />
+          {/* <Footer /> */}
         </Box>
       </PageWrapper>
     </MainWrapper>
