@@ -9,6 +9,10 @@ import Price from "@/components/plan";
 import Testimonials from "@/components/testimonial";
 import ContactForm from "@/components/ContactForm";
 import Fund from "@/components/fundraize";
+import GovernmentSchemes from "@/components/GovernmentSchemes";
+import Tieup from "@/components/tieUp";
+import EmiCalculator from "@/components/EmiCalculator";
+import TrustedPartners from "@/components/Partner";
 export default function Home() {
   return (
     <>
@@ -17,6 +21,13 @@ export default function Home() {
       <StatsSection />
       <Mobile />
       <Price />
+      <StatsSection />
+      <Mobile />
+      <Price />
+      <GovernmentSchemes />
+      <TrustedPartners />
+      <Tieup />
+      <EmiCalculator />
       <Fund />
       <Testimonials />
       <Journey />
