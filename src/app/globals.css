@@ -12,8 +12,10 @@
 :root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans); /* Keep as is if part of your setup */
-  --font-mono: var(--font-geist-mono); /* Keep as is if part of your setup */
+  --font-sans: var(--font-geist-sans);
+  /* Keep as is if part of your setup */
+  --font-mono: var(--font-geist-mono);
+  /* Keep as is if part of your setup */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,24 +29,90 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-space-grotesk); /* Use Space Grotesk for body */
+  font-family: var(--font-space-grotesk);
+  /* Use Space Grotesk for body */
 }
 
 /* Apply Inter to headings */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-inter); /* Use Inter for all headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-inter);
+  /* Use Inter for all headings */
 }
 
 /* You might want to define default text sizes for consistency */
 p {
-  font-size: 1rem; /* Example: Default paragraph size */
+  font-size: 1rem;
+  /* Example: Default paragraph size */
   line-height: 1.5;
 }
 
 /* Example: Default heading sizes */
-h1 { font-size: 3rem; }
-h2 { font-size: 2.5rem; }
-h3 { font-size: 2rem; }
-h4 { font-size: 1.5rem; }
-h5 { font-size: 1.25rem; }
-h6 { font-size: 1rem; }
+h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  font-size: 2.5rem;
+}
+
+h3 {
+  font-size: 2rem;
+}
+
+h4 {
+  font-size: 1.5rem;
+}
+
+h5 {
+  font-size: 1.25rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+/* Calculator Slider */
+.calculator-slider {
+  @apply w-full accent-[#ffd500];
+}
+
+.calculator-slider::-webkit-slider-thumb {
+  @apply w-4 h-4 bg-[#ffd500] rounded-full cursor-pointer border-none;
+}
+
+.calculator-slider::-moz-range-thumb {
+  @apply w-4 h-4 bg-[#ffd500] rounded-full cursor-pointer border-none;
+}
+
+.calculator-slider::-ms-thumb {
+  @apply w-4 h-4 bg-[#ffd500] rounded-full cursor-pointer border-none;
+}
+
+.calculator-slider::-webkit-slider-runnable-track {
+  @apply h-0.5 bg-gray-300 rounded-full;
+}
+
+.calculator-slider::-moz-range-track {
+  @apply h-0.5 bg-gray-300 rounded-full;
+}
+
+.calculator-slider::-ms-track {
+  @apply h-0.5 bg-gray-300 rounded-full;
+}
+
+.calculator-slider::-webkit-progress-bar {
+  @apply h-0.5 bg-[#ffd500] rounded-full;
+}
+
+.calculator-slider::-moz-range-progress {
+  @apply h-0.5 bg-[#ffd500] rounded-full;
+}
+
+.calculator-slider::-moz-progress-bar {
+  @apply h-0.5 bg-[#ffd500] rounded-full;
+}
