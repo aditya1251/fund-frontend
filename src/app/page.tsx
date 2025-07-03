@@ -21,9 +21,6 @@ export default function Home() {
       <StatsSection />
       <Mobile />
       <Price />
-      <StatsSection />
-      <Mobile />
-      <Price />
       <GovernmentSchemes />
       <TrustedPartners />
       <Tieup />

@@ -6,7 +6,7 @@ export default function Fund() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#000000] mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-black mb-4">
             WHAT MAKES <span className="text-yellow-400">FUNDSRAIZE</span> UNIQUE
           </h2>
         </div>
@@ -25,7 +25,7 @@ export default function Fund() {
                 className="relative z-10"
               />
             </div>
-            <h3 className="text-2xl font-bold text-[#000000] mb-4">Website Builder</h3>
+            <h3 className="text-2xl font-bold text-black mb-4">Website Builder</h3>
             <p className="text-gray-600 text-lg leading-relaxed">
               Easily Create Stunning, Responsive Websites Without Coding Using Our Intuitive Builder.
             </p>
@@ -42,7 +42,7 @@ export default function Fund() {
                 className="relative z-10"
               />
             </div>
-            <h3 className="text-2xl font-bold text-[#000000] mb-4">Grow Your Business</h3>
+            <h3 className="text-2xl font-bold text-black mb-4">Grow Your Business</h3>
             <p className="text-gray-600 text-lg leading-relaxed">
               Grow Your Business Online With Powerful Tools And Smart Digital Solutions.
             </p>
@@ -59,7 +59,7 @@ export default function Fund() {
                 className="relative z-10"
               />
             </div>
-            <h3 className="text-2xl font-bold text-[#000000] mb-4">Design Anything.</h3>
+            <h3 className="text-2xl font-bold text-black mb-4">Design Anything.</h3>
             <p className="text-gray-600 text-lg leading-relaxed">
               Design Anything You Imagine With Flexible Tools And Creative Freedom.
             </p>

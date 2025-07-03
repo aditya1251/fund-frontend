@@ -12,6 +12,7 @@ import {
   Sparkles,
   ChevronRight,
 } from "lucide-react"
+import Link from "next/link"
 
 export default function Mobile() {
   return (
@@ -22,7 +23,7 @@ export default function Mobile() {
           <div className="space-y-8">
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <h1 className="text-4xl lg:text-5xl font-bold text-[#000000] leading-tight">
+                <h1 className="text-4xl lg:text-5xl font-bold text-black leading-tight">
                   FundsRaize Simplifies Finance With Smart Solutions And Growth-Driven Partnerships.
                 </h1>
                 <div className="flex-shrink-0 mt-2">
@@ -37,25 +38,26 @@ export default function Mobile() {
 
             <div className="flex gap-16">
               <div>
-                <div className="text-3xl font-bold text-[#000000]">700+</div>
+                <div className="text-3xl font-bold text-black">700+</div>
                 <div className="text-[#141212] opacity-70">Financial Advisors</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-[#000000]">125+</div>
+                <div className="text-3xl font-bold text-black">125+</div>
                 <div className="text-[#141212] opacity-70">Lending Partners</div>
               </div>
             </div>
-
-            <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-[#000000] font-semibold px-8 py-6 text-lg rounded-xl shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-all">
+            <Link href="/contact"  >
+            <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black font-semibold px-10 py-6 text-xl rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
               Contact Us
             </Button>
+            </Link>
           </div>
 
           {/* Right Content - Mobile Mockup */}
           <div className="flex justify-center lg:justify-end">
             <div className="relative">
               {/* Phone Frame */}
-              <div className="w-[320px] h-[640px] bg-[#000000] rounded-[40px] p-2 shadow-2xl">
+              <div className="w-[320px] h-[640px] bg-black rounded-[40px] p-2 shadow-2xl">
                 <div className="w-full h-full bg-white rounded-[32px] overflow-hidden">
                   {/* Status Bar */}
                   <div className="flex justify-between items-center px-6 py-3 bg-white">

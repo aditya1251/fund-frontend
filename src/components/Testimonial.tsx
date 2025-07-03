@@ -31,7 +31,7 @@ export default function Testimonials() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#000000] mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-black mb-4">
             What People Say <span className="text-[#f5d949]">About Us</span>
           </h2>
           <p className="text-[#505050] text-lg max-w-3xl mx-auto leading-relaxed">
@@ -54,7 +54,7 @@ export default function Testimonials() {
                 </div>
 
                 {/* Testimonial Text */}
-                <p className="text-[#000000] text-base leading-relaxed mb-8 font-medium">{testimonial.text}</p>
+                <p className="text-black text-base leading-relaxed mb-8 font-medium">{testimonial.text}</p>
 
                 {/* Author Info */}
                 <div className="flex items-center gap-3">
@@ -66,7 +66,7 @@ export default function Testimonials() {
                     />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-[#000000] text-sm">{testimonial.author}</h4>
+                    <h4 className="font-semibold text-black text-sm">{testimonial.author}</h4>
                     <p className="text-[#505050] text-sm">{testimonial.role}</p>
                   </div>
                 </div>
