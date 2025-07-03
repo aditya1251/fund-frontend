@@ -1,10 +1,15 @@
-"use client"
-import Link from "next/link"
-import Image from "next/image"
-import { ChevronDown } from "lucide-react"
-import { Button } from "./ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
-import logo from "../../public/assets/logo.png"
+"use client";
+import Link from "next/link";
+import Image from "next/image";
+import { ChevronDown } from "lucide-react";
+import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import logo from "../../public/assets/logo.png";
 
 export default function NavigationHeader() {
   return (
@@ -29,7 +34,10 @@ export default function NavigationHeader() {
 
           {/* Navigation Menu */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-black hover:text-[#f7c430] transition-colors duration-200 font-medium">
+            <Link
+              href="/"
+              className="text-black hover:text-[#f7c430] transition-colors duration-200 font-medium"
+            >
               Home
             </Link>
 
@@ -180,7 +188,7 @@ export default function NavigationHeader() {
 
           {/* Sign In Button */}
           <div className="flex items-center">
-              <Link href="/sign-in" passHref>
+            <Link href="/sign-in" passHref>
               <Button className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
                 Sign In
               </Button>
@@ -189,5 +197,5 @@ export default function NavigationHeader() {
         </div>
       </div>
     </header>
-  )
+  );
 }

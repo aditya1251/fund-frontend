@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export default function Hero() {
   return (
@@ -41,5 +41,5 @@ export default function Hero() {
         </div>
       </div>
     </div>
-  )
+  );
 }

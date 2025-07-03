@@ -1,5 +1,5 @@
-import { Button } from "./ui/button"
-import { Star, Instagram, Twitter, Facebook, Youtube } from "lucide-react"
+import { Button } from "./ui/button";
+import { Star, Instagram, Twitter, Facebook, Youtube } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -16,7 +16,9 @@ export default function Footer() {
                     <div className="w-3 h-3 bg-[#f7c430] rounded-full"></div>
                   </div>
                 </div>
-                <span className="text-black text-xl font-semibold">Fund Raizer</span>
+                <span className="text-black text-xl font-semibold">
+                  Fund Raizer
+                </span>
               </div>
 
               <div className="text-[#141212] text-sm leading-relaxed mb-8">
@@ -27,7 +29,9 @@ export default function Footer() {
               </div>
 
               <div className="mb-4">
-                <h3 className="text-black text-lg font-semibold mb-4">Verified Lending Partners</h3>
+                <h3 className="text-black text-lg font-semibold mb-4">
+                  Verified Lending Partners
+                </h3>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-1">
                     <div className="w-8 h-6 bg-blue-600 rounded-sm flex items-center justify-center">
@@ -92,7 +96,9 @@ export default function Footer() {
 
             {/* Services Column */}
             <div className="lg:col-span-2">
-              <h3 className="text-black text-lg font-semibold mb-4">Services</h3>
+              <h3 className="text-black text-lg font-semibold mb-4">
+                Services
+              </h3>
               <ul className="space-y-3 text-[#141212] text-sm">
                 <li>
                   <a href="#" className="hover:text-black">
@@ -147,7 +153,9 @@ export default function Footer() {
             {/* Right Section - CTA */}
             <div className="lg:col-span-3">
               <div className="flex items-start gap-2 mb-4">
-                <h2 className="text-black text-2xl font-bold leading-tight">YOUR JOURNEY TO GIVING STARTS HERE</h2>
+                <h2 className="text-black text-2xl font-bold leading-tight">
+                  YOUR JOURNEY TO GIVING STARTS HERE
+                </h2>
                 <Star className="w-6 h-6 text-[#f7c430] fill-[#f7c430] mt-1 flex-shrink-0" />
               </div>
 
@@ -160,7 +168,9 @@ export default function Footer() {
               </Button>
 
               <div className="flex items-center gap-3">
-                <span className="text-black text-sm font-medium">Follow us on</span>
+                <span className="text-black text-sm font-medium">
+                  Follow us on
+                </span>
                 <div className="flex items-center gap-2">
                   <Instagram className="w-5 h-5 text-black hover:text-[#141212] cursor-pointer" />
                   <Twitter className="w-5 h-5 text-black hover:text-[#141212] cursor-pointer" />
@@ -188,5 +198,5 @@ export default function Footer() {
         </div>
       </div>
     </div>
-  )
+  );
 }
