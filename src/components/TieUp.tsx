@@ -7,8 +7,9 @@ export default function Tieup() {
           Our <span className="text-yellow-500">NBFC</span> Tieup (110+)
         </h2>
         <p className="text-gray-600 text-lg leading-relaxed max-w-3xl mx-auto">
-          We're proud to collaborate with leading organizations and government bodies who support our mission. Their
-          trust and partnership help us deliver reliable and impactful services to our users.
+          We're proud to collaborate with leading organizations and government
+          bodies who support our mission. Their trust and partnership help us
+          deliver reliable and impactful services to our users.
         </p>
       </div>
 
@@ -62,9 +63,11 @@ export default function Tieup() {
 
         {/* IndusInd Bank */}
         <div className="flex items-center justify-center h-16 w-48">
-          <span className="text-red-600 font-bold text-2xl italic">IndusInd Bank</span>
+          <span className="text-red-600 font-bold text-2xl italic">
+            IndusInd Bank
+          </span>
         </div>
       </div>
     </div>
-  )
+  );
 }

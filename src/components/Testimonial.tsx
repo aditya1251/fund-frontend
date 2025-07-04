@@ -1,5 +1,5 @@
-import { Star } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import { Star } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Testimonials() {
   const testimonials = [
@@ -24,14 +24,14 @@ export default function Testimonials() {
       role: "District Assurance Officer",
       avatar: "/placeholder.svg?height=40&width=40",
     },
-  ]
+  ];
 
   return (
     <section className="py-16 px-4 bg-white">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#000000] mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-black mb-4">
             What People Say <span className="text-[#f5d949]">About Us</span>
           </h2>
           <p className="text-[#505050] text-lg max-w-3xl mx-auto leading-relaxed">
@@ -44,17 +44,25 @@ export default function Testimonials() {
         {/* Testimonials Grid */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           {testimonials.map((testimonial) => (
-            <Card key={testimonial.id} className="bg-[#fff0c3] border-[#cbcccc] border-2 rounded-2xl">
+            <Card
+              key={testimonial.id}
+              className="bg-[#fff0c3] border-[#cbcccc] border-2 rounded-2xl"
+            >
               <CardContent className="p-8">
                 {/* Stars */}
                 <div className="flex gap-1 mb-6">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-[#f7c430] text-[#f7c430]" />
+                    <Star
+                      key={i}
+                      className="w-5 h-5 fill-[#f7c430] text-[#f7c430]"
+                    />
                   ))}
                 </div>
 
                 {/* Testimonial Text */}
-                <p className="text-[#000000] text-base leading-relaxed mb-8 font-medium">{testimonial.text}</p>
+                <p className="text-black text-base leading-relaxed mb-8 font-medium">
+                  {testimonial.text}
+                </p>
 
                 {/* Author Info */}
                 <div className="flex items-center gap-3">
@@ -66,7 +74,9 @@ export default function Testimonials() {
                     />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-[#000000] text-sm">{testimonial.author}</h4>
+                    <h4 className="font-semibold text-black text-sm">
+                      {testimonial.author}
+                    </h4>
                     <p className="text-[#505050] text-sm">{testimonial.role}</p>
                   </div>
                 </div>
@@ -78,10 +88,15 @@ export default function Testimonials() {
         {/* Pagination Dots */}
         <div className="flex justify-center gap-2">
           {[...Array(7)].map((_, i) => (
-            <div key={i} className={`w-3 h-3 rounded-full ${i === 3 ? "bg-[#f7c430]" : "bg-[#cbcccc]"}`} />
+            <div
+              key={i}
+              className={`w-3 h-3 rounded-full ${
+                i === 3 ? "bg-[#f7c430]" : "bg-[#cbcccc]"
+              }`}
+            />
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

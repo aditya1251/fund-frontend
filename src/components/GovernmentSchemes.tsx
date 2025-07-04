@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
 export default function GovernmentSchemes() {
   return (
-    <div className="min-h-screen bg-[#ffffff] py-16 px-4">
+    <div className="min-h-screen bg-white py-16 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#000000] mb-6 tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-bold text-black mb-6 tracking-tight">
             GOVERNMENT SCHEMES WE OFFER
           </h1>
           <p className="text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
@@ -19,20 +19,36 @@ export default function GovernmentSchemes() {
         {/* Statistics Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
           <div className="bg-[#f7c430] rounded-2xl p-6 text-center">
-            <div className="text-3xl md:text-4xl font-bold text-[#000000] mb-2">730+</div>
-            <div className="text-sm md:text-base font-medium text-[#000000]">Mudra Loans</div>
+            <div className="text-3xl md:text-4xl font-bold text-black mb-2">
+              730+
+            </div>
+            <div className="text-sm md:text-base font-medium text-black">
+              Mudra Loans
+            </div>
           </div>
           <div className="bg-[#f7c430] rounded-2xl p-6 text-center">
-            <div className="text-3xl md:text-4xl font-bold text-[#000000] mb-2">60+</div>
-            <div className="text-sm md:text-base font-medium text-[#000000]">CGTMSE Loan</div>
+            <div className="text-3xl md:text-4xl font-bold text-black mb-2">
+              60+
+            </div>
+            <div className="text-sm md:text-base font-medium text-black">
+              CGTMSE Loan
+            </div>
           </div>
           <div className="bg-[#f7c430] rounded-2xl p-6 text-center">
-            <div className="text-3xl md:text-4xl font-bold text-[#000000] mb-2">230+</div>
-            <div className="text-sm md:text-base font-medium text-[#000000]">PMGP Loans</div>
+            <div className="text-3xl md:text-4xl font-bold text-black mb-2">
+              230+
+            </div>
+            <div className="text-sm md:text-base font-medium text-black">
+              PMGP Loans
+            </div>
           </div>
           <div className="bg-[#f7c430] rounded-2xl p-6 text-center">
-            <div className="text-3xl md:text-4xl font-bold text-[#000000] mb-2">340+</div>
-            <div className="text-sm md:text-base font-medium text-[#000000]">MSME Loans</div>
+            <div className="text-3xl md:text-4xl font-bold text-black mb-2">
+              340+
+            </div>
+            <div className="text-sm md:text-base font-medium text-black">
+              MSME Loans
+            </div>
           </div>
         </div>
 
@@ -56,7 +72,7 @@ export default function GovernmentSchemes() {
               <div className="absolute top-0 left-8 md:left-16">
                 <div className="w-32 h-32 md:w-40 md:h-40 bg-[#f7c430] rounded-full flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-xs md:text-sm font-bold text-[#000000] leading-tight">
+                    <div className="text-xs md:text-sm font-bold text-black leading-tight">
                       BOOST YOUR
                       <br />
                       BUSINESS
@@ -69,7 +85,7 @@ export default function GovernmentSchemes() {
               <div className="absolute top-0 right-8 md:right-16">
                 <div className="w-32 h-32 md:w-40 md:h-40 bg-[#f7c430] rounded-full flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-xs md:text-sm font-bold text-[#000000] leading-tight">
+                    <div className="text-xs md:text-sm font-bold text-black leading-tight">
                       MINIMAL
                       <br />
                       DOCUMENTS
@@ -82,7 +98,9 @@ export default function GovernmentSchemes() {
               <div className="absolute top-1/2 left-0 transform -translate-y-1/2">
                 <div className="w-28 h-28 md:w-32 md:h-32 bg-[#f7c430] rounded-full flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-xs md:text-sm font-bold text-[#000000]">LOWEST ROI</div>
+                    <div className="text-xs md:text-sm font-bold text-black">
+                      LOWEST ROI
+                    </div>
                   </div>
                 </div>
               </div>
@@ -91,7 +109,9 @@ export default function GovernmentSchemes() {
               <div className="absolute top-1/2 right-0 transform -translate-y-1/2">
                 <div className="w-28 h-28 md:w-32 md:h-32 bg-gray-100 rounded-full flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-xs md:text-sm font-bold text-[#000000]">EASY APPROVAL</div>
+                    <div className="text-xs md:text-sm font-bold text-black">
+                      EASY APPROVAL
+                    </div>
                   </div>
                 </div>
               </div>
@@ -100,7 +120,9 @@ export default function GovernmentSchemes() {
               <div className="absolute bottom-0 left-8 md:left-16">
                 <div className="w-28 h-28 md:w-32 md:h-32 bg-gray-100 rounded-full flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-xs md:text-sm font-bold text-[#000000] leading-tight">SAFE & SECURE</div>
+                    <div className="text-xs md:text-sm font-bold text-black leading-tight">
+                      SAFE & SECURE
+                    </div>
                   </div>
                 </div>
               </div>
@@ -109,7 +131,9 @@ export default function GovernmentSchemes() {
               <div className="absolute bottom-0 right-8 md:right-16">
                 <div className="w-32 h-32 md:w-40 md:h-40 bg-[#f7c430] rounded-full flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-xs md:text-sm font-bold text-[#000000]">QUICK APPLY</div>
+                    <div className="text-xs md:text-sm font-bold text-black">
+                      QUICK APPLY
+                    </div>
                   </div>
                 </div>
               </div>
@@ -119,11 +143,11 @@ export default function GovernmentSchemes() {
 
         {/* Get Started Button */}
         <div className="text-center">
-          <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-[#000000] font-bold text-lg px-12 py-6 rounded-2xl border-2 border-[#000000] shadow-lg">
+          <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black font-bold text-lg px-12 py-6 rounded-2xl border-2 border-black shadow-lg">
             Get Started
           </Button>
         </div>
       </div>
     </div>
-  )
+  );
 }

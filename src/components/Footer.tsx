@@ -1,5 +1,5 @@
-import { Button } from "./ui/button"
-import { Star, Instagram, Twitter, Facebook, Youtube } from "lucide-react"
+import { Button } from "./ui/button";
+import { Star, Instagram, Twitter, Facebook, Youtube } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -12,11 +12,13 @@ export default function Footer() {
             <div className="lg:col-span-3">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 bg-[#f7c430] rounded-full flex items-center justify-center">
-                  <div className="w-6 h-6 bg-[#000000] rounded-full flex items-center justify-center">
+                  <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center">
                     <div className="w-3 h-3 bg-[#f7c430] rounded-full"></div>
                   </div>
                 </div>
-                <span className="text-[#000000] text-xl font-semibold">Fund Raizer</span>
+                <span className="text-black text-xl font-semibold">
+                  Fund Raizer
+                </span>
               </div>
 
               <div className="text-[#141212] text-sm leading-relaxed mb-8">
@@ -27,13 +29,15 @@ export default function Footer() {
               </div>
 
               <div className="mb-4">
-                <h3 className="text-[#000000] text-lg font-semibold mb-4">Verified Lending Partners</h3>
+                <h3 className="text-black text-lg font-semibold mb-4">
+                  Verified Lending Partners
+                </h3>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-1">
                     <div className="w-8 h-6 bg-blue-600 rounded-sm flex items-center justify-center">
                       <span className="text-white text-xs font-bold">HDFC</span>
                     </div>
-                    <span className="text-xs text-[#000000]">BANK</span>
+                    <span className="text-xs text-black">BANK</span>
                   </div>
                   <div className="w-12 h-8 bg-blue-500 rounded-full flex items-center justify-center">
                     <span className="text-white text-xs font-bold">BAJAJ</span>
@@ -50,40 +54,40 @@ export default function Footer() {
 
             {/* Links Column */}
             <div className="lg:col-span-2">
-              <h3 className="text-[#000000] text-lg font-semibold mb-4">Links</h3>
+              <h3 className="text-black text-lg font-semibold mb-4">Links</h3>
               <ul className="space-y-3 text-[#141212] text-sm">
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     Home
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     About Us
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     Services
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     EMI Calculator
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     Contact Us
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     FAQs
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     Blog
                   </a>
                 </li>
@@ -92,30 +96,32 @@ export default function Footer() {
 
             {/* Services Column */}
             <div className="lg:col-span-2">
-              <h3 className="text-[#000000] text-lg font-semibold mb-4">Services</h3>
+              <h3 className="text-black text-lg font-semibold mb-4">
+                Services
+              </h3>
               <ul className="space-y-3 text-[#141212] text-sm">
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     Taxation
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     Loan
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     Govt. Loan
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     Quick Loans
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     Insurance
                   </a>
                 </li>
@@ -124,20 +130,20 @@ export default function Footer() {
 
             {/* Lorem Column */}
             <div className="lg:col-span-2">
-              <h3 className="text-[#000000] text-lg font-semibold mb-4">Lorem</h3>
+              <h3 className="text-black text-lg font-semibold mb-4">Lorem</h3>
               <ul className="space-y-3 text-[#141212] text-sm">
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     Pricing
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     Reviews
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-[#000000]">
+                  <a href="#" className="hover:text-black">
                     FAQs And Tips
                   </a>
                 </li>
@@ -147,7 +153,9 @@ export default function Footer() {
             {/* Right Section - CTA */}
             <div className="lg:col-span-3">
               <div className="flex items-start gap-2 mb-4">
-                <h2 className="text-[#000000] text-2xl font-bold leading-tight">YOUR JOURNEY TO GIVING STARTS HERE</h2>
+                <h2 className="text-black text-2xl font-bold leading-tight">
+                  YOUR JOURNEY TO GIVING STARTS HERE
+                </h2>
                 <Star className="w-6 h-6 text-[#f7c430] fill-[#f7c430] mt-1 flex-shrink-0" />
               </div>
 
@@ -155,17 +163,19 @@ export default function Footer() {
                 Transparent. Trusted. Impactful. Let's Build A Better Future.
               </p>
 
-              <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-[#000000] font-semibold px-8 py-3 rounded-lg mb-6">
+              <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black font-semibold px-8 py-3 rounded-lg mb-6">
                 Get Started
               </Button>
 
               <div className="flex items-center gap-3">
-                <span className="text-[#000000] text-sm font-medium">Follow us on</span>
+                <span className="text-black text-sm font-medium">
+                  Follow us on
+                </span>
                 <div className="flex items-center gap-2">
-                  <Instagram className="w-5 h-5 text-[#000000] hover:text-[#141212] cursor-pointer" />
-                  <Twitter className="w-5 h-5 text-[#000000] hover:text-[#141212] cursor-pointer" />
-                  <Facebook className="w-5 h-5 text-[#000000] hover:text-[#141212] cursor-pointer" />
-                  <Youtube className="w-5 h-5 text-[#000000] hover:text-[#141212] cursor-pointer" />
+                  <Instagram className="w-5 h-5 text-black hover:text-[#141212] cursor-pointer" />
+                  <Twitter className="w-5 h-5 text-black hover:text-[#141212] cursor-pointer" />
+                  <Facebook className="w-5 h-5 text-black hover:text-[#141212] cursor-pointer" />
+                  <Youtube className="w-5 h-5 text-black hover:text-[#141212] cursor-pointer" />
                 </div>
               </div>
             </div>
@@ -174,19 +184,19 @@ export default function Footer() {
       </div>
 
       {/* Bottom Footer Bar */}
-      <div className="bg-[#000000] px-8 py-4">
+      <div className="bg-black px-8 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex gap-8">
-            <a href="#" className="text-[#ffffff] text-sm hover:text-gray-300">
+            <a href="#" className="text-white text-sm hover:text-gray-300">
               Privacy & Policy
             </a>
-            <a href="#" className="text-[#ffffff] text-sm hover:text-gray-300">
+            <a href="#" className="text-white text-sm hover:text-gray-300">
               Term & Condition
             </a>
           </div>
-          <div className="text-[#ffffff] text-sm">Copyright @2024</div>
+          <div className="text-white text-sm">Copyright @2024</div>
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export default function Hero() {
   return (
@@ -20,20 +20,20 @@ export default function Hero() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             {/* Main Headline */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#ffffff] leading-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6">
               TURN YOUR <span className="text-[#f7c430]">DREAM</span>
               <br />
               <span className="text-[#f7c430]">HOME</span> INTO REALITY.
             </h1>
 
             {/* Subheading */}
-            <p className="text-lg sm:text-xl md:text-2xl text-[#ffffff] mb-8 max-w-3xl leading-relaxed">
+            <p className="text-lg sm:text-xl md:text-2xl text-white mb-8 max-w-3xl leading-relaxed">
               Affordable EMIs, Flexible Tenures, And Easy Approval –<br />
               Your Home Is Just A Step Away.
             </p>
 
             {/* CTA Button */}
-            <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-[#000000] font-bold text-lg px-8 py-6 h-auto rounded-none">
+            <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black font-semibold px-10 py-7 text-xl rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
               APPLY NOW
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
@@ -41,5 +41,5 @@ export default function Hero() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,33 +1,49 @@
-"use client"
-import Link from "next/link"
-import { ChevronDown } from "lucide-react"
-import { Button } from "./ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
+"use client";
+import Link from "next/link";
+import Image from "next/image";
+import { ChevronDown } from "lucide-react";
+import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import logo from "../../public/assets/logo.png";
 
 export default function NavigationHeader() {
   return (
-    <header className="w-full bg-[#ffffff] border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="w-full bg-white border-b border-gray-100">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-[#f7c430] rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-sm">F</span>
+              <div className="w-12 h-12 flex items-center justify-center">
+                {/* Logo Icon */}
+                <Image
+                  src={logo}
+                  alt="Logo"
+                  width={60}
+                  height={60}
+                  className="rounded-full"
+                />
               </div>
-              <span className="text-[#000000] font-semibold text-lg">Fundsraize</span>
             </Link>
           </div>
 
           {/* Navigation Menu */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-[#000000] hover:text-[#f7c430] transition-colors duration-200 font-medium">
+            <Link
+              href="/"
+              className="text-black hover:text-[#f7c430] transition-colors duration-200 font-medium"
+            >
               Home
             </Link>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center space-x-1 text-[#000000] hover:text-[#f7c430] transition-colors duration-200 font-medium">
+                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium">
                   <span>Loan</span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
@@ -53,7 +69,7 @@ export default function NavigationHeader() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center space-x-1 text-[#000000] hover:text-[#f7c430] transition-colors duration-200 font-medium">
+                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium">
                   <span>Govt. Loan</span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
@@ -79,7 +95,7 @@ export default function NavigationHeader() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center space-x-1 text-[#000000] hover:text-[#f7c430] transition-colors duration-200 font-medium">
+                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium">
                   <span>Insurance</span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
@@ -105,7 +121,7 @@ export default function NavigationHeader() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center space-x-1 text-[#000000] hover:text-[#f7c430] transition-colors duration-200 font-medium">
+                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium">
                   <span>Taxation</span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
@@ -131,7 +147,7 @@ export default function NavigationHeader() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center space-x-1 text-[#000000] hover:text-[#f7c430] transition-colors duration-200 font-medium">
+                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium">
                   <span>Marketing</span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
@@ -157,14 +173,14 @@ export default function NavigationHeader() {
 
             <Link
               href="/about"
-              className="text-[#000000] hover:text-[#f7c430] transition-colors duration-200 font-medium"
+              className="text-black hover:text-[#f7c430] transition-colors duration-200 font-medium"
             >
               About
             </Link>
 
             <Link
               href="/contact"
-              className="text-[#000000] hover:text-[#f7c430] transition-colors duration-200 font-medium"
+              className="text-black hover:text-[#f7c430] transition-colors duration-200 font-medium"
             >
               Contact Us
             </Link>
@@ -172,12 +188,14 @@ export default function NavigationHeader() {
 
           {/* Sign In Button */}
           <div className="flex items-center">
-            <Button className="bg-[#f7c430] hover:bg-[#e6b12a] text-[#000000] font-medium px-6 py-2 rounded-md transition-colors duration-200">
-              Sign In
-            </Button>
+            <Link href="/sign-in" passHref>
+              <Button className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
+                Sign In
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
     </header>
-  )
+  );
 }
