@@ -3,10 +3,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image"; // Import Next.js Image component
+import Link from "next/link"; // Import Link component for navigation
 import home from "../../public/assets/home.png";
 import govt from "../../public/assets/govt.png";
 import dsa from "../../public/assets/become.png";
 import business from "../../public/assets/business.png"; // Assuming you have a business image
+
 export default function Hero() {
   const slides = [
     {
@@ -64,7 +66,7 @@ export default function Hero() {
     },
     {
       id: 4,
-      backgroundImage: business, // Fallback to URL for example
+      backgroundImage: business,
       headline: (
         <>
           FUEL YOUR <span className="text-[#f7c430]">BUSINESS GROWTH</span>.
@@ -102,18 +104,24 @@ export default function Hero() {
           prevIndex === slides.length - 1 ? 0 : prevIndex + 1
         );
         setTransitioning(false);
-      }, 700); // Matches text transition duration
-    }, 5000); // Time each slide is visible
+      }, 700);
+    }, 5000);
 
     return () => resetAutoAdvanceTimeout();
   }, [currentSlideIndex, slides.length]);
 
   const currentSlide = slides[currentSlideIndex];
 
+  // Define the routes/links
+  const applyRoute = "/apply"; // Your general apply route
+  const becomeRoute = "/become"; // Your become partner route
+
+  // Determine the current button link
+  const currentButtonLink = currentSlideIndex === 2 ? becomeRoute : applyRoute; // Index 2 is the 3rd slide (DSA partner)
+
   return (
-    // Removed min-h-screen. Height will now be driven by the image aspect ratio or min-height
     <div className="relative w-full overflow-hidden">
-      {/* Background Image Container - Now uses Next.js Image component */}
+      {/* Background Image Container */}
       <div className="absolute inset-0 flex">
         {slides.map((slide, index) => (
           <div
@@ -129,8 +137,6 @@ export default function Hero() {
                   : 0,
             }}
           >
-            {/* Using Next.js Image component for better optimization and aspect ratio handling */}
-            {/* object-cover ensures it fills the container while maintaining aspect ratio */}
             <Image
               src={
                 typeof slide.backgroundImage === "string"
@@ -138,25 +144,21 @@ export default function Hero() {
                   : slide.backgroundImage.src
               }
               alt={`Slide ${slide.id}`}
-              fill // Makes the image fill its parent div
-              style={{ objectFit: "cover" }} // Ensures image covers the area, cropping if necessary
-              priority={index === 0} // Load the first image with high priority
-              className="absolute inset-0" // Ensure it takes up space within its parent div
+              fill
+              style={{ objectFit: "cover" }}
+              priority={index === 0}
+              className="absolute inset-0"
             />
+            <div className="absolute inset-0 bg-black/50" />
           </div>
         ))}
       </div>
 
       {/* Content Layer (Main Headline, Paragraph, Button) and Vertical Slider */}
-      {/* min-h-[500px] added to ensure content is visible even with short images */}
       <div className="relative z-30 flex min-h-[500px] items-center py-20">
-        {" "}
-        {/* Added min-h and py-20 for content spacing */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center h-full">
           {/* Main Content Area */}
           <div className="max-w-4xl flex-grow md:pt-0">
-            {" "}
-            {/* Removed pt-20 as content container has py-20 */}
             {/* Main Headline - Fade out/in effect */}
             <h1
               className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6 transition-opacity duration-700 ${
@@ -173,18 +175,17 @@ export default function Hero() {
             >
               {currentSlide.paragraph}
             </p>
-            {/* CTA Button */}
-            <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black font-semibold px-10 py-7 text-xl rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
-              APPLY NOW
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            {/* CTA Button wrapped with Next.js Link component */}
+            <Link href={currentButtonLink} passHref>
+              <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black font-semibold px-10 py-7 text-xl rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
+                APPLY NOW
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
           </div>
 
           {/* Vertical Slider at the right */}
-          {/* Height adjusted to be more contained within the content area */}
           <div className="flex flex-col items-center justify-center py-8 md:py-0 md:ml-8 mt-auto md:mt-0 h-[250px] md:h-[calc(100%-80px)]">
-            {" "}
-            {/* Adjusted heights */}
             <div className="bg-white/20 rounded-full p-2 flex flex-col items-center justify-between h-full">
               {slides.map((_, index) => (
                 <div
@@ -201,7 +202,7 @@ export default function Hero() {
                       setTransitioning(false);
                     }, 700);
                   }}
-                  className={`w-1 md:w-2 h-16 my-2 rounded-full cursor-pointer transition-all duration-300
+                  className={`w-2 md:w-3 h-16 my-2 rounded-full cursor-pointer transition-all duration-300
                     ${
                       index === currentSlideIndex
                         ? "bg-[#f7c430] scale-x-150"
