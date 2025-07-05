@@ -5,8 +5,8 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image"; // Import Next.js Image component
 import home from "../../public/assets/home.png";
 import govt from "../../public/assets/govt.png";
-import dsa from "../../public/assets/become.png"; 
-
+import dsa from "../../public/assets/become.png";
+import business from "../../public/assets/business.png"; // Assuming you have a business image
 export default function Hero() {
   const slides = [
     {
@@ -51,8 +51,7 @@ export default function Hero() {
       headline: (
         <>
           START EARNING - <span className="text-[#f7c430]">BIG BECOME</span>.
-          <br />
-          A LOAN DSA PARTNER TODAY.
+          <br />A LOAN DSA PARTNER TODAY.
         </>
       ),
       paragraph: (
@@ -65,20 +64,19 @@ export default function Hero() {
     },
     {
       id: 4,
-      backgroundImage:
-        govt, // Fallback to URL for example
+      backgroundImage: business, // Fallback to URL for example
       headline: (
         <>
-          INVEST IN <span className="text-[#f7c430]">YOURSELF</span>.
+          FUEL YOUR <span className="text-[#f7c430]">BUSINESS GROWTH</span>.
           <br />
-          GROW WITH US.
+          WITH EASY BUSINESS LOANS.
         </>
       ),
       paragraph: (
         <>
-          From Education to Business, We Support Your Aspirations –
+          Loan upto 5 Crore | Fast Approval | Minimal Documentation
           <br />
-          Unlock Your Full Potential.
+          No Collateral Required
         </>
       ),
     },
@@ -145,17 +143,20 @@ export default function Hero() {
               priority={index === 0} // Load the first image with high priority
               className="absolute inset-0" // Ensure it takes up space within its parent div
             />
-            <div className="absolute inset-0 bg-black/50" />
           </div>
         ))}
       </div>
 
       {/* Content Layer (Main Headline, Paragraph, Button) and Vertical Slider */}
       {/* min-h-[500px] added to ensure content is visible even with short images */}
-      <div className="relative z-30 flex min-h-[500px] items-center py-20"> {/* Added min-h and py-20 for content spacing */}
+      <div className="relative z-30 flex min-h-[500px] items-center py-20">
+        {" "}
+        {/* Added min-h and py-20 for content spacing */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center h-full">
           {/* Main Content Area */}
-          <div className="max-w-4xl flex-grow md:pt-0"> {/* Removed pt-20 as content container has py-20 */}
+          <div className="max-w-4xl flex-grow md:pt-0">
+            {" "}
+            {/* Removed pt-20 as content container has py-20 */}
             {/* Main Headline - Fade out/in effect */}
             <h1
               className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6 transition-opacity duration-700 ${
@@ -181,7 +182,9 @@ export default function Hero() {
 
           {/* Vertical Slider at the right */}
           {/* Height adjusted to be more contained within the content area */}
-          <div className="flex flex-col items-center justify-center py-8 md:py-0 md:ml-8 mt-auto md:mt-0 h-[250px] md:h-[calc(100%-80px)]"> {/* Adjusted heights */}
+          <div className="flex flex-col items-center justify-center py-8 md:py-0 md:ml-8 mt-auto md:mt-0 h-[250px] md:h-[calc(100%-80px)]">
+            {" "}
+            {/* Adjusted heights */}
             <div className="bg-white/20 rounded-full p-2 flex flex-col items-center justify-between h-full">
               {slides.map((_, index) => (
                 <div
