@@ -3,6 +3,7 @@ import { Paper, Box, Grid } from '@mui/material'
 import PageContainer from '@/app/superadmin/(DashboardLayout)/components/container/PageContainer'
 import DashboardCard from '@/app/superadmin/(DashboardLayout)/components/shared/DashboardCard'
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles'
+import { darkTheme, lightTheme } from '@/utils/theme/modes';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body1,
@@ -11,9 +12,6 @@ const Item = styled(Paper)(({ theme }) => ({
   height: 60,
   lineHeight: '60px',
 }))
-
-const darkTheme = createTheme({ palette: { mode: 'dark' } })
-const lightTheme = createTheme({ palette: { mode: 'light' } })
 
 const Shadow = () => {
   return (

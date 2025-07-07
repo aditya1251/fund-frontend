@@ -1,11 +1,9 @@
 "use client";
-import { styled, Container, Box } from "@mui/material";
+import { styled, Container, Box, useTheme } from "@mui/material";
 import React, { useState } from "react";
 import Header from "@/app/superadmin/(DashboardLayout)/layout/header/Header";
 import Sidebar from "@/app/superadmin/(DashboardLayout)/layout/sidebar/Sidebar";
-
 import Topbar from "./layout/header/Topbar";
-import theme from "@/utils/theme";
 import Footer from "./layout/footer/page";
 
 const MainWrapper = styled("div")(() => ({
@@ -22,41 +20,23 @@ const PageWrapper = styled("div")(() => ({
   backgroundColor: "transparent",
 }));
 
-
-
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-
+  const theme = useTheme();
   return (
     <MainWrapper className="mainwrapper">
-
       <PageWrapper className="page-wrapper">
-
-
-        {/* ------------------------------------------- */}
-        {/* Sidebar */}
-        {/* ------------------------------------------- */}
-
-        <Sidebar
-        />
-        {/* ------------------------------------------- */}
-        {/* PageContent */}
-        {/* ------------------------------------------- */}
+        <Sidebar />
         <Box
           sx={{
-
             [theme.breakpoints.up("lg")]: {
               marginLeft: '270px',
             },
           }}
         >
-          {/* ------------------------------------------- */}
-          {/* Header */}
-          {/* ------------------------------------------- */}
           <Header />
           <Container
             sx={{
@@ -65,15 +45,7 @@ export default function RootLayout({
               minHeight: 'calc(100vh - 229px)'
             }}
           >
-
-
-            {/* ------------------------------------------- */}
-            {/* Page Route */}
-            {/* ------------------------------------------- */}
             <Box>{children}</Box>
-
-
-
           </Container>
           <Footer />
         </Box>
