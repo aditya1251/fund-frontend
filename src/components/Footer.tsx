@@ -1,5 +1,7 @@
 import { Button } from "./ui/button";
 import { Star, Instagram, Twitter, Facebook, Youtube } from "lucide-react";
+import Image from "next/image";
+import logo from "../../public/assets/logo.png"; // Adjust the path as necessary
 
 export default function Footer() {
   return (
@@ -11,11 +13,7 @@ export default function Footer() {
             {/* Left Section - Company Info */}
             <div className="lg:col-span-3">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-[#f7c430] rounded-full flex items-center justify-center">
-                  <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center">
-                    <div className="w-3 h-3 bg-[#f7c430] rounded-full"></div>
-                  </div>
-                </div>
+                <Image src={logo} alt="Logo" width={40} height={40} />
                 <span className="text-black text-xl font-semibold">
                   Fund Raizer
                 </span>
