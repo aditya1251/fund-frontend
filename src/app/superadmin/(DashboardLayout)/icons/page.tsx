@@ -2,6 +2,7 @@
 import PageContainer from '@/app/superadmin/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/superadmin/(DashboardLayout)/components/shared/DashboardCard';
 import { Typography, Link, Box, Divider } from '@mui/material';
+// @ts-ignore - react-syntax-highlighter types issue
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import SyntaxHighlighter from "react-syntax-highlighter";
 
