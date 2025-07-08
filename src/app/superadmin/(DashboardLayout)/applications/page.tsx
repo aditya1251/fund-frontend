@@ -211,22 +211,11 @@ export default function SuperAdminApplications() {
         </div>
       )}
       
-      <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+      <div className="p-4">
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Account Applications</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Account Applications</h1>
             <p className="mt-2 text-gray-600">Review and manage user account requests.</p>
-          </div>
-          
-          <div className="mt-4 md:mt-0">
-            <div className="bg-white shadow-sm rounded-md flex p-1">
-              <span className="px-3 py-1 text-gray-700 text-sm font-medium flex items-center">
-                Logged in as: <span className="ml-1 text-[#F7C430] font-semibold">Super Admin ({adminUsername})</span>
-              </span>
-              <span className="px-3 py-1 text-gray-500 text-sm flex items-center border-l">
-                {currentDate}
-              </span>
-            </div>
           </div>
         </div>
         
