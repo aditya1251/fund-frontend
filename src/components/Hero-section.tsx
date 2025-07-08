@@ -148,8 +148,7 @@ export default function Hero() {
               style={{ objectFit: "cover" }}
               priority={index === 0}
               className="absolute inset-0"
-            />
-            <div className="absolute inset-0 bg-black/50" />
+            />  
           </div>
         ))}
       </div>
@@ -202,7 +201,7 @@ export default function Hero() {
                       setTransitioning(false);
                     }, 700);
                   }}
-                  className={`w-2 md:w-3 h-16 my-2 rounded-full cursor-pointer transition-all duration-300
+                  className={`w-1 md:w-2 h-16 my-2 rounded-full cursor-pointer transition-all duration-300
                     ${
                       index === currentSlideIndex
                         ? "bg-[#f7c430] scale-x-150"

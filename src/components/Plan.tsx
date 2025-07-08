@@ -84,7 +84,7 @@ export default function Price() {
               </h3>
               <div className="text-3xl font-bold text-black mb-8">₹ 5499/-</div>
 
-              <Button className="w-full bg-black text-white rounded-xl font-semibold py-3 mb-8 hover:bg-[#141212]">
+              <Button className="w-full bg-white text-black rounded-xl font-semibold py-3 mb-8 hover:bg-gray-100 border-2 border-black">
                 Get Started
               </Button>
 

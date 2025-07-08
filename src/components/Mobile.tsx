@@ -6,14 +6,14 @@ import { Sparkles } from "lucide-react";
 
 export default function Mobile() {
   return (
-    <div className="min-h-screen bg-[#fff0c3] overflow-hidden">
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
+    <div className="min-h-auto bg-[#fff0c3] overflow-hidden">
+      <div className="container mx-auto px-6 py-10">
+        <div className="grid lg:grid-cols-2 gap-12 items-center max-w-screen mx-auto">
           {/* Left Content */}
           <div className="space-y-8">
             <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <h1 className="text-4xl lg:text-5xl font-bold text-black leading-tight">
+              <div className="flex items-start gap-2">
+                <h1 className="text-4xl lg:text-5xl text-black leading-tight font-space-grotesk">
                   FundsRaize Simplifies Finance With Smart Solutions And
                   Growth-Driven Partnerships.
                 </h1>
