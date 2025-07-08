@@ -12,7 +12,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
-          const res = await fetch("http://localhost:5000/api/users/login", {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -30,7 +30,6 @@ export const authOptions: NextAuthOptions = {
             data.user &&
             (data.user.role === "admin" || data.user.role === "superadmin")
           ) {
-            // Optionally attach the token to the user object if you want to use it later
             return { ...data.user, token: data.token };
           }
           return null;
@@ -44,7 +43,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   pages: {
-    signIn: "/superadmin/(DashboardLayout)/sample-form", // Use existing login UI
+    signIn: "/superadmin/(DashboardLayout)/sample-form",
   },
   callbacks: {
     async session({ session, token }) {
@@ -62,5 +61,6 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
+// ✅ App Router-compatible export
 const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST }; 
+export { handler as GET, handler as POST };
