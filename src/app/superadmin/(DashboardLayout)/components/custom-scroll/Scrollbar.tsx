@@ -1,3 +1,4 @@
+// @ts-ignore - simplebar-react types issue with package.json exports
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import Box from '@mui/material/Box'
@@ -5,7 +6,8 @@ import { SxProps } from '@mui/system';
 import { styled } from '@mui/material/styles'
 import { useMediaQuery } from "@mui/material";
 
-const SimpleBarStyle = styled(SimpleBar)(() => ({
+// Type assertion to handle the module resolution issue
+const SimpleBarStyle = styled(SimpleBar as any)(() => ({
     maxHeight: "100%",
 }));
 
