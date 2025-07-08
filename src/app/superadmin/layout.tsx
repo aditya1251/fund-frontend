@@ -2,7 +2,6 @@ import { DashboardContextProvider } from './context/DashboardContext';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
-import ThemeClientProvider from "@/app/superadmin/theme-client-provider";
 
 export default async function RootLayout({
   children,
@@ -21,9 +20,7 @@ export default async function RootLayout({
       </head>
       <body>
         <DashboardContextProvider>
-          <ThemeClientProvider>
-            {children}
-          </ThemeClientProvider>
+          {children}
         </DashboardContextProvider>
       </body>
     </html>
