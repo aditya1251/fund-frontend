@@ -10,8 +10,10 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import logo from "../../public/assets/logo.png";
+import { useSession, signOut } from "next-auth/react";
 
 export default function NavigationHeader() {
+  const { data: session, status } = useSession();
   return (
     <header className="w-full bg-white border-b border-gray-100">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
@@ -186,13 +188,36 @@ export default function NavigationHeader() {
             </Link>
           </nav>
 
-          {/* Sign In Button */}
-          <div className="flex items-center">
-            <Link href="/sign-in" passHref>
-              <Button className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
-                Sign In
+          {/* Admin/Superadmin Link & Sign In/Logout Button */}
+          <div className="flex items-center space-x-2">
+            {status === "authenticated" && session?.user?.role === "admin" && (
+              <Link href="/crm" passHref>
+                <Button className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
+                  Admin Panel
+                </Button>
+              </Link>
+            )}
+            {status === "authenticated" && session?.user?.role === "superadmin" && (
+              <Link href="/superadmin" passHref>
+                <Button className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
+                  Super Admin
+                </Button>
+              </Link>
+            )}
+            {status === "authenticated" ? (
+              <Button
+                className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow"
+                onClick={() => signOut({ callbackUrl: "/login" })}
+              >
+                Logout
               </Button>
-            </Link>
+            ) : (
+              <Link href="/login" passHref>
+                <Button className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

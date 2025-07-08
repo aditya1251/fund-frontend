@@ -1,6 +1,9 @@
 "use client";
-import { styled, Container, Box, useTheme } from "@mui/material";
-import React, { useState } from "react";
+import { styled, Container, Box } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { baselightTheme } from "@/utils/theme/DefaultColors";
+import React from "react";
 import Header from "@/app/superadmin/(DashboardLayout)/layout/header/Header";
 import Sidebar from "@/app/superadmin/(DashboardLayout)/layout/sidebar/Sidebar";
 import Topbar from "./layout/header/Topbar";
@@ -25,32 +28,34 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const theme = useTheme();
   return (
-    <MainWrapper className="mainwrapper">
-      <PageWrapper className="page-wrapper">
-        <Sidebar />
-        <Box
-          sx={{
-            [theme.breakpoints.up("lg")]: {
-              marginLeft: '270px',
-            },
-          }}
-        >
-          <Header />
-          <Container
+    <ThemeProvider theme={baselightTheme}>
+      <CssBaseline />
+      <MainWrapper className="mainwrapper">
+        <PageWrapper className="page-wrapper">
+          <Sidebar />
+          <Box
             sx={{
-              paddingTop: "20px",
-              maxWidth: "1200px",
-              minHeight: 'calc(100vh - 229px)'
+              '@media (min-width:1200px)': {
+                marginLeft: '270px',
+              },
             }}
           >
-            <Box>{children}</Box>
-          </Container>
-          <Footer />
-        </Box>
-      </PageWrapper>
-    </MainWrapper>
+            <Header />
+            <Container
+              sx={{
+                paddingTop: "20px",
+                maxWidth: "1200px",
+                minHeight: 'calc(100vh - 229px)'
+              }}
+            >
+              <Box>{children}</Box>
+            </Container>
+            <Footer />
+          </Box>
+        </PageWrapper>
+      </MainWrapper>
+    </ThemeProvider>
   );
 }
 

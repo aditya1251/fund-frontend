@@ -50,9 +50,9 @@ const Menuitems: MenuitemsType[] = [
 
     {
         id: uniqueId(),
-        title: "Form",
+        title: "Applications",
         icon: "window-frame-broken",
-        href: "/sample-form",
+        href: "/superadmin/applications",
     },
     {
         id: uniqueId(),
