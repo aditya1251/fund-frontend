@@ -1,18 +1,17 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import ApplicationCard from "@/components/ApplicationCard";
+import axios from "axios";
 
 // TypeScript interface for application data
 interface Application {
   id: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
   phone: string;
   organization: string;
   purpose: string;
-  description: string;
+  message: string;
   status: "pending" | "approved" | "rejected";
   createdAt: string;
   rejectionReason?: string;
@@ -30,76 +29,15 @@ export default function SuperAdminApplications() {
     message: string;
     type: "success" | "error";
   } | null>(null);
-  
-  // Current date and admin info
-  const currentDate = "2025-06-27 15:35:11"; // You can use dynamic date if needed
-  const adminUsername = "yashsingh9651";
+
   
   useEffect(() => {
     const fetchApplications = async () => {
       try {
         setIsLoading(true);
-        // In a real app, this would be a fetch call to your external backend API
-        // Example: const response = await fetch('https://your-backend-api.com/applications');
-        
-        // For demo purposes, use mock data
-        const mockApplications: Application[] = [
-          {
-            id: "app-1",
-            firstName: "John",
-            lastName: "Doe",
-            email: "john.doe@example.com",
-            phone: "555-123-4567",
-            organization: "Doe Foundation",
-            purpose: "nonprofit",
-            description: "Looking to raise funds for our community outreach program.",
-            status: "pending",
-            createdAt: "2025-06-25T10:30:00Z",
-          },
-          {
-            id: "app-2",
-            firstName: "Jane",
-            lastName: "Smith",
-            email: "jane.smith@example.com",
-            phone: "555-987-6543",
-            organization: "Smith Enterprises",
-            purpose: "business",
-            description: "Need funding for our startup expansion.",
-            status: "pending",
-            createdAt: "2025-06-26T14:45:00Z",
-          },
-          {
-            id: "app-3",
-            firstName: "Michael",
-            lastName: "Johnson",
-            email: "michael.j@example.com",
-            phone: "555-456-7890",
-            organization: "Johnson College",
-            purpose: "education",
-            description: "Fundraising for scholarship programs.",
-            status: "approved",
-            createdAt: "2025-06-20T09:15:00Z",
-            credentials: {
-              username: "michaelj",
-              password: "Edu$2025!X"
-            }
-          },
-          {
-            id: "app-4",
-            firstName: "Emily",
-            lastName: "Williams",
-            email: "emily.w@example.com",
-            phone: "555-789-1234",
-            organization: "",
-            purpose: "personal",
-            description: "Medical expenses fundraising.",
-            status: "rejected",
-            createdAt: "2025-06-18T16:20:00Z",
-            rejectionReason: "Insufficient information provided about fundraising purpose. Please reapply with more details about your medical expenses and fundraising goal."
-          },
-        ];
-        
-        setApplications(mockApplications);
+        const res = await axios.get("http://localhost:5000/api/users/application");
+        console.log("Fetched applications:", res.data);
+        setApplications(res.data);
       } catch (error) {
         console.error("Error fetching applications:", error);
         showNotification("Failed to load applications", "error");
@@ -107,7 +45,6 @@ export default function SuperAdminApplications() {
         setIsLoading(false);
       }
     };
-    
     fetchApplications();
   }, []);
   
@@ -120,66 +57,31 @@ export default function SuperAdminApplications() {
   const handleUpdateStatus = async (id: string, newStatus: "approved" | "rejected", data: any) => {
     try {
       setIsLoading(true);
-      
-      // Prepare API request payload
-      const requestBody = {
+      await axios.put(`http://localhost:5000/api/users/application/${id}/status`, {
         status: newStatus,
-        ...(newStatus === "approved" && { credentials: data.credentials }),
-        ...(newStatus === "rejected" && { rejectionReason: data.rejectionReason })
-      };
-      
-      // This would be your actual API call to the external backend
-      // Replace this comment with your actual API call
-      // Example:
-      // const response = await fetch(`https://your-backend-api.com/applications/${id}/status`, {
-      //   method: 'PUT',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': `Bearer ${accessToken}`
-      //   },
-      //   body: JSON.stringify(requestBody)
-      // });
-      // 
-      // if (!response.ok) throw new Error('Failed to update application status');
-      // const result = await response.json();
-      
-      // For demo purposes, simulate API success
-      // In production, remove this simulation and uncomment the actual API call above
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Update local state to reflect changes
+      });
       setApplications(prevApplications => {
         return prevApplications.map(app => {
           if (app.id === id) {
-            if (newStatus === "approved") {
-              return {
-                ...app,
-                status: newStatus,
-                credentials: data.credentials
-              };
-            } else if (newStatus === "rejected") {
-              return {
-                ...app,
-                status: newStatus,
-                rejectionReason: data.rejectionReason
-              };
-            }
+            return {
+              ...app,
+              status: newStatus,
+            };
           }
           return app;
         });
       });
-      
       // Show success notification
       showNotification(
         newStatus === "approved"
-          ? "User application approved and credentials sent successfully!"
-          : "User application rejected and notification sent.",
+          ? "User application approved successfully!"
+          : "User application rejected successfully!",
         "success"
       );
     } catch (error) {
-      console.error(`Error ${newStatus === "approved" ? "approving" : "rejecting"} application:`, error);
+      console.error(`Error updating application status:`, error);
       showNotification(
-        `Failed to ${newStatus === "approved" ? "approve" : "reject"} user application.`,
+        `Failed to update user application status.`,
         "error"
       );
     } finally {

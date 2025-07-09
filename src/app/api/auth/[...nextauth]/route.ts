@@ -12,7 +12,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
-          const res = await fetch("http://localhost:5000/api/users/login", {
+          const res = await fetch("http://localhost:5000/api/admin/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -44,7 +44,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   pages: {
-    signIn: "/superadmin/(DashboardLayout)/sample-form", // Use existing login UI
+    signIn: "/login", // Use existing login UI
   },
   callbacks: {
     async session({ session, token }) {

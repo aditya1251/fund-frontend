@@ -197,17 +197,18 @@ export default function NavigationHeader() {
                 </Button>
               </Link>
             )}
-            {status === "authenticated" && session?.user?.role === "superadmin" && (
-              <Link href="/superadmin" passHref>
-                <Button className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
-                  Super Admin
-                </Button>
-              </Link>
-            )}
+            {status === "authenticated" &&
+              session?.user?.role === "superadmin" && (
+                <Link href="/superadmin" passHref>
+                  <Button className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
+                    Super Admin
+                  </Button>
+                </Link>
+              )}
             {status === "authenticated" ? (
               <Button
                 className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow"
-                onClick={() => signOut({ callbackUrl: "/login" })}
+                onClick={() => signOut()}
               >
                 Logout
               </Button>
