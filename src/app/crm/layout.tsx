@@ -3,7 +3,7 @@ import Header from "@/components/crm/header";
 import Banner from "@/components/crm/banner";
 import Sidebar from "@/components/crm/sidebar";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function CrmLayout({
