@@ -14,6 +14,7 @@ import {
   Linkedin,
   Loader2,
 } from "lucide-react";
+import axios from "axios";
 
 export default function ContactForm() {
   // Form state
@@ -106,28 +107,23 @@ export default function ContactForm() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call to submit form data
-      // This is where you would integrate with your backend
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // Mock successful submission
-      console.log("Form submitted successfully:", formData);
+      // Send form data to backend
+      await axios.post("http://localhost:5000/api/users/application", formData);
       setSubmitSuccess(true);
-
-      // Reset form after successful submission
       setFormData({
         name: "",
         email: "",
         phone: "",
         message: "",
       });
-
-      // Reset success message after 5 seconds
       setTimeout(() => {
         setSubmitSuccess(false);
       }, 5000);
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    } catch (error: any) {
+      setErrors({
+        ...errors,
+        message: error?.response?.data?.message || "Failed to submit. Try again later.",
+      });
     } finally {
       setIsSubmitting(false);
     }

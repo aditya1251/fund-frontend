@@ -56,6 +56,12 @@ const Menuitems: MenuitemsType[] = [
     },
     {
         id: uniqueId(),
+        title: "Manage Admins",
+        icon: "user-square-linear",
+        href: "/superadmin/admins",
+    },
+    {
+        id: uniqueId(),
         title: "Sample Page",
         icon: "window-frame-broken",
         href: "/sample-page",
