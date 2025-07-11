@@ -111,9 +111,15 @@ const Menuitems: MenuitemsType[] = [
 
     {
         id: uniqueId(),
-        title: "Form",
+        title: "Applications",
         icon: "window-frame-broken",
-        href: "/superadmin/sample-form",
+        href: "/superadmin/applications",
+    },
+    {
+        id: uniqueId(),
+        title: "Manage Admins",
+        icon: "user-square-linear",
+        href: "/superadmin/admins",
     },
     {
         id: uniqueId(),

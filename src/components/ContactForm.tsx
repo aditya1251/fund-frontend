@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
+import { Label } from "./ui/label";
 import {
   Phone,
   Mail,
@@ -14,6 +14,7 @@ import {
   Linkedin,
   Loader2,
 } from "lucide-react";
+import axios from "axios";
 
 export default function ContactForm() {
   // Form state
@@ -21,9 +22,9 @@ export default function ContactForm() {
     name: "",
     email: "",
     phone: "",
-    message: ""
+    message: "",
   });
-  
+
   // Form validation state
   const [errors, setErrors] = useState<{
     name?: string;
@@ -31,94 +32,98 @@ export default function ContactForm() {
     phone?: string;
     message?: string;
   }>({});
-  
+
   // Form submission state
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  
+
   // Handle input changes
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { id, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [id]: value
+      [id]: value,
     }));
-    
+
     // Clear error when field is being edited
-    if (errors[id]) {
-      setErrors(prev => ({
+    if (errors[id as keyof typeof errors]) {
+      setErrors((prev) => ({
         ...prev,
-        [id]: null
+        [id]: null,
       }));
     }
   };
-  
+
   // Validate form
   const validateForm = () => {
-    const newErrors = {};
-    
+    const newErrors: {
+      name?: string;
+      email?: string;
+      phone?: string;
+      message?: string;
+    } = {};
+
     // Name validation
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
     }
-    
+
     // Email validation
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)
+    ) {
       newErrors.email = "Invalid email address";
     }
-    
+
     // Phone validation
     if (!formData.phone.trim()) {
       newErrors.phone = "Phone number is required";
     } else if (!/^\d{10,}$/i.test(formData.phone.replace(/[\s-()]/g, ""))) {
       newErrors.phone = "Please enter a valid phone number";
     }
-    
+
     // Message validation
     if (!formData.message.trim()) {
       newErrors.message = "Message is required";
     }
-    
     setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
-  
+
   // Handle form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     // Validate form
     if (!validateForm()) {
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
-      // Simulate API call to submit form data
-      // This is where you would integrate with your backend
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Mock successful submission
-      console.log("Form submitted successfully:", formData);
+      // Send form data to backend
+      await axios.post("http://localhost:5000/api/users/application", formData);
       setSubmitSuccess(true);
-      
-      // Reset form after successful submission
       setFormData({
         name: "",
         email: "",
         phone: "",
-        message: ""
+        message: "",
       });
-      
-      // Reset success message after 5 seconds
       setTimeout(() => {
         setSubmitSuccess(false);
       }, 5000);
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    } catch (error: any) {
+      setErrors({
+        ...errors,
+        message: error?.response?.data?.message || "Failed to submit. Try again later.",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -168,20 +173,35 @@ export default function ContactForm() {
               </div>
             </div>
           </div>
-          
+
           {/* Right side - Contact Form */}
           <div className="bg-white/10 backdrop-blur-sm rounded-lg border-2 border-[#F7C430] p-5 flex flex-col justify-center w-full md:w-auto">
             {submitSuccess ? (
               <div className="p-6 text-center">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  <svg
+                    className="w-8 h-8 text-green-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    ></path>
                   </svg>
                 </div>
-                <h3 className="text-xl font-medium text-green-800 mb-2">Message Sent Successfully!</h3>
-                <p className="text-gray-600">Thank you for contacting us. We'll get back to you soon.</p>
-                <Button 
-                  onClick={() => setSubmitSuccess(false)} 
+                <h3 className="text-xl font-medium text-green-800 mb-2">
+                  Message Sent Successfully!
+                </h3>
+                <p className="text-gray-600">
+                  Thank you for contacting us. We'll get back to you soon.
+                </p>
+                <Button
+                  onClick={() => setSubmitSuccess(false)}
                   className="mt-4 bg-[#F7C430] hover:bg-[#E76F51]"
                 >
                   Send Another Message
@@ -197,7 +217,9 @@ export default function ContactForm() {
                     <Input
                       id="name"
                       placeholder="Your name"
-                      className={`bg-black/10 ${errors.name ? 'border-red-500' : ''}`}
+                      className={`bg-black/10 ${
+                        errors.name ? "border-red-500" : ""
+                      }`}
                       value={formData.name}
                       onChange={handleChange}
                       disabled={isSubmitting}
@@ -214,13 +236,17 @@ export default function ContactForm() {
                       id="email"
                       type="email"
                       placeholder="Your email"
-                      className={`bg-black/10 ${errors.email ? 'border-red-500' : ''}`}
+                      className={`bg-black/10 ${
+                        errors.email ? "border-red-500" : ""
+                      }`}
                       value={formData.email}
                       onChange={handleChange}
                       disabled={isSubmitting}
                     />
                     {errors.email && (
-                      <p className="text-xs text-red-500 mt-1">{errors.email}</p>
+                      <p className="text-xs text-red-500 mt-1">
+                        {errors.email}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -231,7 +257,9 @@ export default function ContactForm() {
                   <Input
                     id="phone"
                     placeholder="Your phone number"
-                    className={`bg-black/10 ${errors.phone ? 'border-red-500' : ''}`}
+                    className={`bg-black/10 ${
+                      errors.phone ? "border-red-500" : ""
+                    }`}
                     value={formData.phone}
                     onChange={handleChange}
                     disabled={isSubmitting}
@@ -248,17 +276,21 @@ export default function ContactForm() {
                     id="message"
                     placeholder="Tell us about your project"
                     rows={3}
-                    className={`bg-black/10 resize-none ${errors.message ? 'border-red-500' : ''}`}
+                    className={`bg-black/10 resize-none ${
+                      errors.message ? "border-red-500" : ""
+                    }`}
                     value={formData.message}
                     onChange={handleChange}
                     disabled={isSubmitting}
                   />
                   {errors.message && (
-                    <p className="text-xs text-red-500 mt-1">{errors.message}</p>
+                    <p className="text-xs text-red-500 mt-1">
+                      {errors.message}
+                    </p>
                   )}
                 </div>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-[#F7C430] hover:bg-[#E76F51] text-white font-semibold py-4 rounded-lg transition-colors text-lg flex items-center justify-center"
                   disabled={isSubmitting}
                 >
