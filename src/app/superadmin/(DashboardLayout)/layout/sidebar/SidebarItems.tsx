@@ -2,16 +2,16 @@ import React from "react";
 import { usePathname } from "next/navigation";
 import { Box, Typography } from "@mui/material";
 import {
-    Logo,
     Sidebar as MUI_Sidebar,
     Menu,
     MenuItem,
-    Submenu,
 } from "react-mui-sidebar";
+
 
 import Menuitems from "./MenuItems";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import { Submenu } from "./Submenu";
 
 const renderMenuItems = (items: any[], pathDirect: string) => {
 
@@ -44,6 +44,8 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
                             <Icon icon="mdi:circle" width="6" height="6" />
                         )
                     }
+                    defaultOpen={item.href ? pathDirect.startsWith(item.href) : false}
+                    
                 >
                     {renderMenuItems(item.children, pathDirect)}
                 </Submenu>
