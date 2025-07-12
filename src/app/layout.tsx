@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Inter, Space_Grotesk } from 'next/font/google';
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
+import { Provider } from 'react-redux';
+import { store } from '@/lib/store';
+import TokenSync from "@/components/TokenSync";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -38,7 +41,10 @@ export default function RootLayout({
         className={`${inter.variable} ${spaceGrotesk.variable}`}
       >
         <SessionProvider>
-          {children}
+          <Provider store={store}>
+            <TokenSync />
+            {children}
+          </Provider>
         </SessionProvider>
       </body>
     </html>

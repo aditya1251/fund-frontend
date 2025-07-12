@@ -1,6 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -20,6 +19,11 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useSession } from "next-auth/react";
+import {
+  useGetAdminsQuery,
+  useCreateAdminMutation,
+  useDeleteAdminMutation,
+} from "@/lib/superadminApi";
 
 interface Admin {
   id: string;
@@ -30,28 +34,23 @@ interface Admin {
 
 export default function ManageAdmins() {
   const { data: session } = useSession();
-  const [admins, setAdmins] = useState<Admin[]>([]);
+  console.log("Session:", session);
+  console.log("Token:", session?.user?.token);
+  const token = session?.user?.token;
   const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: "success" | "error" }>({ open: false, message: "", severity: "success" });
 
-  const fetchAdmins = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get("http://localhost:5000/api/admin", {
-        headers: session?.user?.token ? { Authorization: `Bearer ${session.user.token}` } : {},
-      });
-      setAdmins(res.data);
-    } catch (error) {
-      setSnackbar({ open: true, message: "Failed to load admins", severity: "error" });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchAdmins();
-  }, []);
+  const {
+    data: admins = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useGetAdminsQuery(undefined, {
+    skip: !token,
+    extra: { token },
+  });
+  const [createAdmin, { isLoading: isCreating }] = useCreateAdminMutation();
+  const [deleteAdmin, { isLoading: isDeleting }] = useDeleteAdminMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -59,41 +58,25 @@ export default function ManageAdmins() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!token) return;
     try {
-      setLoading(true);
-      await axios.post(
-        "http://localhost:5000/api/admin/register",
-        {
-          ...form,
-          role: "admin",
-          type: "adminCreation",
-        },
-        {
-          headers: session?.user?.token ? { Authorization: `Bearer ${session.user.token}` } : {},
-        }
-      );
+      await createAdmin({ ...form, role: "admin", type: "adminCreation" }, { extra: { token } }).unwrap();
       setSnackbar({ open: true, message: "Admin created successfully!", severity: "success" });
       setForm({ name: "", email: "", password: "" });
-      fetchAdmins();
+      refetch();
     } catch (error: any) {
-      setSnackbar({ open: true, message: error?.response?.data?.message || "Failed to create admin", severity: "error" });
-    } finally {
-      setLoading(false);
+      setSnackbar({ open: true, message: error?.data?.message || "Failed to create admin", severity: "error" });
     }
   };
 
   const handleDelete = async (id: string) => {
+    if (!token) return;
     try {
-      setLoading(true);
-      await axios.delete(`http://localhost:5000/api/admin/${id}`, {
-        headers: session?.user?.token ? { Authorization: `Bearer ${session.user.token}` } : {},
-      });
+      await deleteAdmin(id, { extra: { token } }).unwrap();
       setSnackbar({ open: true, message: "Admin deleted", severity: "success" });
-      fetchAdmins();
+      refetch();
     } catch (error) {
       setSnackbar({ open: true, message: "Failed to delete admin", severity: "error" });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -103,19 +86,17 @@ export default function ManageAdmins() {
       <Paper sx={{ p: 3, mb: 4 }}>
         <Typography variant="h6" mb={2}>Register New Admin</Typography>
         <form onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={4}>
-              <TextField label="Name" name="name" value={form.name} onChange={handleChange} fullWidth required size="small" />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <TextField label="Email" name="email" value={form.email} onChange={handleChange} fullWidth required size="small" type="email" />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <TextField label="Password" name="password" value={form.password} onChange={handleChange} fullWidth required size="small" type="password" />
-            </Grid>
-            <Grid item xs={12}>
-              <Button type="submit" variant="contained" color="primary" disabled={loading}>Register Admin</Button>
-            </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <TextField label="Name" name="name" value={form.name} onChange={handleChange} fullWidth required size="small" />
+          </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <TextField label="Email" name="email" value={form.email} onChange={handleChange} fullWidth required size="small" type="email" />
+          </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <TextField label="Password" name="password" value={form.password} onChange={handleChange} fullWidth required size="small" type="password" />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <Button type="submit" variant="contained" color="primary" disabled={isCreating}>Register Admin</Button>
           </Grid>
         </form>
       </Paper>
@@ -132,18 +113,32 @@ export default function ManageAdmins() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {admins.map((admin) => (
-                <TableRow key={admin.id}>
-                  <TableCell>{admin.name}</TableCell>
-                  <TableCell>{admin.email}</TableCell>
-                  <TableCell>{new Date(admin.createdAt).toLocaleString()}</TableCell>
-                  <TableCell>
-                    <IconButton color="error" onClick={() => handleDelete(admin.id)} disabled={loading}>
-                      <DeleteIcon />
-                    </IconButton>
+              {isLoading || isDeleting ? (
+                <TableRow>
+                  <TableCell colSpan={4} align="center">
+                    Loading...
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : isError ? (
+                <TableRow>
+                  <TableCell colSpan={4} align="center">
+                    Failed to load admins.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                admins.map((admin: Admin) => (
+                  <TableRow key={admin.id}>
+                    <TableCell>{admin.name}</TableCell>
+                    <TableCell>{admin.email}</TableCell>
+                    <TableCell>{new Date(admin.createdAt).toLocaleString()}</TableCell>
+                    <TableCell>
+                      <IconButton color="error" onClick={() => handleDelete(admin.id)} disabled={isDeleting}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>
