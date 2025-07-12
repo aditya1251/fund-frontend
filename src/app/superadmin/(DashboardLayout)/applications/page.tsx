@@ -1,7 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
 import ApplicationCard from "@/components/ApplicationCard";
-import axios from "axios";
+import {
+  useGetApplicationsQuery,
+  useUpdateApplicationStatusMutation,
+} from "@/lib/superadminApi";
 
 // TypeScript interface for application data
 interface Application {
@@ -22,80 +26,53 @@ interface Application {
 }
 
 export default function SuperAdminApplications() {
-  const [applications, setApplications] = useState<Application[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: session } = useSession();
+  const token = session?.user?.token;
   const [activeTab, setActiveTab] = useState<"pending" | "approved" | "rejected">("pending");
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
   } | null>(null);
 
-  
-  useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        setIsLoading(true);
-        const res = await axios.get("http://localhost:5000/api/users/application");
-        console.log("Fetched applications:", res.data);
-        setApplications(res.data);
-      } catch (error) {
-        console.error("Error fetching applications:", error);
-        showNotification("Failed to load applications", "error");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchApplications();
-  }, []);
-  
+  const {
+    data: applications = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useGetApplicationsQuery(undefined, {
+    skip: !token,
+    extra: { token },
+  });
+  const [updateStatus, { isLoading: isUpdating }] = useUpdateApplicationStatusMutation();
+
   const showNotification = (message: string, type: "success" | "error") => {
     setNotification({ message, type });
-    // Hide notification after 5 seconds
     setTimeout(() => setNotification(null), 5000);
   };
-  
+
   const handleUpdateStatus = async (id: string, newStatus: "approved" | "rejected", data: any) => {
+    if (!token) return;
     try {
-      setIsLoading(true);
-      await axios.put(`http://localhost:5000/api/users/application/${id}/status`, {
-        status: newStatus,
-      });
-      setApplications(prevApplications => {
-        return prevApplications.map(app => {
-          if (app.id === id) {
-            return {
-              ...app,
-              status: newStatus,
-            };
-          }
-          return app;
-        });
-      });
-      // Show success notification
+      await updateStatus({ id, status: newStatus }, { extra: { token } }).unwrap();
       showNotification(
         newStatus === "approved"
           ? "User application approved successfully!"
           : "User application rejected successfully!",
         "success"
       );
+      refetch();
     } catch (error) {
-      console.error(`Error updating application status:`, error);
-      showNotification(
-        `Failed to update user application status.`,
-        "error"
-      );
-    } finally {
-      setIsLoading(false);
+      showNotification("Failed to update user application status.", "error");
     }
   };
-  
-  const filteredApplications = applications.filter(app => app.status === activeTab);
-  
+
+  const filteredApplications = applications.filter((app: Application) => app.status === activeTab);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Notification */}
       {notification && (
-        <div 
+        <div
           className={`fixed top-4 right-4 p-4 rounded-md shadow-lg z-50 flex items-center ${
             notification.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
           }`}
@@ -112,7 +89,7 @@ export default function SuperAdminApplications() {
           {notification.message}
         </div>
       )}
-      
+
       <div className="p-4">
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
@@ -120,7 +97,7 @@ export default function SuperAdminApplications() {
             <p className="mt-2 text-gray-600">Review and manage user account requests.</p>
           </div>
         </div>
-        
+
         {/* Tab Navigation */}
         <div className="border-b border-gray-200 mb-6">
           <nav className="flex -mb-px">
@@ -134,10 +111,10 @@ export default function SuperAdminApplications() {
             >
               Pending
               <span className="ml-2 bg-gray-100 text-gray-700 py-0.5 px-2 rounded-full text-xs">
-                {applications.filter(app => app.status === "pending").length}
+                {applications.filter((app: Application) => app.status === "pending").length}
               </span>
             </button>
-            
+
             <button
               onClick={() => setActiveTab("approved")}
               className={`py-4 px-6 font-medium text-sm border-b-2 ${
@@ -148,10 +125,10 @@ export default function SuperAdminApplications() {
             >
               Approved
               <span className="ml-2 bg-gray-100 text-gray-700 py-0.5 px-2 rounded-full text-xs">
-                {applications.filter(app => app.status === "approved").length}
+                {applications.filter((app: Application) => app.status === "approved").length}
               </span>
             </button>
-            
+
             <button
               onClick={() => setActiveTab("rejected")}
               className={`py-4 px-6 font-medium text-sm border-b-2 ${
@@ -162,16 +139,20 @@ export default function SuperAdminApplications() {
             >
               Rejected
               <span className="ml-2 bg-gray-100 text-gray-700 py-0.5 px-2 rounded-full text-xs">
-                {applications.filter(app => app.status === "rejected").length}
+                {applications.filter((app: Application) => app.status === "rejected").length}
               </span>
             </button>
           </nav>
         </div>
-        
+
         {/* Applications List */}
-        {isLoading ? (
+        {isLoading || isUpdating ? (
           <div className="flex justify-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#F7C430]"></div>
+          </div>
+        ) : isError ? (
+          <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+            <p className="text-gray-500">Failed to load applications.</p>
           </div>
         ) : filteredApplications.length === 0 ? (
           <div className="bg-white rounded-lg shadow-sm p-6 text-center">
@@ -179,7 +160,7 @@ export default function SuperAdminApplications() {
           </div>
         ) : (
           <div className="space-y-6">
-            {filteredApplications.map((application) => (
+            {filteredApplications.map((application: Application) => (
               <ApplicationCard
                 key={application.id}
                 application={application}
