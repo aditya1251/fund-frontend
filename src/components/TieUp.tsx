@@ -1,4 +1,48 @@
+"use client";
+
+import Image from "next/image";
+
+// Import all your NBFC logos
+import shri from "../../public/assets/shriram.png";
+import chola from "../../public/assets/chola.png";
+import ujjivan from "../../public/assets/ujjivan.png";
+import jana from "../../public/assets/jana.jpg";
+import captial from "../../public/assets/Capital_Small_Finance_Logo.png"; // Note: This was imported but not used in the original.
+import equitas from "../../public/assets/Equitas-logo.png";
+import baja from "../../public/assets/bajaj.png";
+import au from "../../public/assets/aubank.png";
+import muthoot from "../../public/assets/muthoot.png";
+import aditya from "../../public/assets/aditya.png";
+import sundaram from "../../public/assets/sundaram.png";
+import lt from "../../public/assets/lt.webp";
+import poonawala from "../../public/assets/poona.png";
+import lic from "../../public/assets/lic.png";
+import piramal from "../../public/assets/primal.jpeg";
+import iifl from "../../public/assets/IIFLFinance.webp";
+import tata from "../../public/assets/TCHFL.webp";
+
 export default function Tieup() {
+  const nbfcLogos = [
+    { src: au, alt: "AU Small Finance Bank" },
+    { src: equitas, alt: "Equitas Small Finance Bank" },
+    { src: jana, alt: "Jana Small Finance Bank" },
+    { src: ujjivan, alt: "Ujjivan Small Finance Bank" },
+    { src: baja, alt: "Bajaj Finserv" },
+    { src: chola, alt: "Cholamandalam Finance" },
+    { src: shri, alt: "Shriram Finance" },
+    { src: muthoot, alt: "Muthoot Finance" },
+    { src: aditya, alt: "Aditya Birla Finance" },
+    { src: sundaram, alt: "Sundaram Finance" },
+    { src: lt, alt: "L&T Finance" },
+    { src: poonawala, alt: "Poonawala Finance" },
+    { src: lic, alt: "LIC Housing Finance" },
+    { src: tata, alt: "Tata Capital Housing Finance" },
+    { src: piramal, alt: "Piramal Finance" },
+    { src: iifl, alt: "IIFL Finance" },
+    // Add captial if you want to include it, it was imported but not used in the original logo list
+    // { src: captial, alt: "Capital Small Finance Bank" },
+  ];
+
   return (
     <div className="w-full max mx-auto px-6 py-16 bg-white">
       {/* Header Section */}
@@ -13,61 +57,46 @@ export default function Tieup() {
         </p>
       </div>
 
-      {/* Logos Section */}
-      <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-        {/* HDFC Bank */}
-        <div className="flex items-center justify-center h-16 w-48">
-          <div className="bg-blue-600 text-white px-4 py-2 rounded-sm flex items-center gap-2">
-            <div className="w-8 h-8 bg-red-600 rounded-sm flex items-center justify-center">
-              <span className="text-white font-bold text-sm">H</span>
+      {/* Logos Section - Infinite Loop Container */}
+      <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
+        <div className="flex w-max animate-nbfc-scroll">
+          {/* Duplicate the logos to create the infinite effect */}
+          {[...nbfcLogos, ...nbfcLogos].map((logo, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-center h-16 w-48 mx-4 flex-shrink-0" // Added mx-4 for spacing
+            >
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                width={150}
+                height={50}
+                className="object-contain"
+              />
             </div>
-            <span className="font-bold text-xl">HDFC BANK</span>
-          </div>
-        </div>
-
-        {/* Axis Bank */}
-        <div className="flex items-center justify-center h-16 w-48">
-          <div className="flex items-center gap-2">
-            <div className="w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[35px] border-b-red-600"></div>
-            <span className="text-red-600 font-bold text-2xl">AXIS BANK</span>
-          </div>
-        </div>
-
-        {/* Bajaj Finserv */}
-        <div className="flex items-center justify-center h-16 w-48">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">B</span>
-            </div>
-            <div className="text-blue-600">
-              <div className="font-bold text-xl">BAJAJ</div>
-              <div className="font-semibold text-sm">FINSERV</div>
-            </div>
-          </div>
-        </div>
-
-        {/* LIC HFL */}
-        <div className="flex items-center justify-center h-16 w-48">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-blue-600 rounded flex items-center justify-center">
-              <div className="w-6 h-6 bg-yellow-500 rounded-sm flex items-center justify-center">
-                <div className="w-3 h-3 bg-blue-600 rounded-sm"></div>
-              </div>
-            </div>
-            <div className="text-blue-600">
-              <div className="font-bold text-lg">LIC HFL</div>
-              <div className="text-xs font-medium">LIC HOUSING FINANCE LTD</div>
-            </div>
-          </div>
-        </div>
-
-        {/* IndusInd Bank */}
-        <div className="flex items-center justify-center h-16 w-48">
-          <span className="text-red-600 font-bold text-2xl italic">
-            IndusInd Bank
-          </span>
+          ))}
         </div>
       </div>
+
+      {/* Add a style block for the custom animation */}
+      <style jsx>{`
+        @keyframes nbfc-scroll {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%); /* Moves half the total width of duplicated content */
+          }
+        }
+
+        .animate-nbfc-scroll {
+          animation: nbfc-scroll 50s linear infinite; /* Adjust duration as needed */
+        }
+
+        .animate-nbfc-scroll:hover {
+          animation-play-state: paused; /* Pause on hover */
+        }
+      `}</style>
     </div>
   );
 }

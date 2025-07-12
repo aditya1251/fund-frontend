@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
-
+import Image from "next/image";
+import govtScheme from "../../public/assets/ui1.png";
+import Link from "next/link";
 export default function GovernmentSchemes() {
   return (
     <div className="min-h-screen bg-white py-16 px-4">
@@ -58,10 +60,10 @@ export default function GovernmentSchemes() {
             {/* Central Circle with Family Illustration */}
             <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
               <div className="w-80 h-80 bg-[#f7c430] rounded-full flex items-center justify-center">
-                <img
-                  src="/placeholder.svg?height=300&width=300"
+                <Image
+                  src={govtScheme}
                   alt="Family with government scheme benefits"
-                  className="w-72 h-72 object-contain"
+                  className="w-70 h-70 object-contain rounded-full"
                 />
               </div>
             </div>
@@ -72,7 +74,7 @@ export default function GovernmentSchemes() {
               <div className="absolute top-0 left-8 md:left-16">
                 <div className="w-32 h-32 md:w-40 md:h-40 bg-[#f7c430] rounded-full flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-xs md:text-sm font-bold text-black leading-tight">
+                    <div className="text-xs md:text-sm text-black leading-tight">
                       BOOST YOUR
                       <br />
                       BUSINESS
@@ -85,7 +87,7 @@ export default function GovernmentSchemes() {
               <div className="absolute top-0 right-8 md:right-16">
                 <div className="w-32 h-32 md:w-40 md:h-40 bg-[#f7c430] rounded-full flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-xs md:text-sm font-bold text-black leading-tight">
+                    <div className="text-xs md:text-sm text-black leading-tight">
                       MINIMAL
                       <br />
                       DOCUMENTS
@@ -98,7 +100,7 @@ export default function GovernmentSchemes() {
               <div className="absolute top-1/2 left-0 transform -translate-y-1/2">
                 <div className="w-28 h-28 md:w-32 md:h-32 bg-[#f7c430] rounded-full flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-xs md:text-sm font-bold text-black">
+                    <div className="text-xs md:text-sm text-black">
                       LOWEST ROI
                     </div>
                   </div>
@@ -107,20 +109,20 @@ export default function GovernmentSchemes() {
 
               {/* Middle Right */}
               <div className="absolute top-1/2 right-0 transform -translate-y-1/2">
-                <div className="w-28 h-28 md:w-32 md:h-32 bg-gray-100 rounded-full flex items-center justify-center">
+                <div className="inline-flex h-[165px] w-[165px] px-[36px] items-center justify-center flex-shrink-0 rounded-full bg-white shadow-2xl">
                   <div className="text-center">
-                    <div className="text-xs md:text-sm font-bold text-black">
-                      EASY APPROVAL
+                    <div className="text-xs md:text-sm text-black leading-tight">
+                      SAFE & SECURE
                     </div>
                   </div>
                 </div>
-              </div>
+</div>
 
               {/* Bottom Left */}
               <div className="absolute bottom-0 left-8 md:left-16">
-                <div className="w-28 h-28 md:w-32 md:h-32 bg-gray-100 rounded-full flex items-center justify-center">
+                <div className="inline-flex h-[200px] w-[200px] px-[36px] items-center justify-center flex-shrink-0 rounded-full bg-white shadow-2xl">
                   <div className="text-center">
-                    <div className="text-xs md:text-sm font-bold text-black leading-tight">
+                    <div className="text-xs md:text-sm text-black">
                       SAFE & SECURE
                     </div>
                   </div>
@@ -131,7 +133,7 @@ export default function GovernmentSchemes() {
               <div className="absolute bottom-0 right-8 md:right-16">
                 <div className="w-32 h-32 md:w-40 md:h-40 bg-[#f7c430] rounded-full flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-xs md:text-sm font-bold text-black">
+                    <div className="text-xs md:text-sm text-black">
                       QUICK APPLY
                     </div>
                   </div>
@@ -143,9 +145,11 @@ export default function GovernmentSchemes() {
 
         {/* Get Started Button */}
         <div className="text-center">
-          <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black font-bold text-lg px-12 py-6 rounded-2xl border-2 border-black shadow-lg">
-            Get Started
-          </Button>
+          <Link href="/contact">
+            <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black px-10 py-6 text-xl rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
+              Get Started
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
