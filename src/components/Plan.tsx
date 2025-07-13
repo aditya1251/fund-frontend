@@ -7,6 +7,8 @@ import { useState, useRef, useEffect } from "react";
 export default function Price() {
   const [activeTab, setActiveTab] = useState("Premium");
   const cardContainerRef = useRef<HTMLDivElement>(null);
+  // Fix: Move isInitialLoad ref to top-level
+  const isInitialLoad = useRef(true);
 
   const handleTabClick = (tabName: string): void => {
     setActiveTab(tabName);
@@ -31,6 +33,14 @@ export default function Price() {
   const checkIconClasses = "w-5 h-5 text-black";
 
   useEffect(() => {
+    // Use the top-level isInitialLoad ref
+    if (isInitialLoad.current) {
+      // Skip scrolling on initial load
+      isInitialLoad.current = false;
+      return;
+    }
+
+    // Only scroll when activeTab changes after initial load
     if (cardContainerRef.current) {
       const activeCardElement = cardContainerRef.current.querySelector(
         `[data-plan="${activeTab}"]`
@@ -40,7 +50,7 @@ export default function Price() {
         activeCardElement.scrollIntoView({
           behavior: "smooth",
           block: "nearest",
-          inline: "center"
+          inline: "center",
         });
       }
     }
@@ -52,12 +62,12 @@ export default function Price() {
         {/* Header Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
-            SMART PLANS FOR <span className="text-[#ffd439]">SMART</span>{" "}
-            BUSINESSES
+            SMART PLANS FOR{" "}
+            <span className="text-[#ffd439]">SMART</span> BUSINESSES
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Explore Tailored, Cost-Effective Plans Built To Support Your
-            Business At Every Stage Of Growth.
+            Explore Tailored, Cost-Effective Plans Built To Support Your Business
+            At Every Stage Of Growth.
           </p>
         </div>
 
@@ -101,7 +111,7 @@ export default function Price() {
             data-plan="Standard"
             className={`flex flex-col items-start gap-6 w-[401px] h-[624px] p-6 flex-shrink-0 rounded-[16px] border-3 border-black bg-[#FFD439] transition-all duration-300 ease-in-out ${
               activeTab === "Standard"
-                ? "shadow-[10px_10px_0_0_#000] z-10" 
+                ? "shadow-[10px_10px_0_0_#000] z-10"
                 : "shadow-[6px_6px_0_0_#000]"
             }`}
           >
@@ -148,8 +158,8 @@ export default function Price() {
           <Card
             data-plan="Premium"
             className={`flex flex-col items-start gap-6 w-[401px] h-[624px] p-6 flex-shrink-0 rounded-[16px] border-3 border-black bg-[#FFD439] transition-all duration-300 ease-in-out ${
-              activeTab === "Premium" 
-                ? "shadow-[10px_10px_0_0_#000] z-10" 
+              activeTab === "Premium"
+                ? "shadow-[10px_10px_0_0_#000] z-10"
                 : "shadow-[6px_6px_0_0_#000]"
             }`}
           >
@@ -192,8 +202,8 @@ export default function Price() {
           <Card
             data-plan="Professional"
             className={`flex flex-col items-start gap-6 w-[401px] h-[624px] p-6 flex-shrink-0 rounded-[16px] border-3 border-black bg-[#FFD439] transition-all duration-300 ease-in-out ${
-              activeTab === "Professional" 
-                ? "shadow-[10px_10px_0_0_#000] z-10" 
+              activeTab === "Professional"
+                ? "shadow-[10px_10px_0_0_#000] z-10"
                 : "shadow-[6px_6px_0_0_#000]"
             }`}
           >
@@ -242,8 +252,8 @@ export default function Price() {
           <Card
             data-plan="BCP Portal"
             className={`flex flex-col items-start gap-6 w-[401px] h-[624px] p-6 flex-shrink-0 rounded-[16px] border-3 border-black bg-[#FFD439] transition-all duration-300 ease-in-out ${
-              activeTab === "BCP Portal" 
-                ? "shadow-[10px_10px_0_0_#000] z-10" 
+              activeTab === "BCP Portal"
+                ? "shadow-[10px_10px_0_0_#000] z-10"
                 : "shadow-[6px_6px_0_0_#000]"
             }`}
           >
@@ -274,7 +284,9 @@ export default function Price() {
                 </div>
                 <div className="flex items-center gap-3">
                   <Check className={checkIconClasses} />
-                  <span className="text-black">Access to 120+ banks and NBFC</span>
+                  <span className="text-black">
+                    Access to 120+ banks and NBFC
+                  </span>
                 </div>
               </div>
             </CardContent>
