@@ -60,7 +60,7 @@ export default function ManageAdmins() {
     e.preventDefault();
     if (!token) return;
     try {
-      await createAdmin({ ...form, role: "admin", type: "adminCreation" }, { extra: { token } }).unwrap();
+      await createAdmin({ ...form, role: "DSA", type: "adminCreation" }, { extra: { token } }).unwrap();
       setSnackbar({ open: true, message: "Admin created successfully!", severity: "success" });
       setForm({ name: "", email: "", password: "" });
       refetch();

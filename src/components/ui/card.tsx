@@ -21,6 +21,7 @@ export function Card({ children, className = '', ...props }: CardProps) {
   )
 }
 
+
 export function CardContent({ children, className = '', ...props }: CardContentProps) {
   return (
     <div className={`p-6 pt-0 ${className}`} {...props}>
@@ -28,3 +29,13 @@ export function CardContent({ children, className = '', ...props }: CardContentP
     </div>
   )
 }
+const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    const baseClasses = "flex flex-col space-y-1.5 p-6"
+    const combinedClasses = className ? `${baseClasses} ${className}` : baseClasses
+
+    return <div ref={ref} className={combinedClasses} {...props} />
+  },
+)
+CardHeader.displayName = "CardHeader"
+export {CardHeader}
