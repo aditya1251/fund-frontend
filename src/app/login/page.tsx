@@ -5,6 +5,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import ui4 from "../../../public/assets/Team.png";
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -40,21 +42,21 @@ export default function LoginPage() {
     <div className="flex min-h-screen w-full">
       <div className="flex flex-col justify-center w-full max-w-md mx-auto px-4 md:px-8 py-12 md:max-w-none md:w-1/2">
         <div className="max-w-md mx-auto w-full">
-          <h1 className="text-2xl font-bold text-center mb-2">WELCOME BACK</h1>
+          <h1 className="text-2xl text-black text-center mb-2">WELCOME BACK</h1>
           <p className="text-center text-sm text-[#474747] mb-10">
             Sign in with your social account or enter your details
           </p>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium">
+              <label htmlFor="email" className="block text-sm font-medium text-black">
                 Email Address
               </label>
               <input
                 id="email"
                 type="email"
                 placeholder="Enter your email"
-                className="w-full px-3 py-3 bg-[#f1f1f1] rounded-md border-0 outline-none"
+                className="w-full px-3 py-3 bg-[#f1f1f1] rounded-md border-0 outline-none text-black"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
@@ -63,15 +65,15 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="password" className="block text-sm font-medium">
+              <label htmlFor="password" className="block text-sm font-medium text-black">
                 Password
               </label>
               <div className="relative">
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="••••••••••"
-                  className="w-full px-3 py-3 bg-[#f1f1f1] rounded-md border-0 outline-none"
+                  placeholder="Enter your password"
+                  className="w-full px-3 py-3 bg-[#f1f1f1] rounded-md border-0 outline-none text-black"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required
@@ -101,18 +103,18 @@ export default function LoginPage() {
                   checked={checked}
                   onChange={e => setChecked(e.target.checked)}
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm">
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-black">
                   Remember me
                 </label>
               </div>
-              <Link href="#" className="text-sm underline">
+              <Link href="#" className="text-sm underline text-black">
                 Forgot Password ?
               </Link>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-[#f7c430] py-3 px-4 rounded-md font-medium"
+              className="w-full bg-[#f7c430] py-3 px-4 rounded-md font-medium text-black cursor-pointer hover:bg-[#f7c430]/90 transition-colors duration-200"
             >
               Log In
             </button>
@@ -129,9 +131,9 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="text-center text-sm">
+            <div className="text-center text-sm text-black">
               Don't have an account?{" "}
-              <Link href="#" className="font-medium">
+              <Link href="#" className="font-semibold">
                 sign up
               </Link>
             </div>
@@ -141,7 +143,7 @@ export default function LoginPage() {
 
       <div className="hidden md:flex md:w-1/2 bg-white items-center justify-center p-8">
         <Image
-          src="/assets/logo.png"
+          src={ui4}
           alt="Collaboration illustration"
           width={500}
           height={500}
