@@ -28,7 +28,7 @@ export const authOptions: NextAuthOptions = {
           if (
             data &&
             data.user &&
-            (data.user.role === "admin" || data.user.role === "superadmin")
+            (data.user.role === "DSA" || data.user.role === "SUPERADMIN")
           ) {
             // Optionally attach the token to the user object if you want to use it later
             return { ...data.user, token: data.token };
