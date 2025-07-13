@@ -21,6 +21,7 @@ import {
 import leads from "@/app/crm/sample-data";
 
 import { House, User, Car, Building, LandPlot } from "lucide-react";
+import Link from "next/link";
 
 export default function Page() {
 	return (
@@ -29,17 +30,19 @@ export default function Page() {
 
 			<Tabs defaultValue="personal">
 				<TabsList>
-					<TabsTrigger value="personal">
-						<TabsIcon>
-							<User />
-						</TabsIcon>
-						<TabsLabel>
-							Personal Loan
-							<TabsDescription>
-								Funds are delivered to your bank account for your own use
-							</TabsDescription>
-						</TabsLabel>
-					</TabsTrigger>
+					<Link href="/crm/loan-form?type=personal?subtype=personal">
+						<TabsTrigger value="personal">
+							<TabsIcon>
+								<User />
+							</TabsIcon>
+							<TabsLabel>
+								Personal Loan
+								<TabsDescription>
+									Funds are delivered to your bank account for your own use
+								</TabsDescription>
+							</TabsLabel>
+						</TabsTrigger>
+					</Link>
 
 					<TabsTrigger value="home">
 						<TabsIcon>
