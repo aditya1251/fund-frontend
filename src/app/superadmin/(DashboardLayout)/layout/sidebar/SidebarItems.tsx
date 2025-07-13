@@ -45,7 +45,7 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
                         )
                     }
                     defaultOpen={item.href ? pathDirect.startsWith(item.href) : false}
-                    
+                    href={item.href}
                 >
                     {renderMenuItems(item.children, pathDirect)}
                 </Submenu>
@@ -60,9 +60,9 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
                 isSelected={pathDirect === item?.href}
                 icon={
                     item.icon ? (
-                        <Icon icon={"solar:" + item.icon} width="24" height="24" />
+                        <Icon icon={"solar:" + item.icon} color="#000" width="24" height="24" />
                     ) : (
-                        <Icon icon="mdi:circle" width="6" height="6" />
+                        <Icon icon="mdi:circle" width="6" color="#000" height="6" />
                     )
                 }
                 component="div"
@@ -77,7 +77,7 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
             >
 
                 <Link href={item.href} target={item.href && item.href.startsWith("https") ? "_blank" : "_self"}>
-                    <Typography color={pathDirect === item?.href ? '#fff' : 'inherit'}>
+                    <Typography fontFamily={"Plus Jakarta Sans"} color={pathDirect === item?.href ? '#000' : 'inherit'}>
                         {item.title}
                         {item.subtitle && (
                             <Typography variant="caption" display="block">
@@ -99,7 +99,7 @@ const SidebarItems = () => {
 
     return (
         <Box sx={{ px: "20px", overflowX: 'hidden' }}>
-            <MUI_Sidebar width={"100%"} showProfile={false} themeColor={"#0085db"} themeSecondaryColor={'#0085db1a'}>
+            <MUI_Sidebar width={"100%"} showProfile={false} themeColor={"#FFDF6B"} themeSecondaryColor={'#FFD4391a'}>
                 <Box sx={{ margin: "0 -24px" }}>
                     <Typography variant="h6" sx={{ padding: "16px 24px 8px 24px" }}> Fund Raizer </Typography>
                 </Box>

@@ -8,9 +8,9 @@ import Scrollbar from "@/app/superadmin/(DashboardLayout)/components/custom-scro
 export const SidebarContext = React.createContext({
   width: "270px",
   collapsewidth: "80px",
-  textColor: "#8D939D",
+  textColor: "#000000",
   isCollapse: false,
-  themeColor: "#5d87ff",
+  themeColor: "#FFDD5F",
 });
 
 const Sidebar = (

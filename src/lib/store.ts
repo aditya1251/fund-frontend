@@ -4,6 +4,7 @@ import { adminApi } from './adminApi';
 import superadminReducer from './superadminSlice';
 import adminReducer from './adminSlice';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PlansApi } from './plansApi';
 
 interface AuthState {
   token: string | null;
@@ -29,14 +30,17 @@ export const store = configureStore({
   reducer: {
     [superadminApi.reducerPath]: superadminApi.reducer,
     [adminApi.reducerPath]: adminApi.reducer,
+    [PlansApi.reducerPath]: PlansApi.reducer,
     superadmin: superadminReducer,
     admin: adminReducer,
+    plans: PlansApi.reducer,
     auth: authSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       superadminApi.middleware,
-      adminApi.middleware
+      adminApi.middleware,
+      PlansApi.middleware,
     ),
 });
 
@@ -61,3 +65,12 @@ export const {
   useUpdateLeadMutation: useAdminUpdateLeadMutation,
   useDeleteLeadMutation: useAdminDeleteLeadMutation,
 } = adminApi; 
+
+// RTK Query hooks for Plans
+export const {
+  useGetPlansQuery: usePlansGetPlansQuery,
+  useCreatePlanMutation: usePlansCreatePlanMutation,
+  useUpdateActiveStatusMutation: usePlansUpdateActiveStatusMutation,
+  useUpdatePlansMutation: usePlansUpdatePlansMutation,
+  useDeletePlanMutation: usePlansDeletePlanMutation,
+} = PlansApi;
