@@ -2,17 +2,22 @@ import { Button } from "./ui/button";
 import { Star, Instagram, Twitter, Facebook, Youtube } from "lucide-react";
 import Image from "next/image";
 import logo from "../../public/assets/logo.png"; // Adjust the path as necessary
+import hdfc from "../../public/assets/hdfc.png"; // Adjust the path as necessary
+import bajaj from "../../public/assets/bajaj.png"; // Adjust the path as necessary
+import axis from "../../public/assets/axis.png"; // Adjust the path as necessary
+import lic from "../../public/assets/lic.png"; // Adjust the path as necessary
+
 
 export default function Footer() {
   return (
     <div className="w-full">
       {/* Main Footer Section */}
-      <div className="bg-[#fff0c3] px-8 py-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="bg-[#fff0c3] px-8 py-10">
+        <div className="max-w-screen mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12">
             {/* Left Section - Company Info */}
             <div className="lg:col-span-3">
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-4">
                 <Image src={logo} alt="Logo" width={40} height={40} />
                 <span className="text-black text-xl font-semibold">
                   Fund Raizer
@@ -27,32 +32,54 @@ export default function Footer() {
               </div>
 
               <div className="mb-4">
-                <h3 className="text-black text-lg font-semibold mb-4">
+                <h3 className="text-black text-sm mb-4">
                   Verified Lending Partners
                 </h3>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1">
-                    <div className="w-8 h-6 bg-blue-600 rounded-sm flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">HDFC</span>
-                    </div>
-                    <span className="text-xs text-black">BANK</span>
+                    <Image
+                      src={hdfc}
+                      alt="HDFC Bank"
+                      width={50}
+                      height={50}
+                      className="rounded-full"
+                    />
                   </div>
-                  <div className="w-12 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">BAJAJ</span>
+                  <div className="flex items-center gap-1">
+                    <Image
+                      src={bajaj}
+                      alt="Bajaj Finserv"
+                      width={50}
+                      height={50}
+                      className="rounded-full"
+                    />
                   </div>
-                  <div className="w-8 h-8 bg-orange-500 rounded flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">AU</span>
+
+                  <div className="flex items-center gap-1">
+                    <Image
+                      src={lic}
+                      alt="LIC"
+                      width={50}
+                      height={50}
+                      className="rounded-full"
+                    />
                   </div>
-                  <div className="w-8 h-8 bg-red-600 rounded flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">A</span>
+                  <div className="flex items-center gap-1">
+                    <Image
+                      src={axis}
+                      alt="Axis Bank"
+                      width={50}
+                      height={50}
+                      className="rounded-full"
+                    />
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Links Column */}
-            <div className="lg:col-span-2">
-              <h3 className="text-black text-lg font-semibold mb-4">Links</h3>
+            <div className="lg:col-span-2 ">
+              <h4 className="text-black text-lg mb-4">Links</h4>
               <ul className="space-y-3 text-[#141212] text-sm">
                 <li>
                   <a href="#" className="hover:text-black">
@@ -94,9 +121,9 @@ export default function Footer() {
 
             {/* Services Column */}
             <div className="lg:col-span-2">
-              <h3 className="text-black text-lg font-semibold mb-4">
+              <h4 className="text-black text-lg mb-4">
                 Services
-              </h3>
+              </h4>
               <ul className="space-y-3 text-[#141212] text-sm">
                 <li>
                   <a href="#" className="hover:text-black">
@@ -128,7 +155,7 @@ export default function Footer() {
 
             {/* Lorem Column */}
             <div className="lg:col-span-2">
-              <h3 className="text-black text-lg font-semibold mb-4">Lorem</h3>
+              <h4 className="text-black text-lg mb-4">Lorem</h4>
               <ul className="space-y-3 text-[#141212] text-sm">
                 <li>
                   <a href="#" className="hover:text-black">
@@ -151,21 +178,21 @@ export default function Footer() {
             {/* Right Section - CTA */}
             <div className="lg:col-span-3">
               <div className="flex items-start gap-2 mb-4">
-                <h2 className="text-black text-2xl font-bold leading-tight">
+                <h2 className="text-black text-xl leading-tight">
                   YOUR JOURNEY TO GIVING STARTS HERE
                 </h2>
                 <Star className="w-6 h-6 text-[#f7c430] fill-[#f7c430] mt-1 flex-shrink-0" />
               </div>
 
-              <p className="text-[#141212] text-sm mb-6 leading-relaxed">
+              <p className="text-[#141212] text-sm mb-2 leading-relaxed">
                 Transparent. Trusted. Impactful. Let's Build A Better Future.
               </p>
 
-              <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black font-semibold px-8 py-3 rounded-lg mb-6">
+              <Button className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
                 Get Started
               </Button>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 mt-4">
                 <span className="text-black text-sm font-medium">
                   Follow us on
                 </span>
