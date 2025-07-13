@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -11,6 +12,7 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import CircleOutlined from "@mui/icons-material/CircleOutlined";
 import { SidebarContext } from "./Sidebar";
+import { useRouter } from "next/navigation";
 
 
 type SubmenuProps = {
@@ -21,6 +23,7 @@ type SubmenuProps = {
   textFontSize?: string;
   disabled?: boolean;
   defaultOpen?: boolean;
+  href?: string;
 };
 
 const Submenu = (
@@ -33,6 +36,7 @@ const Submenu = (
       textFontSize = "14px",
       disabled = false,
       defaultOpen = false,
+      href = "",
     }:SubmenuProps
   ) => {
     const customizer = React.useContext(SidebarContext);
@@ -42,7 +46,12 @@ const Submenu = (
       setOpen(defaultOpen);
     }, [defaultOpen]);
 
+    const router = useRouter();
+
     const handleClick = () => {
+      if(!open ){
+        router.push(href);
+      }
       setOpen(!open);
     };
 
@@ -51,18 +60,18 @@ const Submenu = (
       marginBottom: "2px",
       padding: "10px 12px",
       borderRadius: borderRadius,
-      color: open ? "#fff" : customizer.textColor,
+      color: open ? "#000" : customizer.textColor,
       cursor: disabled ? "default" : "pointer",
       opacity: disabled ? "0.6" : "1",
       backgroundColor: !open ? "" : customizer.themeColor,
       ".MuiListItemIcon-root": {
-        color: open ? "#fff" : customizer.textColor,
+        color: open ? "#000" : customizer.textColor,
       },
       "&:hover": {
         backgroundColor: open ? customizer.themeColor : customizer.themeColor + 20,
-        color: open ? "#fff" : customizer.themeColor,
+        color: open ? "#000" : "#000",
         ".MuiListItemIcon-root": {
-          color: open ? "#fff" : customizer.themeColor,
+          color: open ? "#000" : "#000",
         },
       },
     }));

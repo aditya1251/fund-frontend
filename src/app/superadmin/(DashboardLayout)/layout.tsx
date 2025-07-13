@@ -52,7 +52,6 @@ export default function RootLayout({
             >
               <Box>{children}</Box>
             </Container>
-            <Footer />
           </Box>
         </PageWrapper>
       </MainWrapper>

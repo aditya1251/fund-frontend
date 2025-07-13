@@ -10,7 +10,7 @@ export default async function RootLayout({
 }) {
   const session = await getServerSession(authOptions);
   if (!session || session.user?.role !== "SUPERADMIN") {
-    redirect("/");
+    redirect("/login");
   }
   return (
     <html lang="en">
