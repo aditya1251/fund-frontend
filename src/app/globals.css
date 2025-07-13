@@ -121,3 +121,16 @@ h6 {
 .calculator-slider::-moz-progress-bar {
   @apply h-0.5 bg-[#ffd500] rounded-full;
 }
+
+/* app/globals.css or your main CSS file */
+
+/* Hide scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;    /* Firefox */
+}
