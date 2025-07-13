@@ -12,8 +12,8 @@ export default async function CrmLayout({
 	children: React.ReactNode;
 }>) {
 	const session = await getServerSession(authOptions);
-	if (!session || session.user?.role !== "admin") {
-		redirect("/superadmin/(DashboardLayout)/sample-form");
+	if (!session || session.user?.role !== "DSA") {
+		redirect("/");
 	}
 	return (
 		<div className="flex h-screen bg-gray-50 font-space-grotesk overflow-hidden">
