@@ -1,4 +1,7 @@
 import Image from "next/image";
+import ui2 from "../../public/assets/BuildPNG1.png";
+import ui3 from "../../public/assets/GrowPNG1.png";
+import ui4 from "../../public/assets/Design1.png";
 
 export default function Fund() {
   return (
@@ -17,9 +20,8 @@ export default function Fund() {
           {/* Website Builder */}
           <div className="text-center">
             <div className="mb-8 relative h-80 flex items-center justify-center">
-              <div className="absolute inset-0 bg-yellow-400 rounded-full w-64 h-64 mx-auto opacity-20"></div>
               <Image
-                src="/placeholder.svg?height=300&width=300"
+                src={ui2}
                 alt="Website Builder Illustration"
                 width={300}
                 height={300}
@@ -39,7 +41,7 @@ export default function Fund() {
           <div className="text-center">
             <div className="mb-8 relative h-80 flex items-center justify-center">
               <Image
-                src="/placeholder.svg?height=300&width=300"
+                src={ui3}
                 alt="Business Growth Illustration"
                 width={300}
                 height={300}
@@ -59,7 +61,7 @@ export default function Fund() {
           <div className="text-center">
             <div className="mb-8 relative h-80 flex items-center justify-center">
               <Image
-                src="/placeholder.svg?height=300&width=300"
+                src={ui4}
                 alt="Design Tools Illustration"
                 width={300}
                 height={300}
