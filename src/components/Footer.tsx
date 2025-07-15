@@ -155,7 +155,7 @@ export default function Footer() {
 
             {/* Lorem Column */}
             <div className="lg:col-span-2">
-              <h4 className="text-black text-lg mb-4">Lorem</h4>
+              <h4 className="text-black text-lg mb-4">Learn more</h4>
               <ul className="space-y-3 text-[#141212] text-sm">
                 <li>
                   <a href="#" className="hover:text-black">

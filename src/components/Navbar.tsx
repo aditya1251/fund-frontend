@@ -45,7 +45,7 @@ export default function NavigationHeader() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium">
+                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium cursor-pointer">
                   <span>Loan</span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
@@ -66,12 +66,17 @@ export default function NavigationHeader() {
                     Home Loan
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/loan-against-property" className="w-full text-black">
+                    Loan Against Property
+                  </Link>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium">
+                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium cursor-pointer">
                   <span>Govt. Loan</span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
@@ -88,8 +93,13 @@ export default function NavigationHeader() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/agriculture-loan" className="w-full text-black">
-                    Agriculture Loan
+                  <Link href="/msme-loan" className="w-full text-black">
+                    MSME Loan
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/pmegp-loan" className="w-full text-black">
+                    PMEGP Loan
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -97,7 +107,7 @@ export default function NavigationHeader() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium">
+                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium cursor-pointer">
                   <span>Insurance</span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
@@ -114,8 +124,8 @@ export default function NavigationHeader() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/vehicle-insurance" className="w-full text-black">
-                    Vehicle Insurance
+                  <Link href="/home-insurance" className="w-full text-black">
+                    Home Insurance
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -123,7 +133,7 @@ export default function NavigationHeader() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium">
+                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium cursor-pointer">
                   <span>Taxation</span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
@@ -131,17 +141,77 @@ export default function NavigationHeader() {
               <DropdownMenuContent align="start" className="w-48">
                 <DropdownMenuItem>
                   <Link href="/income-tax" className="w-full text-black">
-                    Income Tax
+                    ITR Services
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Link href="/gst" className="w-full text-black">
+                    TDS Return filling
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/tax-planning" className="w-full text-black">
                     GST Services
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Link href="/tax-planning" className="w-full text-black">
-                    Tax Planning
+                    CMA/Project report
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/tax-planning" className="w-full text-black">
+                    Trademark Registration
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/tax-planning" className="w-full text-black">
+                    Company Registration
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/tax-planning" className="w-full text-black">
+                    IEC Registration
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/tax-planning" className="w-full text-black">
+                    ISO Registration
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/tax-planning" className="w-full text-black">
+                    FSSAI Registration
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/tax-planning" className="w-full text-black">
+                    Udyog Aadhar Registration
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/tax-planning" className="w-full text-black">
+                    PF/ESIC
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/tax-planning" className="w-full text-black">
+                    ROC Filling
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/tax-planning" className="w-full text-black">
+                    Trade License
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/tax-planning" className="w-full text-black">
+                    Company Audit
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/tax-planning" className="w-full text-black">
+                    Balance Sheet/Finance
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -149,7 +219,7 @@ export default function NavigationHeader() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium">
+                <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium cursor-pointer">
                   <span>Marketing</span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
@@ -175,14 +245,14 @@ export default function NavigationHeader() {
 
             <Link
               href="/about"
-              className="text-black hover:text-[#f7c430] transition-colors duration-200 font-medium"
+              className="text-black hover:text-[#f7c430] transition-colors duration-200 font-medium cursor-pointer"
             >
               About
             </Link>
 
             <Link
               href="/contact"
-              className="text-black hover:text-[#f7c430] transition-colors duration-200 font-medium"
+              className="text-black hover:text-[#f7c430] transition-colors duration-200 font-medium cursor-pointer"
             >
               Contact Us
             </Link>

@@ -130,7 +130,7 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black flex items-center justify-center px-4 py-10 md:py-0">
+    <div className="min-h-screen bg-white text-black flex items-center justify-center px-4 py-10 md:py-0 mt-6 mb-6">
       <div className="w-full max-w-7xl">
         <div className="bg-[#FFF0C3] rounded-3xl md:rounded-[55px] border-[3px] border-[#F7C430] p-6 md:p-10 lg:p-20 flex flex-col md:flex-row gap-8 md:gap-10 lg:gap-14 items-center justify-around md:h-[620px]">
           {/* Left side - Contact Information */}
@@ -291,7 +291,7 @@ export default function ContactForm() {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-[#F7C430] hover:bg-[#E76F51] text-white font-semibold py-4 rounded-lg transition-colors text-lg flex items-center justify-center"
+                  className="w-full bg-[#F7C430] hover:bg-[#E76F51] text-white font-semibold py-4 rounded-lg transition-colors text-lg flex items-center justify-center cursor-pointer"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
