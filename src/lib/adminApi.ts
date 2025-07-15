@@ -1,54 +1,60 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { RootState } from './store';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQueryWithAuth } from './baseQuery';
 
 export const adminApi = createApi({
   reducerPath: 'adminApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api/',
-    prepareHeaders: (headers, api) => {
-      const state = api.getState() as RootState;
-      const token = state.auth?.token;
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithAuth,
   endpoints: (builder) => ({
-    getLeads: builder.query<any, void>({
-      query: () => 'leads', // Adjust endpoint as needed
+    // Loan Form Templates
+    getLoanTemplates: builder.query<any, void>({
+      query: () => 'loan-templates',
     }),
-    getOwnApplications: builder.query<any, void>({
-      query: () => 'users/application', // Adjust for admin-specific filtering if needed
+    getLoanTemplateById: builder.query<any, string>({
+      query: (id) => `loan-templates/${id}`,
     }),
-    createLead: builder.mutation<any, any>({
+    createLoanTemplate: builder.mutation<any, any>({
       query: (body) => ({
-        url: 'leads', // Adjust endpoint as needed
+        url: 'loan-templates',
         method: 'POST',
         body,
       }),
     }),
-    updateLead: builder.mutation<any, { id: string; data: any }>({
+    updateLoanTemplate: builder.mutation<any, { id: string; data: any }>({
       query: ({ id, data }) => ({
-        url: `leads/${id}`,
+        url: `loan-templates/${id}`,
         method: 'PUT',
         body: data,
       }),
     }),
-    deleteLead: builder.mutation<any, string>({
+    deleteLoanTemplate: builder.mutation<any, string>({
       query: (id) => ({
-        url: `leads/${id}`,
+        url: `loan-templates/${id}`,
         method: 'DELETE',
       }),
     }),
-    // Add more admin endpoints as needed
+    // Loan Form Submissions
+    getLoanFormSubmissions: builder.query<any, { templateId?: string }>({
+      query: (params) => {
+        const queryStr = params?.templateId ? `?templateId=${params.templateId}` : '';
+        return `loan-forms${queryStr}`;
+      },
+    }),
+    createLoanFormSubmission: builder.mutation<any, any>({
+      query: (body) => ({
+        url: 'loan-forms',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
 export const {
-  useGetLeadsQuery,
-  useGetOwnApplicationsQuery,
-  useCreateLeadMutation,
-  useUpdateLeadMutation,
-  useDeleteLeadMutation,
+  useGetLoanTemplatesQuery,
+  useGetLoanTemplateByIdQuery,
+  useCreateLoanTemplateMutation,
+  useUpdateLoanTemplateMutation,
+  useDeleteLoanTemplateMutation,
+  useGetLoanFormSubmissionsQuery,
+  useCreateLoanFormSubmissionMutation,
 } = adminApi; 
