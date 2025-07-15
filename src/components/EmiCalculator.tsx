@@ -14,13 +14,12 @@ import {
 } from "./ui/select";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-// import { Slider } from "@/components/ui/slider"
 import { Slider } from "./ui/Slider";
 
 export default function EmiCalculator() {
   const [loanAmount, setLoanAmount] = useState(1000000);
   const [interestRate, setInterestRate] = useState(10);
-  const [tenure, setTenure] = useState(40);
+  const [tenure, setTenure] = useState(3); // Default tenure in years (e.g., 3 years)
   const [monthlyEMI, setMonthlyEMI] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
 
@@ -28,7 +27,7 @@ export default function EmiCalculator() {
   useEffect(() => {
     const principal = loanAmount;
     const monthlyRate = interestRate / 12 / 100;
-    const months = tenure;
+    const months = tenure * 12; // Convert years to months for EMI calculation
 
     if (monthlyRate === 0) {
       setMonthlyEMI(principal / months);
@@ -52,7 +51,7 @@ export default function EmiCalculator() {
       .replace("₹", "₹ ");
   };
 
-  const progressPercentage = ((monthlyEMI * tenure) / totalAmount) * 100; // Corrected calculation for progress bar
+  const progressPercentage = ((monthlyEMI * (tenure * 12)) / totalAmount) * 100; // Corrected calculation for progress bar using total months
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#fffaed" }}>
@@ -201,9 +200,9 @@ export default function EmiCalculator() {
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <Label className="text-sm text-gray-700 font-semibold">
-                      Tenure (Months)
+                      Tenure (Years)
                     </Label>{" "}
-                    {/* Clarified label */}
+                    {/* Clarified label to Years */}
                     <Input
                       type="number"
                       value={tenure}
@@ -214,17 +213,17 @@ export default function EmiCalculator() {
                   <Slider
                     value={[tenure]}
                     onValueChange={(value: number[]) => setTenure(value[0])}
-                    max={60}
-                    min={12}
+                    max={20} // Maximum tenure set to 20 years
+                    min={1} // Minimum tenure set to 1 year
                     step={1}
                     className="w-full [&>span:first-child]:bg-yellow-400 [&>span:first-child]:shadow-none [&>span:first-child]:rounded-full [&>span:first-child]:w-4 [&>span:first-child]:h-4 [&>span:first-child]:-mt-1.5"
                   />{" "}
                   {/* Custom slider track and thumb styles if possible */}
                   <div className="flex justify-between text-xs text-gray-600 mt-2">
-                    <span>12 Months</span>
-                    <span>60 Months</span>
+                    <span>1 Year</span>
+                    <span>20 Years</span>
                   </div>{" "}
-                  {/* Clarified labels */}
+                  {/* Clarified labels for years */}
                 </div>
               </div>
 
