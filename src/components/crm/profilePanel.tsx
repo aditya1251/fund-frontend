@@ -12,9 +12,8 @@ import {
 	X,
 } from "lucide-react";
 
-const ProfilePanel = () => {
+const ProfilePanel = ({ user }: { user: { name?: string; email?: string } }) => {
 	const [isOpen, setIsOpen] = useState(false);
-
 	return (
 		<>
 			{/* Avatar Button */}
@@ -29,7 +28,7 @@ const ProfilePanel = () => {
 						className="w-full h-full object-cover"
 					/>
 				</div>
-				<span className="text-sm font-medium text-gray-700">Ruth Mishra</span>
+				<span className="text-sm font-medium text-gray-700">{user?.name}</span>
 			</div>
 
 			{/* Slide-in Profile Panel */}
@@ -64,10 +63,10 @@ const ProfilePanel = () => {
 							</div>
 							<div>
 								<div className="font-medium text-sm text-black">
-									Ruth Mishra
+									{user?.name}
 								</div>
 								<div className="text-xs text-gray-500">
-									ruthmishra@gmail.com
+									{user?.email}
 								</div>
 							</div>
 						</div>

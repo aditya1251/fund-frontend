@@ -30,7 +30,7 @@ export default function Page() {
 
 			<Tabs defaultValue="personal">
 				<TabsList>
-					<Link href="/crm/loan-form?type=personal?subtype=personal">
+					<Link href="/crm/loan-form?type=personal&subtype=personal">
 						<TabsTrigger value="personal">
 							<TabsIcon>
 								<User />
@@ -43,7 +43,7 @@ export default function Page() {
 							</TabsLabel>
 						</TabsTrigger>
 					</Link>
-
+					<Link href="/crm/loan-form?type=personal&subtype=home">
 					<TabsTrigger value="home">
 						<TabsIcon>
 							<House />
@@ -55,7 +55,9 @@ export default function Page() {
 							</TabsDescription>
 						</TabsLabel>
 					</TabsTrigger>
+					</Link>
 
+					<Link href="/crm/loan-form?type=personal&subtype=business">
 					<TabsTrigger value="business">
 						<TabsIcon>
 							<Building />
@@ -67,6 +69,7 @@ export default function Page() {
 							</TabsDescription>
 						</TabsLabel>
 					</TabsTrigger>
+					</Link>
 
 					<TabsTrigger value="car">
 						<TabsIcon>
