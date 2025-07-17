@@ -12,7 +12,10 @@ export default async function CrmLayout({
 	children: React.ReactNode;
 }>) {
 	const session = await getServerSession(authOptions);
-	if (!session || (session.user?.role !== "DSA" && session.user?.role !== "SUPERADMIN")) {
+	if (
+		!session ||
+		(session.user?.role !== "DSA" && session.user?.role !== "SUPERADMIN")
+	) {
 		redirect("/");
 	}
 	return (

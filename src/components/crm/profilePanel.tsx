@@ -11,8 +11,9 @@ import {
 	Bell,
 	X,
 } from "lucide-react";
+import { Session } from "next-auth";
 
-const ProfilePanel = () => {
+const ProfilePanel = ({ user }: { user: Session["user"] }) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
@@ -24,12 +25,14 @@ const ProfilePanel = () => {
 			>
 				<div className="w-8 h-8 rounded-full overflow-hidden bg-[#cbcccc]">
 					<img
-						src="/placeholder.svg"
+						src={user?.image || "/placeholder.svg"}
 						alt="User Avatar"
 						className="w-full h-full object-cover"
 					/>
 				</div>
-				<span className="text-sm font-medium text-gray-700">Ruth Mishra</span>
+				<span className="text-sm font-medium text-gray-700">
+					{user?.name || "New User"}
+				</span>
 			</div>
 
 			{/* Slide-in Profile Panel */}
@@ -55,19 +58,19 @@ const ProfilePanel = () => {
 
 						{/* User Info */}
 						<div className="p-4 flex items-center gap-3 border-b border-gray-100">
-							<div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200">
+							<div className="w-12 h-12 rounded-full overflow-hidden bg-[#cbcccc]">
 								<img
-									src="/placeholder.svg"
+									src={user?.image || "/placeholder.svg"}
 									alt="User Avatar"
 									className="w-full h-full object-cover"
 								/>
 							</div>
 							<div>
 								<div className="font-medium text-sm text-black">
-									Ruth Mishra
+									{user?.name || "New User"}
 								</div>
 								<div className="text-xs text-gray-500">
-									ruthmishra@gmail.com
+									{user?.email || "No Email"}
 								</div>
 							</div>
 						</div>
