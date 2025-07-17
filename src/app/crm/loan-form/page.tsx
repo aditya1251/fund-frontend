@@ -16,7 +16,7 @@ import {
   useCreateLoanTemplateMutation,
   useUpdateLoanTemplateMutation,
   useDeleteLoanTemplateMutation,
-  useCreateLoanFormSubmissionMutation,
+  useCreateLoanMutation,
 } from '@/lib/adminApi';
 import { useSearchParams } from 'next/navigation';
 
@@ -59,8 +59,7 @@ export default function LoanForm() {
   const { data: selectedTemplateData } = useGetLoanTemplateByIdQuery(selectedTemplateId, { skip: !selectedTemplateId });
   const [createLoanTemplate] = useCreateLoanTemplateMutation();
   const [updateLoanTemplate] = useUpdateLoanTemplateMutation();
-  const [deleteLoanTemplate] = useDeleteLoanTemplateMutation();
-  const [createLoanFormSubmission] = useCreateLoanFormSubmissionMutation();
+  const [createLoanFormSubmission] = useCreateLoanMutation();
 
   // Sync templates from API
   useEffect(() => {
@@ -71,9 +70,7 @@ export default function LoanForm() {
   useEffect(() => {
     if (!templatesData) return;
     const type = searchParams.get('type')?.toLowerCase();
-    console.log(type);
     const subtype = searchParams.get('subtype')?.toLowerCase();
-    console.log(subtype);
     if (type || subtype) {
       // Try to match by loanType or name
       const found = templatesData.find((t: LoanFormTemplate) => {
@@ -182,9 +179,9 @@ export default function LoanForm() {
         return;
       }
     }
-    const submittedBy = session?.user?.email || session?.user?.name || "anonymous";
+    const applicant = session?.user?.email;
     try {
-      await createLoanFormSubmission({ templateId: template._id, values: formValues, submittedBy }).unwrap();
+      await createLoanFormSubmission({ templateId: template._id, values: formValues, applicant,loansubType: template.name,loanType:template.loanType }).unwrap();
       setMessage("Form submitted successfully!");
       setFormValues({});
     } catch (err) {
@@ -192,7 +189,7 @@ export default function LoanForm() {
     }
   };
 
-  return (
+        return (
     <div className="min-h-screen bg-[#f3f3f3] p-4">
       <div className="max-w-4xl mx-auto">
         <Card className="mb-6 shadow-sm border-0 bg-white text-black">
@@ -207,15 +204,15 @@ export default function LoanForm() {
               <Select value={selectedTemplateId} onValueChange={setSelectedTemplateId}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Choose a template or create new" />
-                </SelectTrigger>
-                <SelectContent>
+                  </SelectTrigger>
+                  <SelectContent>
                   <SelectItem value="">New Template</SelectItem>
                   {templates.map(t => (
                     <SelectItem key={t._id} value={t._id!}>{t.name}</SelectItem>
                   ))}
-                </SelectContent>
-              </Select>
-            </div>
+                  </SelectContent>
+                </Select>
+              </div>
             <div className="mb-4">
               <Label>Template Name</Label>
               <Input value={template.name} onChange={e => setTemplate({ ...template, name: e.target.value })} />
@@ -235,7 +232,7 @@ export default function LoanForm() {
                     {field.required && <Badge className="bg-yellow-400 text-black ">Required</Badge>}
                     <Button size="sm" variant="outline" className="w-1/8" onClick={() => editField(idx)}>Edit</Button>
                     <Button size="sm" variant="outline" className="w-1/8" onClick={() => removeField(idx)}>Remove</Button>
-                  </div>
+              </div>
                 ))}
               </div>
             </div>
@@ -266,7 +263,7 @@ export default function LoanForm() {
                 />
                 <span className="text-xs">Required</span>
                 {fieldDraft.type === "select" && (
-                  <Input
+                      <Input
                     placeholder="Comma separated options"
                     value={fieldDraft.options?.join(",") || ""}
                     onChange={e => handleFieldChange("options", e.target.value.split(",").map(s => s.trim()))}
@@ -302,42 +299,42 @@ export default function LoanForm() {
                     return (
                       <div key={idx}>
                         <Label>{field.label}{field.required && " *"}</Label>
-                        <Input
+                <Input
                           type={field.type}
                           required={field.required}
                           value={formValues[field.label] || ""}
                           onChange={e => handleFormValueChange(field.label, e.target.value)}
                         />
-                      </div>
-                    )
+          </div>
+        )
                   case "select":
-                    return (
+        return (
                       <div key={idx}>
                         <Label>{field.label}{field.required && " *"}</Label>
                         <Select value={formValues[field.label] || ""} onValueChange={v => handleFormValueChange(field.label, v)}>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select option" />
-                          </SelectTrigger>
-                          <SelectContent>
+                  </SelectTrigger>
+                  <SelectContent>
                             {field.options?.map(opt => (
                               <SelectItem key={opt} value={opt}>{opt}</SelectItem>
                             ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    )
+                  </SelectContent>
+                </Select>
+          </div>
+        )
                   case "checkbox":
-                    return (
+        return (
                       <div key={idx} className="flex items-center gap-2">
                         <Checkbox
                           checked={!!formValues[field.label]}
                           onCheckedChange={checked => handleFormValueChange(field.label, !!checked)}
                         />
                         <Label>{field.label}{field.required && " *"}</Label>
-                      </div>
-                    )
+          </div>
+        )
                   case "textarea":
-                    return (
+        return (
                       <div key={idx}>
                         <Label>{field.label}{field.required && " *"}</Label>
                         <Textarea
@@ -345,11 +342,11 @@ export default function LoanForm() {
                           value={formValues[field.label] || ""}
                           onChange={e => handleFormValueChange(field.label, e.target.value)}
                         />
-                      </div>
-                    )
-                  default:
-                    return null
-                }
+          </div>
+        )
+      default:
+        return null
+    }
               })}
               {template.fields.length > 0 && (
                 <Button type="submit" className="bg-yellow-400 text-black font-medium px-8 py-3 h-12">Submit Form</Button>
