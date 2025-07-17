@@ -30,7 +30,7 @@ export default function Page() {
 
 			<Tabs defaultValue="personal">
 				<TabsList>
-					<Link href="/crm/loan-form?type=personal&subtype=personal">
+					<Link href="/crm/loan-form?type=loan&subtype=personal">
 						<TabsTrigger value="personal">
 							<TabsIcon>
 								<User />
@@ -43,57 +43,60 @@ export default function Page() {
 							</TabsLabel>
 						</TabsTrigger>
 					</Link>
-					<Link href="/crm/loan-form?type=personal&subtype=home">
-					<TabsTrigger value="home">
-						<TabsIcon>
-							<House />
-						</TabsIcon>
-						<TabsLabel>
-							Home Loan
-							<TabsDescription>
-								Funds are delivered to your bank account for your own use
-							</TabsDescription>
-						</TabsLabel>
-					</TabsTrigger>
+					<Link href="/crm/loan-form?type=loan&subtype=home">
+						<TabsTrigger value="home">
+							<TabsIcon>
+								<House />
+							</TabsIcon>
+							<TabsLabel>
+								Home Loan
+								<TabsDescription>
+									Funds are delivered to your bank account for your own use
+								</TabsDescription>
+							</TabsLabel>
+						</TabsTrigger>
 					</Link>
 
-					<Link href="/crm/loan-form?type=personal&subtype=business">
-					<TabsTrigger value="business">
-						<TabsIcon>
-							<Building />
-						</TabsIcon>
-						<TabsLabel>
-							Business Loan
-							<TabsDescription>
-								Funds are delivered to your bank account for your own use
-							</TabsDescription>
-						</TabsLabel>
-					</TabsTrigger>
+					<Link href="/crm/loan-form?type=loan&subtype=business">
+						<TabsTrigger value="business">
+							<TabsIcon>
+								<Building />
+							</TabsIcon>
+							<TabsLabel>
+								Business Loan
+								<TabsDescription>
+									Funds are delivered to your bank account for your own use
+								</TabsDescription>
+							</TabsLabel>
+						</TabsTrigger>
+					</Link>
+					<Link href="/crm/loan-form?type=loan&subtype=car">
+						<TabsTrigger value="car">
+							<TabsIcon>
+								<Car />
+							</TabsIcon>
+							<TabsLabel>
+								Car Loan
+								<TabsDescription>
+									Funds are delivered to your bank account for your own use
+								</TabsDescription>
+							</TabsLabel>
+						</TabsTrigger>
 					</Link>
 
-					<TabsTrigger value="car">
-						<TabsIcon>
-							<Car />
-						</TabsIcon>
-						<TabsLabel>
-							Car Loan
-							<TabsDescription>
-								Funds are delivered to your bank account for your own use
-							</TabsDescription>
-						</TabsLabel>
-					</TabsTrigger>
-
-					<TabsTrigger value="property">
-						<TabsIcon>
-							<LandPlot />
-						</TabsIcon>
-						<TabsLabel>
-							Loan Against Property
-							<TabsDescription>
-								Funds are delivered to your bank account for your own use
-							</TabsDescription>
-						</TabsLabel>
-					</TabsTrigger>
+					<Link href="/crm/loan-form?type=loan&subtype=property">
+						<TabsTrigger value="property">
+							<TabsIcon>
+								<LandPlot />
+							</TabsIcon>
+							<TabsLabel>
+								Loan Against Property
+								<TabsDescription>
+									Funds are delivered to your bank account for your own use
+								</TabsDescription>
+							</TabsLabel>
+						</TabsTrigger>
+					</Link>
 				</TabsList>
 			</Tabs>
 
@@ -133,9 +136,9 @@ export default function Page() {
 											<StatusBadge
 												status={
 													lead.status.toLowerCase() as
-														| "approved"
-														| "pending"
-														| "rejected"
+													| "approved"
+													| "pending"
+													| "rejected"
 												}
 											/>,
 										]}
