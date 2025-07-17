@@ -33,13 +33,13 @@ export const adminApi = createApi({
       }),
     }),
     // Loan Form Submissions
-    getLoanFormSubmissions: builder.query<any, { templateId?: string }>({
+    getLoans: builder.query<any, { templateId?: string }>({
       query: (params) => {
         const queryStr = params?.templateId ? `?templateId=${params.templateId}` : '';
         return `loan-forms${queryStr}`;
       },
     }),
-    createLoanFormSubmission: builder.mutation<any, any>({
+    createLoan: builder.mutation<any, any>({
       query: (body) => ({
         url: 'loan-forms',
         method: 'POST',
@@ -55,6 +55,6 @@ export const {
   useCreateLoanTemplateMutation,
   useUpdateLoanTemplateMutation,
   useDeleteLoanTemplateMutation,
-  useGetLoanFormSubmissionsQuery,
-  useCreateLoanFormSubmissionMutation,
+  useGetLoansQuery,
+  useCreateLoanMutation,
 } = adminApi; 

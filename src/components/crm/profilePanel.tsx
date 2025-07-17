@@ -11,11 +11,13 @@ import {
 	Bell,
 	X,
 } from "lucide-react";
-import { Session } from "next-auth";
 
-const ProfilePanel = ({ user }: { user: Session["user"] }) => {
+const ProfilePanel = ({
+	user,
+}: {
+	user: { name?: string; email?: string };
+}) => {
 	const [isOpen, setIsOpen] = useState(false);
-
 	return (
 		<>
 			{/* Avatar Button */}
@@ -25,14 +27,12 @@ const ProfilePanel = ({ user }: { user: Session["user"] }) => {
 			>
 				<div className="w-8 h-8 rounded-full overflow-hidden bg-[#cbcccc]">
 					<img
-						src={user?.image || "/placeholder.svg"}
+						src="/placeholder.svg"
 						alt="User Avatar"
 						className="w-full h-full object-cover"
 					/>
 				</div>
-				<span className="text-sm font-medium text-gray-700">
-					{user?.name || "New User"}
-				</span>
+				<span className="text-sm font-medium text-gray-700">{user?.name}</span>
 			</div>
 
 			{/* Slide-in Profile Panel */}
@@ -58,20 +58,18 @@ const ProfilePanel = ({ user }: { user: Session["user"] }) => {
 
 						{/* User Info */}
 						<div className="p-4 flex items-center gap-3 border-b border-gray-100">
-							<div className="w-12 h-12 rounded-full overflow-hidden bg-[#cbcccc]">
+							<div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200">
 								<img
-									src={user?.image || "/placeholder.svg"}
+									src="/placeholder.svg"
 									alt="User Avatar"
 									className="w-full h-full object-cover"
 								/>
 							</div>
 							<div>
 								<div className="font-medium text-sm text-black">
-									{user?.name || "New User"}
+									{user?.name}
 								</div>
-								<div className="text-xs text-gray-500">
-									{user?.email || "No Email"}
-								</div>
+								<div className="text-xs text-gray-500">{user?.email}</div>
 							</div>
 						</div>
 

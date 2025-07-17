@@ -18,6 +18,7 @@ import {
 	ViewAllButton,
 } from "@/components/ui/data-table";
 import leads from "@/app/crm/sample-data";
+import Link from "next/link";
 
 export default function Page() {
 	return (
@@ -26,6 +27,7 @@ export default function Page() {
 
 			<Tabs defaultValue="msme">
 				<TabsList>
+					<Link href="/crm/loan-form?type=government&subtype=mudra">
 					<TabsTrigger value="mudra">
 						<TabsLabel>
 							Mudra Loan
@@ -35,7 +37,9 @@ export default function Page() {
 							</TabsDescription>
 						</TabsLabel>
 					</TabsTrigger>
+					</Link>
 
+					<Link href="/crm/loan-form?type=government&subtype=msme">
 					<TabsTrigger value="msme">
 						<TabsLabel>
 							MSME Loan
@@ -45,7 +49,8 @@ export default function Page() {
 							</TabsDescription>
 						</TabsLabel>
 					</TabsTrigger>
-
+					</Link>
+					<Link href="/crm/loan-form?type=government&subtype=pmegp">
 					<TabsTrigger value="pmegp">
 						<TabsLabel>
 							PMEGP Loan
@@ -55,7 +60,8 @@ export default function Page() {
 							</TabsDescription>
 						</TabsLabel>
 					</TabsTrigger>
-
+					</Link>
+					<Link href="/crm/loan-form?type=government&subtype=cgtmse">
 					<TabsTrigger value="cgtmse">
 						<TabsLabel>
 							CGTMSE Loan
@@ -64,7 +70,8 @@ export default function Page() {
 							</TabsDescription>
 						</TabsLabel>
 					</TabsTrigger>
-
+					</Link>
+					<Link href="/crm/loan-form?type=government&subtype=startup">
 					<TabsTrigger value="startup">
 						<TabsLabel>
 							Startup India Loan
@@ -74,6 +81,7 @@ export default function Page() {
 							</TabsDescription>
 						</TabsLabel>
 					</TabsTrigger>
+					</Link>
 				</TabsList>
 			</Tabs>
 
