@@ -1,302 +1,202 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Check } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { Check } from "lucide-react";
 
 export default function Price() {
   const [activeTab, setActiveTab] = useState("Premium");
   const cardContainerRef = useRef<HTMLDivElement>(null);
-  // Fix: Move isInitialLoad ref to top-level
-  const isInitialLoad = useRef(true);
+  const scrollPrevented = useRef(false); 
 
-  const handleTabClick = (tabName: string): void => {
-    setActiveTab(tabName);
-  };
+  const pricingPlans = [
+    {
+      id: "Standard",
+      title: "Standard Plan",
+      price: "₹ 3599/-",
+      features: [
+        "Loan Panel",
+        "Insurance Panel",
+        "Accounting Services",
+        "Credit Card Panel",
+        "CRM Panel",
+        "Marketing Material"
+      ]
+    },
+    {
+      id: "Premium",
+      title: "Premium Plan",
+      price: "₹ 5499/-",
+      features: [
+        "Plan 1 Included",
+        "Taxation (20% OFF)",
+        "Govt Loan",
+        "Account Opening",
+        "Instant Loan"
+      ]
+    },
+    {
+      id: "Professional",
+      title: "Professional Plan",
+      price: "₹ 10999/-",
+      features: [
+        "Plan 1 Included",
+        "Plan 2 Included",
+        "Taxation (20%OFF)",
+        "Marketing (50 Lead/Month)",
+        "Website Designing",
+        "Home / Property Loan"
+      ]
+    },
+    {
+      id: "BCP Portal",
+      title: "BCP Portal",
+      price: "₹ 89999/-",
+      features: [
+        "Own BCP portal to manage your DSA team",
+        "Plan 1, 2, 3 included",
+        "Dedicated RM",
+        "Access to 120+ banks and NBFC"
+      ]
+    }
+  ];
 
   const getTabButtonClasses = (tabName: string) => {
-    return `px-6 py-2 rounded-full font-medium cursor-pointer transition-all duration-300 ease-in-out ${
+    return `px-4 py-2 rounded-full font-medium cursor-pointer transition-all duration-300 ease-in-out ${
       activeTab === tabName
-        ? "bg-[#ffd439] text-black"
+        ? "bg-[#ffd439] text-black shadow-md"
         : "text-white hover:bg-gray-800"
     }`;
   };
 
   const getCardButtonClasses = (cardTabName: string) => {
-    return `w-full rounded-xl font-semibold py-3 mb-8 border-2 transition-all duration-300 ease-in-out ${
+    return `w-full rounded-xl font-semibold py-3 mt-6 border-2 transition-all duration-300 ease-in-out ${
       activeTab === cardTabName
         ? "bg-black text-white hover:bg-gray-800"
         : "bg-white text-black hover:bg-gray-100"
     } border-black`;
   };
 
-  const checkIconClasses = "w-5 h-5 text-black";
+  // Prevent scrolling on initial load
+  useEffect(() => {
+    if (!scrollPrevented.current) {
+      const scrollY = window.scrollY;
+      const originalScrollRestoration = window.history.scrollRestoration;
+      window.history.scrollRestoration = 'manual';
+      
+      setTimeout(() => {
+        window.scrollTo(0, scrollY);
+        window.history.scrollRestoration = originalScrollRestoration;
+      }, 10);
+      
+      scrollPrevented.current = true;
+    }
+  }, []);
+
+  const handleTabClick = (tabName: string): void => {
+    setActiveTab(tabName);
+  };
 
   useEffect(() => {
-    // Use the top-level isInitialLoad ref
-    if (isInitialLoad.current) {
-      // Skip scrolling on initial load
-      isInitialLoad.current = false;
-      return;
-    }
-
-    // Only scroll when activeTab changes after initial load
     if (cardContainerRef.current) {
       const activeCardElement = cardContainerRef.current.querySelector(
         `[data-plan="${activeTab}"]`
       ) as HTMLElement;
 
       if (activeCardElement) {
-        activeCardElement.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "center",
+        // Calculate horizontal scroll position without affecting vertical position
+        const container = cardContainerRef.current;
+        const containerRect = container.getBoundingClientRect();
+        const cardRect = activeCardElement.getBoundingClientRect();
+        
+        // Calculate scroll position relative to container
+        const scrollLeft = cardRect.left - containerRect.left + container.scrollLeft;
+        
+        // Scroll horizontally only
+        container.scrollTo({
+          left: scrollLeft - (containerRect.width / 2) + (cardRect.width / 2),
+          behavior: "smooth"
         });
       }
     }
   }, [activeTab]);
 
   return (
-    <div className="min-h-screen bg-white py-16 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-16 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
-            SMART PLANS FOR{" "}
-            <span className="text-[#ffd439]">SMART</span> BUSINESSES
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            SMART PLANS FOR <span className="text-[#ffd439]">SMART</span> BUSINESSES
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Explore Tailored, Cost-Effective Plans Built To Support Your Business
-            At Every Stage Of Growth.
+            Explore Tailored, Cost-Effective Plans Built To Support Your
+            Business At Every Stage Of Growth.
           </p>
         </div>
 
         {/* Tab Selector */}
         <div className="flex justify-center mb-16">
-          <div className="bg-black rounded-full p-1 flex space-x-2">
-            <button
-              className={getTabButtonClasses("Standard")}
-              onClick={() => handleTabClick("Standard")}
-            >
-              Standard
-            </button>
-            <button
-              className={getTabButtonClasses("Premium")}
-              onClick={() => handleTabClick("Premium")}
-            >
-              Premium
-            </button>
-            <button
-              className={getTabButtonClasses("Professional")}
-              onClick={() => handleTabClick("Professional")}
-            >
-              Professional
-            </button>
-            <button
-              className={getTabButtonClasses("BCP Portal")}
-              onClick={() => handleTabClick("BCP Portal")}
-            >
-              BCP Portal
-            </button>
+          <div className="bg-black rounded-full p-1 flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
+            {pricingPlans.map(plan => (
+              <button
+                key={plan.id}
+                className={getTabButtonClasses(plan.id)}
+                onClick={() => handleTabClick(plan.id)}
+              >
+                {plan.id}
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Cards Container */}
         <div
           ref={cardContainerRef}
-          className="flex overflow-x-auto scroll-smooth pb-4 gap-8 mb-16 hide-scrollbar px-4 items-center"
+          className="flex overflow-x-auto scroll-smooth pb-4 gap-8 mb-16 hide-scrollbar px-4 items-stretch"
         >
-          {/* Standard Plan */}
-          <Card
-            data-plan="Standard"
-            className={`flex flex-col items-start gap-6 w-[401px] h-[624px] p-6 flex-shrink-0 rounded-[16px] border-3 border-black bg-[#FFD439] transition-all duration-300 ease-in-out ${
-              activeTab === "Standard"
-                ? "shadow-[10px_10px_0_0_#000] z-10"
-                : "shadow-[6px_6px_0_0_#000]"
-            }`}
-          >
-            <CardContent className="p-0 w-full">
-              <h3 className="text-xl font-semibold text-black mb-6">
-                Standard Plan
-              </h3>
-              <div className="text-3xl font-bold text-black mb-8">₹ 3599/-</div>
+          {pricingPlans.map(plan => (
+            <div
+              key={plan.id}
+              data-plan={plan.id}
+              className={`flex flex-col w-[300px] min-w-[300px] md:w-[350px] md:min-w-[350px] p-6 flex-shrink-0 rounded-xl border-3 border-black bg-[#FFD439] transition-all duration-300 ease-in-out ${
+                activeTab === plan.id
+                  ? "shadow-[10px_10px_0_0_#000] z-10"
+                  : "shadow-[6px_6px_0_0_#000]"
+              }`}
+            >
+              {/* Card content */}
+              <div className="flex flex-col h-full">
+                <div>
+                  <h3 className="text-xl font-semibold text-black mb-4">
+                    {plan.title}
+                  </h3>
+                  <div className="text-3xl font-bold text-black mb-2">{plan.price}</div>
+                </div>
+                
+                <button className={getCardButtonClasses(plan.id)}>
+                  Get Started
+                </button>
 
-              <Button className={getCardButtonClasses("Standard")}>
-                Get Started
-              </Button>
-
-              <div className="space-y-4 mt-6">
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Loan Panel</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Insurance Panel</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Accounting Services</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Credit Card Panel</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">CRM Panel</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Marketing Material</span>
+                <div className="flex-grow mt-4">
+                  <div className="space-y-4">
+                    {plan.features.map((feature, index) => (
+                      <div key={index} className="flex items-center gap-3">
+                        <Check className="w-5 h-5 text-black flex-shrink-0" />
+                        <span className="text-black text-left">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Premium Plan */}
-          <Card
-            data-plan="Premium"
-            className={`flex flex-col items-start gap-6 w-[401px] h-[624px] p-6 flex-shrink-0 rounded-[16px] border-3 border-black bg-[#FFD439] transition-all duration-300 ease-in-out ${
-              activeTab === "Premium"
-                ? "shadow-[10px_10px_0_0_#000] z-10"
-                : "shadow-[6px_6px_0_0_#000]"
-            }`}
-          >
-            <CardContent className="p-0 w-full">
-              <h3 className="text-xl font-semibold text-black mb-6">
-                Premium Plan
-              </h3>
-              <div className="text-3xl font-bold text-black mb-8">₹ 5499/-</div>
-
-              <Button className={getCardButtonClasses("Premium")}>
-                Get Started
-              </Button>
-
-              <div className="space-y-4 mt-6">
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Plan 1 Included</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Taxation (20% OFF)</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Govt Loan</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Account Opening</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Instant Loan</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Professional Plan */}
-          <Card
-            data-plan="Professional"
-            className={`flex flex-col items-start gap-6 w-[401px] h-[624px] p-6 flex-shrink-0 rounded-[16px] border-3 border-black bg-[#FFD439] transition-all duration-300 ease-in-out ${
-              activeTab === "Professional"
-                ? "shadow-[10px_10px_0_0_#000] z-10"
-                : "shadow-[6px_6px_0_0_#000]"
-            }`}
-          >
-            <CardContent className="p-0 w-full">
-              <h3 className="text-xl font-semibold text-black mb-6">
-                Professional Plan
-              </h3>
-              <div className="text-3xl font-bold text-black mb-8">
-                ₹ 10999/-
-              </div>
-
-              <Button className={getCardButtonClasses("Professional")}>
-                Get Started
-              </Button>
-
-              <div className="space-y-4 mt-6">
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Plan 1 Included</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Plan 2 Included</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Taxation (20%OFF)</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Marketing (50 Lead/Month)</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Website Designing</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Home / Property Loan</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* BCP Portal Card */}
-          <Card
-            data-plan="BCP Portal"
-            className={`flex flex-col items-start gap-6 w-[401px] h-[624px] p-6 flex-shrink-0 rounded-[16px] border-3 border-black bg-[#FFD439] transition-all duration-300 ease-in-out ${
-              activeTab === "BCP Portal"
-                ? "shadow-[10px_10px_0_0_#000] z-10"
-                : "shadow-[6px_6px_0_0_#000]"
-            }`}
-          >
-            <CardContent className="p-0 w-full">
-              <h3 className="text-xl font-semibold text-black mb-6">
-                BCP Portal
-              </h3>
-              <div className="text-3xl font-bold text-black mb-8">₹ 89999/-</div>
-
-              <Button className={getCardButtonClasses("BCP Portal")}>
-                Get Started
-              </Button>
-
-              <div className="space-y-4 mt-6">
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">
-                    Own BCP portal to manage your DSA team
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Plan 1, 2, 3 included</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">Dedicated RM</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className={checkIconClasses} />
-                  <span className="text-black">
-                    Access to 120+ banks and NBFC
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+          ))}
         </div>
 
         {/* Footer Text */}
         <div className="text-center">
           <p className="text-gray-500 mb-2">More details and all features</p>
-          <p className="text-gray-500">View pricing page</p>
+          <button className="text-gray-800 font-medium hover:text-[#ffd439] transition-colors">
+            View pricing page
+          </button>
         </div>
       </div>
     </div>
