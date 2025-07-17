@@ -12,7 +12,11 @@ import {
 	X,
 } from "lucide-react";
 
-const ProfilePanel = ({ user }: { user: { name?: string; email?: string } }) => {
+const ProfilePanel = ({
+	user,
+}: {
+	user: { name?: string; email?: string };
+}) => {
 	const [isOpen, setIsOpen] = useState(false);
 	return (
 		<>
@@ -65,9 +69,7 @@ const ProfilePanel = ({ user }: { user: { name?: string; email?: string } }) => 
 								<div className="font-medium text-sm text-black">
 									{user?.name}
 								</div>
-								<div className="text-xs text-gray-500">
-									{user?.email}
-								</div>
+								<div className="text-xs text-gray-500">{user?.email}</div>
 							</div>
 						</div>
 
