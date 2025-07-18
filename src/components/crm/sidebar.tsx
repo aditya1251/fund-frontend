@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -55,24 +56,48 @@ const navItems: NavItem[] = [
 ];
 
 const Sidebar = () => {
+	const [open, setOpen] = useState(true);
 	const baseUrl = "/crm";
 	const pathname = usePathname();
 
+	const toggleSidebar = () => setOpen((prev) => !prev);
+
 	return (
-		<aside className="w-64 bg-white shadow-lg flex flex-col justify-between">
+		<aside
+			className={`relative flex flex-col justify-between bg-white shadow-lg transition-[width] duration-300 ease-in-out ${
+				open ? "w-64" : "w-20"
+			}`}
+		>
 			<div>
-				<div className="text-black flex items-center justify-between px-6 py-4 border-b border-gray-200">
-					<div className="w-8 h-8 rounded-full overflow-hidden bg-[#ddd]">
-						<img
-							src="/placeholder.svg"
-							alt="Logo"
-							className="w-full h-full object-cover"
-						/>
+				{/* Header */}
+				<div className="text-black flex items-center justify-between px-4 py-4 border-b border-gray-200">
+					{/* Logo */}
+					<div
+						className={`overflow-hidden transition-[width] duration-300 ${
+							open ? "w-8" : "w-0"
+						}`}
+					>
+						<div className="w-8 h-8 rounded-full overflow-hidden bg-[#ddd]">
+							<img
+								src="/placeholder.svg"
+								alt="Logo"
+								className="w-full h-full object-cover"
+							/>
+						</div>
 					</div>
-					<PanelLeftClose />
+
+					<button
+						onClick={toggleSidebar}
+						aria-label="Toggle sidebar"
+						className="p-1 rounded hover:bg-gray-200"
+					>
+						<PanelLeftClose className="cursor-pointer" />
+					</button>
 				</div>
-				<nav className="p-4 flex flex-col justify-between gap-4">
-					<ul className="flex flex-col gap-2 justify-evenly h-full overflow-y-auto">
+
+				{/* Navigation */}
+				<nav className="p-4 flex flex-col gap-4">
+					<ul className="flex flex-col gap-2">
 						{navItems.map(({ href, label, icon }) => {
 							const isActive = pathname === `${baseUrl}${href}`;
 							return (
@@ -86,18 +111,20 @@ const Sidebar = () => {
 										}`}
 									>
 										<div>{icon}</div>
-										<span>{label}</span>
+										{open && <span>{label}</span>}
 									</Link>
 								</li>
 							);
 						})}
 					</ul>
+
+					{/* Logout */}
 					<Link
 						href="/logout"
 						className="flex items-center p-2 gap-3 rounded-lg text-sm text-neutral-500 hover:bg-gray-200 transition-colors duration-200"
 					>
 						<LogOutIcon />
-						<span>Log Out</span>
+						{open && <span>Log Out</span>}
 					</Link>
 				</nav>
 			</div>

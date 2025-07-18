@@ -39,11 +39,126 @@ export default function NavigationHeader() {
   const toggle = () => setMobileOpen(!mobileOpen);
 
   /* ---- Desktop nav (unchanged) ---- */
-  const desktopNav = (
-    <nav className="hidden md:flex items-center space-x-8">
-      {/*  keep everything you already had here */}
-    </nav>
-  );
+ const desktopNav = (
+  <nav className="hidden md:flex items-center space-x-8">
+    <Link href="/" className="text-black hover:text-[#f7c430] transition-colors duration-200 font-medium">
+      Home
+    </Link>
+
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium cursor-pointer">
+          <span>Loan</span>
+          <ChevronDown className="w-4 h-4" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-48">
+        <DropdownMenuItem>
+          <Link href="/personal-loan" className="w-full text-black">Personal Loan</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href="/business-loan" className="w-full text-black">Business Loan</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href="/home-loan" className="w-full text-black">Home Loan</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href="/loan-against-property" className="w-full text-black">Loan Against Property</Link>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium cursor-pointer">
+          <span>Govt. Loan</span>
+          <ChevronDown className="w-4 h-4" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-48">
+        <DropdownMenuItem>
+          <Link href="/mudra-loan" className="w-full text-black">Mudra Loan</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href="/startup-loan" className="w-full text-black">Startup Loan</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href="/msme-loan" className="w-full text-black">MSME Loan</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href="/pmegp-loan" className="w-full text-black">PMEGP Loan</Link>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium cursor-pointer">
+          <span>Insurance</span>
+          <ChevronDown className="w-4 h-4" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-48">
+        <DropdownMenuItem>
+          <Link href="/life-insurance" className="w-full text-black">Life Insurance</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href="/health-insurance" className="w-full text-black">Health Insurance</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href="/home-insurance" className="w-full text-black">Home Insurance</Link>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium cursor-pointer">
+          <span>Taxation</span>
+          <ChevronDown className="w-4 h-4" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-48">
+        <DropdownMenuItem><Link href="/income-tax" className="w-full text-black">ITR Services</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/gst" className="w-full text-black">TDS Return filling</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">GST Services</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">CMA/Project report</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">Trademark Registration</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">Company Registration</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">IEC Registration</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">ISO Registration</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">FSSAI Registration</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">Udyog Aadhar Registration</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">PF/ESIC</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">ROC Filling</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">Trade License</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">Company Audit</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">Balance Sheet/Finance</Link></DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="flex items-center space-x-1 text-black hover:text-[#f7c430] transition-colors duration-200 font-medium cursor-pointer">
+          <span>Marketing</span>
+          <ChevronDown className="w-4 h-4" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-48">
+        <DropdownMenuItem><Link href="/digital-marketing" className="w-full text-black">Digital Marketing</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/social-media" className="w-full text-black">Social Media</Link></DropdownMenuItem>
+        <DropdownMenuItem><Link href="/content-marketing" className="w-full text-black">Content Marketing</Link></DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+
+    <Link href="/about" className="text-black hover:text-[#f7c430] transition-colors duration-200 font-medium">
+      About
+    </Link>
+    <Link href="/contact" className="text-black hover:text-[#f7c430] transition-colors duration-200 font-medium">
+      Contact Us
+    </Link>
+  </nav>
+);
 
   /* ---- Mobile drawer ---- */
   const mobileDrawer = (
