@@ -10,6 +10,32 @@ import dsa from "../../public/assets/become.png";
 import business from "../../public/assets/business.png"; // Assuming you have a business image
 
 export default function Hero() {
+
+
+const MobileDots = ({
+  slides,
+  currentSlideIndex,
+  goTo,
+}: {
+  slides: any[];
+  currentSlideIndex: number;
+  goTo: (i: number) => void;
+}) => (
+  <div className="flex justify-center space-x-2 mt-6 md:hidden">
+    {slides.map((_, idx) => (
+      <button
+        key={idx}
+        onClick={() => goTo(idx)}
+        className={`w-2.5 h-2.5 rounded-full transition-all ${
+          idx === currentSlideIndex
+            ? "bg-[#f7c430] scale-125"
+            : "bg-white/60"
+        }`}
+      />
+    ))}
+  </div>
+);
+
   const slides = [
     {
       id: 1,
@@ -120,99 +146,98 @@ export default function Hero() {
   const currentButtonLink = currentSlideIndex === 2 ? becomeRoute : applyRoute; // Index 2 is the 3rd slide (DSA partner)
 
   return (
-    <div className="relative w-full overflow-hidden">
-      {/* Background Image Container */}
-      <div className="absolute inset-0 flex">
-        {slides.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`absolute inset-0 transition-transform duration-1000 ease-in-out`}
-            style={{
-              transform: `translateX(${100 * (index - currentSlideIndex)}%)`,
-              zIndex:
-                index === currentSlideIndex
-                  ? 2
-                  : index === (currentSlideIndex + 1) % slides.length
-                  ? 1
-                  : 0,
-            }}
+  <div className="relative w-full overflow-hidden">
+    {/* Background slides */}
+    <div className="absolute inset-0 flex">
+      {slides.map((slide, index) => (
+        <div
+          key={slide.id}
+          className="absolute inset-0 transition-transform duration-1000 ease-in-out"
+          style={{
+            transform: `translateX(${100 * (index - currentSlideIndex)}%)`,
+            zIndex: index === currentSlideIndex ? 2 : 0,
+          }}
+        >
+          <Image
+            src={
+              typeof slide.backgroundImage === "string"
+                ? slide.backgroundImage
+                : slide.backgroundImage.src
+            }
+            alt={`Slide ${slide.id}`}
+            fill
+            style={{ objectFit: "cover" }}
+            priority={index === 0}
+            className="absolute inset-0"
+          />
+        </div>
+      ))}
+    </div>
+
+    {/* Foreground content */}
+    <div className="relative z-30 flex min-h-[500px] items-center">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center h-full">
+        {/* Left copy */}
+        <div className="max-w-4xl flex-grow md:pt-0 text-center md:text-left">
+          <h1
+            className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight mb-4 md:mb-6 transition-opacity duration-700 ${
+              transitioning ? "opacity-0" : "opacity-100"
+            }`}
           >
-            <Image
-              src={
-                typeof slide.backgroundImage === "string"
-                  ? slide.backgroundImage
-                  : slide.backgroundImage.src
-              }
-              alt={`Slide ${slide.id}`}
-              fill
-              style={{ objectFit: "cover" }}
-              priority={index === 0}
-              className="absolute inset-0"
-            />  
-          </div>
-        ))}
-      </div>
+            {currentSlide.headline}
+          </h1>
+          <p
+            className={`text-base sm:text-lg md:text-xl lg:text-2xl text-white mb-6 md:mb-8 max-w-3xl leading-relaxed transition-opacity duration-700 ${
+              transitioning ? "opacity-0" : "opacity-100"
+            }`}
+          >
+            {currentSlide.paragraph}
+          </p>
+          <Link href={currentButtonLink} passHref>
+            <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black font-semibold px-8 py-5 md:px-10 md:py-7 text-lg md:text-xl rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
+              APPLY NOW
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
 
-      {/* Content Layer (Main Headline, Paragraph, Button) and Vertical Slider */}
-      <div className="relative z-30 flex min-h-[500px] items-center py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center h-full">
-          {/* Main Content Area */}
-          <div className="max-w-4xl flex-grow md:pt-0">
-            {/* Main Headline - Fade out/in effect */}
-            <h1
-              className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6 transition-opacity duration-700 ${
-                transitioning ? "opacity-0" : "opacity-100"
-              }`}
-            >
-              {currentSlide.headline}
-            </h1>
-            {/* Subheading - Fade out/in effect */}
-            <p
-              className={`text-lg sm:text-xl md:text-2xl text-white mb-8 max-w-3xl leading-relaxed transition-opacity duration-700 ${
-                transitioning ? "opacity-0" : "opacity-100"
-              }`}
-            >
-              {currentSlide.paragraph}
-            </p>
-            {/* CTA Button wrapped with Next.js Link component */}
-            <Link href={currentButtonLink} passHref>
-              <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black font-semibold px-10 py-7 text-xl rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
-                APPLY NOW
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
+          {/* Mobile dots */}
+          <MobileDots
+            slides={slides}
+            currentSlideIndex={currentSlideIndex}
+            goTo={(i) => {
+              if (i === currentSlideIndex) return;
+              resetAutoAdvanceTimeout();
+              setTransitioning(true);
+              setCurrentSlideIndex(i);
+              setTimeout(() => setTransitioning(false), 700);
+            }}
+          />
+        </div>
 
-          {/* Vertical Slider at the right */}
-          <div className="flex flex-col items-center justify-center py-8 md:py-0 md:ml-8 mt-auto md:mt-0 h-[250px] md:h-[calc(100%-80px)]">
-            <div className="bg-white/20 rounded-full p-2 flex flex-col items-center justify-between h-full">
-              {slides.map((_, index) => (
-                <div
-                  key={index}
-                  onClick={() => {
-                    if (index === currentSlideIndex) return;
-
-                    resetAutoAdvanceTimeout();
-                    setTransitioning(true);
-
-                    setCurrentSlideIndex(index);
-
-                    setTimeout(() => {
-                      setTransitioning(false);
-                    }, 700);
-                  }}
-                  className={`w-1 md:w-2 h-16 my-2 rounded-full cursor-pointer transition-all duration-300
-                    ${
-                      index === currentSlideIndex
-                        ? "bg-[#f7c430] scale-x-150"
-                        : "bg-white/50 hover:bg-white/70"
-                    }`}
-                />
-              ))}
-            </div>
+        {/* Right vertical bar (hidden on mobile) */}
+        <div className="hidden md:flex flex-col items-center justify-center py-8 md:py-0 md:ml-8 mt-auto md:mt-0 h-[250px] md:h-[calc(100%-80px)]">
+          <div className="bg-white/20 rounded-full p-2 flex flex-col items-center justify-between h-full">
+            {slides.map((_, index) => (
+              <div
+                key={index}
+                onClick={() => {
+                  if (index === currentSlideIndex) return;
+                  resetAutoAdvanceTimeout();
+                  setTransitioning(true);
+                  setCurrentSlideIndex(index);
+                  setTimeout(() => setTransitioning(false), 700);
+                }}
+                className={`w-1 md:w-2 h-16 my-2 rounded-full cursor-pointer transition-all duration-300
+                  ${
+                    index === currentSlideIndex
+                      ? "bg-[#f7c430] scale-x-150"
+                      : "bg-white/50 hover:bg-white/70"
+                  }`}
+              />
+            ))}
           </div>
         </div>
       </div>
     </div>
-  );
-}
+  </div>
+)}

@@ -153,7 +153,7 @@ export default function EmiCalculator() {
                       type="number"
                       value={loanAmount}
                       onChange={(e) => setLoanAmount(Number(e.target.value))}
-                      className="h-14 border-gray-300 text-gray-800 text-lg pl-8 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                      className="h-14 border-gray-300 text-gray-800 text-lg pl-8 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent border  "
                     />{" "}
                     {/* Taller, rounded, focus style, padding for symbol */}
                   </div>
@@ -174,7 +174,7 @@ export default function EmiCalculator() {
                       type="number"
                       value={interestRate}
                       onChange={(e) => setInterestRate(Number(e.target.value))}
-                      className="text-black border-1"
+                      className="text-gray-800 border-1 border-gray-700 rounded-md w-24 h-10 text-center text-base focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                       step="0.1"
                     />{" "}
                     {/* Slightly larger input */}
