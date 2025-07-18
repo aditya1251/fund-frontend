@@ -174,7 +174,7 @@ export default function EmiCalculator() {
                       type="number"
                       value={interestRate}
                       onChange={(e) => setInterestRate(Number(e.target.value))}
-                      className="text-gray-800 border-1 border-gray-700 rounded-md w-24 h-10 text-center text-base focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                      className="text-gray-800 border-gray-700 rounded-md w-24 h-10 text-center text-base focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                       step="0.1"
                     />{" "}
                     {/* Slightly larger input */}
