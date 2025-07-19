@@ -10,7 +10,7 @@ interface ProfilePanel {
 	 user: string;
 }
 
-export default function Header() {
+export default function 	Header() {
 	const { data: session } = useSession();
 
 	return (
