@@ -58,18 +58,9 @@ export const {
 	useDeleteAdminMutation: useSuperadminDeleteAdminMutation,
 	useGetApplicationsQuery: useSuperadminGetApplicationsQuery,
 	useUpdateApplicationStatusMutation:
-		useSuperadminUpdateApplicationStatusMutation,
+	useSuperadminUpdateApplicationStatusMutation,
 	useAddApplicationMutation: useSuperadminAddApplicationMutation,
 } = superadminApi;
-
-// RTK Query hooks for admin
-export const {
-	useGetLeadsQuery: useAdminGetLeadsQuery,
-	useGetOwnApplicationsQuery: useAdminGetOwnApplicationsQuery,
-	useCreateLeadMutation: useAdminCreateLeadMutation,
-	useUpdateLeadMutation: useAdminUpdateLeadMutation,
-	useDeleteLeadMutation: useAdminDeleteLeadMutation,
-} = adminApi;
 
 // RTK Query hooks for Plans
 export const {

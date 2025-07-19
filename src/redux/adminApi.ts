@@ -9,8 +9,11 @@ export const adminApi = createApi({
     getLoanTemplates: builder.query<any, void>({
       query: () => 'loan-templates',
     }),
+    getLoanTemplateByName: builder.query<any, string>({
+      query: (name) => `loan-templates/${name}`,
+    }),
     getLoanTemplateById: builder.query<any, string>({
-      query: (id) => `loan-templates/${id}`,
+      query: (id) => `loan-templates/temp/${id}`,
     }),
     createLoanTemplate: builder.mutation<any, any>({
       query: (body) => ({
@@ -33,9 +36,9 @@ export const adminApi = createApi({
       }),
     }),
     // Loan Form Submissions
-    getLoans: builder.query<any, { templateId?: string }>({
+    getLoans: builder.query<any, { loanType?: string }>({
       query: (params) => {
-        const queryStr = params?.templateId ? `?templateId=${params.templateId}` : '';
+        const queryStr = params?.loanType ? `?loanType=${params.loanType}` : '';
         return `loan-forms${queryStr}`;
       },
     }),
@@ -46,15 +49,24 @@ export const adminApi = createApi({
         body,
       }),
     }),
+    updateLoan: builder.mutation<any, { _id: string; status: string; rejectionMessage?: string }>({
+      query: (body) => ({
+        url: 'loan-forms',
+        method: 'PUT',
+        body,
+      }),
+    }),
   }),
 });
 
 export const {
   useGetLoanTemplatesQuery,
+  useGetLoanTemplateByNameQuery,
   useGetLoanTemplateByIdQuery,
   useCreateLoanTemplateMutation,
   useUpdateLoanTemplateMutation,
   useDeleteLoanTemplateMutation,
   useGetLoansQuery,
   useCreateLoanMutation,
+  useUpdateLoanMutation,
 } = adminApi; 

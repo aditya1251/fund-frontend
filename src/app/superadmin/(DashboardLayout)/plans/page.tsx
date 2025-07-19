@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { usePlansDeletePlanMutation, usePlansGetPlansQuery } from "@/lib/store";
-import { useUpdateActiveStatusMutation } from "@/lib/plansApi";
+import { usePlansDeletePlanMutation, usePlansGetPlansQuery } from "@/redux/store";
+import { useUpdateActiveStatusMutation } from "@/redux/plansApi";
 
 export const features = [
   "Leads",

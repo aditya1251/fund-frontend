@@ -6,18 +6,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { useSession } from "next-auth/react"
 import {
-  useGetLoanTemplatesQuery,
-  useGetLoanTemplateByIdQuery,
-  useCreateLoanTemplateMutation,
-  useUpdateLoanTemplateMutation,
-  useDeleteLoanTemplateMutation,
+  useGetLoanTemplateByNameQuery,
   useCreateLoanMutation,
-} from '@/lib/adminApi';
+} from '@/redux/adminApi';
 import { useSearchParams } from 'next/navigation';
 
 interface TemplateField {
@@ -45,121 +40,14 @@ const FIELD_TYPES = [
 ]
 
 export default function LoanForm() {
-  const [templates, setTemplates] = useState<LoanFormTemplate[]>([])
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string>("")
-  const [template, setTemplate] = useState<LoanFormTemplate>({ name: "", loanType: "", fields: [], createdBy: "superadmin" })
-  const [fieldDraft, setFieldDraft] = useState<TemplateField>({ label: "", type: "text", required: false })
-  const [isEditingField, setIsEditingField] = useState<number | null>(null)
+  // Remove: const [template, setTemplate] = useState<LoanFormTemplate | null>(null)
   const [formValues, setFormValues] = useState<Record<string, any>>({})
   const [message, setMessage] = useState<string>("")
   const { data: session } = useSession();
   const searchParams = useSearchParams();
-
-  const { data: templatesData, refetch: refetchTemplates } = useGetLoanTemplatesQuery();
-  const { data: selectedTemplateData } = useGetLoanTemplateByIdQuery(selectedTemplateId, { skip: !selectedTemplateId });
-  const [createLoanTemplate] = useCreateLoanTemplateMutation();
-  const [updateLoanTemplate] = useUpdateLoanTemplateMutation();
+  const subtype = searchParams.get('subtype')?.toLowerCase() || '';
+  const { data: templateData, isLoading } = useGetLoanTemplateByNameQuery(subtype, { skip: !subtype });
   const [createLoanFormSubmission] = useCreateLoanMutation();
-
-  // Sync templates from API
-  useEffect(() => {
-    if (templatesData) setTemplates(templatesData);
-  }, [templatesData]);
-
-  // Auto-select template based on URL params
-  useEffect(() => {
-    if (!templatesData) return;
-    const type = searchParams.get('type')?.toLowerCase();
-    const subtype = searchParams.get('subtype')?.toLowerCase();
-    if (type || subtype) {
-      // Try to match by loanType or name
-      const found = templatesData.find((t: LoanFormTemplate) => {
-        const loanType = t.loanType?.toLowerCase() || '';
-        const name = t.name?.toLowerCase() || '';
-        return (
-          (type && (loanType.includes(type) || name.includes(type))) ||
-          (subtype && (loanType.includes(subtype) || name.includes(subtype)))
-        );
-      });
-      if (found && found._id !== selectedTemplateId) {
-        setSelectedTemplateId(found._id);
-      }
-    }
-  }, [templatesData, searchParams, selectedTemplateId]);
-
-  // On mount, if a subtype is present in the URL, try to auto-select a template whose name matches the subtype (case-insensitive, exact match preferred). If not found, set the template name input to the subtype value so the admin can create a new template with that name.
-  useEffect(() => {
-    if (!templatesData) return;
-    const type = searchParams.get('type') || '';
-    const subtype = searchParams.get('subtype') || '';
-    if (subtype) {
-      const subtypeLower = subtype.toLowerCase();
-      // Try to find a template with exact name match (case-insensitive)
-      const found = templatesData.find((t: LoanFormTemplate) => t.name?.toLowerCase() === subtypeLower);
-      if (found && found._id !== selectedTemplateId) {
-        setSelectedTemplateId(found._id);
-      } else if (!found) {
-        // No template found, set up a new template with name=subtype and loanType=type
-        setSelectedTemplateId('');
-        setTemplate({ name: subtype, loanType: type, fields: [], createdBy: 'superadmin' });
-      }
-    }
-  }, [templatesData, searchParams, selectedTemplateId]);
-
-  // Load selected template from API
-  useEffect(() => {
-    if (selectedTemplateId && selectedTemplateData) {
-      setTemplate(selectedTemplateData);
-      setFormValues({});
-    } else if (!selectedTemplateId) {
-      setTemplate({ name: "", loanType: "", fields: [], createdBy: "superadmin" });
-      setFormValues({});
-    }
-  }, [selectedTemplateId, selectedTemplateData]);
-
-  // Field builder handlers
-  const handleFieldChange = (key: keyof TemplateField, value: any) => {
-    setFieldDraft(prev => ({ ...prev, [key]: value }))
-  }
-  const addField = () => {
-    if (!fieldDraft.label) return
-    setTemplate(prev => ({ ...prev, fields: [...prev.fields, fieldDraft] }))
-    setFieldDraft({ label: "", type: "text", required: false })
-    setIsEditingField(null)
-  }
-  const editField = (idx: number) => {
-    setFieldDraft(template.fields[idx])
-    setIsEditingField(idx)
-  }
-  const updateField = () => {
-    if (isEditingField === null) return
-    setTemplate(prev => ({
-      ...prev,
-      fields: prev.fields.map((f, i) => (i === isEditingField ? fieldDraft : f)),
-    }))
-    setFieldDraft({ label: "", type: "text", required: false })
-    setIsEditingField(null)
-  }
-  const removeField = (idx: number) => {
-    setTemplate(prev => ({ ...prev, fields: prev.fields.filter((_, i) => i !== idx) }))
-  }
-
-  // Template save/update
-  const saveTemplate = async () => {
-    setMessage("");
-    try {
-      if (template._id) {
-        await updateLoanTemplate({ id: template._id, data: template }).unwrap();
-        setMessage("Template updated!");
-      } else {
-        await createLoanTemplate(template).unwrap();
-        setMessage("Template created!");
-      }
-      refetchTemplates();
-    } catch (err) {
-      setMessage("Error saving template");
-    }
-  };
 
   // Form preview handlers
   const handleFormValueChange = (label: string, value: any) => {
@@ -169,11 +57,11 @@ export default function LoanForm() {
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
-    if (!template._id) {
-      setMessage("Please select a template to submit.");
+    if (!templateData?._id) {
+      setMessage("No template found for this loan type.");
       return;
     }
-    for (const field of template.fields) {
+    for (const field of templateData.fields) {
       if (field.required && !formValues[field.label]) {
         setMessage(`Please fill required field: ${field.label}`);
         return;
@@ -181,7 +69,7 @@ export default function LoanForm() {
     }
     const applicant = session?.user?.email;
     try {
-      await createLoanFormSubmission({ templateId: template._id, values: formValues, applicant,loansubType: template.name,loanType:template.loanType }).unwrap();
+      await createLoanFormSubmission({ values: formValues, applicant, loanSubType: templateData.name, loanType: templateData.loanType }).unwrap();
       setMessage("Form submitted successfully!");
       setFormValues({});
     } catch (err) {
@@ -189,109 +77,22 @@ export default function LoanForm() {
     }
   };
 
-        return (
+  return (
     <div className="min-h-screen bg-[#f3f3f3] p-4">
-      <div className="max-w-4xl mx-auto">
-        <Card className="mb-6 shadow-sm border-0 bg-white text-black">
-          <CardHeader>
-            <h1 className="text-lg font-semibold">Loan Form</h1>
-          </CardHeader>
-        </Card>
-        <Card className="mb-6 bg-white shadow-sm border-0">
-          <CardContent>
-            <div className="mb-4">
-              <Label>Select Template</Label>
-              <Select value={selectedTemplateId} onValueChange={setSelectedTemplateId}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Choose a template or create new" />
-                  </SelectTrigger>
-                  <SelectContent>
-                  <SelectItem value="">New Template</SelectItem>
-                  {templates.map(t => (
-                    <SelectItem key={t._id} value={t._id!}>{t.name}</SelectItem>
-                  ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            <div className="mb-4">
-              <Label>Template Name</Label>
-              <Input value={template.name} onChange={e => setTemplate({ ...template, name: e.target.value })} />
-            </div>
-            <div className="mb-4">
-              <Label>Loan Type</Label>
-              <Input value={template.loanType} onChange={e => setTemplate({ ...template, loanType: e.target.value })} />
-            </div>
-            {/* Fields */}
-            <div className="mb-4 text-black">
-              <Label>Fields</Label>
-              <div className="space-y-2">
-                {template.fields.map((field, idx) => (
-                  <div key={idx} className="flex items-center justify-between">
-                    <span className="font-medium w-4/8">{field.label}</span>
-                    <span className="text-xs text-gray-500 w-1/8">({field.type})</span>
-                    {field.required && <Badge className="bg-yellow-400 text-black ">Required</Badge>}
-                    <Button size="sm" variant="outline" className="w-1/8" onClick={() => editField(idx)}>Edit</Button>
-                    <Button size="sm" variant="outline" className="w-1/8" onClick={() => removeField(idx)}>Remove</Button>
-              </div>
-                ))}
-              </div>
-            </div>
-            {/* Add Fields */}
-            <div className="mb-4 text-black p-4 bg-gray-50 rounded">
-              <h4 className="font-semibold mb-2">{isEditingField !== null ? "Edit Field" : "Add Field"}</h4>
-              <div className="flex flex-col md:flex-row gap-2 items-center">
-                <Input
-                  placeholder="Label"
-                  value={fieldDraft.label}
-                  onChange={e => handleFieldChange("label", e.target.value)}
-                  className="w-40"
-                />
-                <Select value={fieldDraft.type} onValueChange={v => handleFieldChange("type", v)}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue placeholder="Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {FIELD_TYPES.map(ft => (
-                      <SelectItem key={ft.value} value={ft.value}>{ft.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Checkbox
-                  checked={!!fieldDraft.required}
-                  onCheckedChange={checked => handleFieldChange("required", !!checked)}
-                  className="ml-2"
-                />
-                <span className="text-xs">Required</span>
-                {fieldDraft.type === "select" && (
-                      <Input
-                    placeholder="Comma separated options"
-                    value={fieldDraft.options?.join(",") || ""}
-                    onChange={e => handleFieldChange("options", e.target.value.split(",").map(s => s.trim()))}
-                    className="w-64"
-                  />
-                )}
-                {isEditingField !== null ? (
-                  <Button size="sm" className="bg-white border border-black" onClick={updateField}>Update</Button>
-                ) : (
-                  <Button size="sm" className="bg-white border border-black" onClick={addField}>Add</Button>
-                )}
-              </div>
-            </div>
-            <Button className="bg-yellow-400 text-black font-medium px-8 py-3 h-12" onClick={saveTemplate}>
-              {template._id ? "Update Template" : "Save Template"}
-            </Button>
-            {message && <div className="mt-2 text-green-600 font-medium">{message}</div>}
-          </CardContent>
-        </Card>
-        {/* Form Preview */}
-        <Card className="shadow-sm border-0 bg-white text-black">
-          <CardHeader>
-            <h2 className="text-lg font-semibold text-[#2d2c2c]">Form Preview</h2>
-          </CardHeader>
-          <CardContent>
-            {template.fields.length === 0 && <div className="text-gray-500">No fields defined.</div>}
+      <Card className="shadow-sm max-w-4xl mx-auto border-0 bg-white text-black">
+        <CardHeader>
+          <h2 className="text-lg font-semibold text-[#2d2c2c]">Form Preview</h2>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="text-gray-500">Loading template...</div>
+          ) : !templateData ? (
+            <div className="text-gray-500">No template found for this loan type.</div>
+          ) : templateData.fields.length === 0 ? (
+            <div className="text-gray-500">No fields defined in this template.</div>
+          ) : (
             <form className="space-y-4" onSubmit={submitForm}>
-              {template.fields.map((field, idx) => {
+              {templateData.fields.map((field: any, idx: number) => {
                 switch (field.type) {
                   case "text":
                   case "number":
@@ -299,42 +100,42 @@ export default function LoanForm() {
                     return (
                       <div key={idx}>
                         <Label>{field.label}{field.required && " *"}</Label>
-                <Input
+                        <Input
                           type={field.type}
                           required={field.required}
                           value={formValues[field.label] || ""}
                           onChange={e => handleFormValueChange(field.label, e.target.value)}
                         />
-          </div>
-        )
+                      </div>
+                    )
                   case "select":
-        return (
+                    return (
                       <div key={idx}>
                         <Label>{field.label}{field.required && " *"}</Label>
                         <Select value={formValues[field.label] || ""} onValueChange={v => handleFormValueChange(field.label, v)}>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select option" />
-                  </SelectTrigger>
-                  <SelectContent>
-                            {field.options?.map(opt => (
+                          </SelectTrigger>
+                          <SelectContent>
+                            {field.options?.map((opt: any) => (
                               <SelectItem key={opt} value={opt}>{opt}</SelectItem>
                             ))}
-                  </SelectContent>
-                </Select>
-          </div>
-        )
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )
                   case "checkbox":
-        return (
+                    return (
                       <div key={idx} className="flex items-center gap-2">
                         <Checkbox
                           checked={!!formValues[field.label]}
                           onCheckedChange={checked => handleFormValueChange(field.label, !!checked)}
                         />
                         <Label>{field.label}{field.required && " *"}</Label>
-          </div>
-        )
+                      </div>
+                    )
                   case "textarea":
-        return (
+                    return (
                       <div key={idx}>
                         <Label>{field.label}{field.required && " *"}</Label>
                         <Textarea
@@ -342,20 +143,18 @@ export default function LoanForm() {
                           value={formValues[field.label] || ""}
                           onChange={e => handleFormValueChange(field.label, e.target.value)}
                         />
-          </div>
-        )
-      default:
-        return null
-    }
+                      </div>
+                    )
+                  default:
+                    return null
+                }
               })}
-              {template.fields.length > 0 && (
-                <Button type="submit" className="bg-yellow-400 text-black font-medium px-8 py-3 h-12">Submit Form</Button>
-              )}
+              <Button type="submit" className="bg-yellow-400 text-black font-medium px-8 py-3 h-12">Submit Form</Button>
             </form>
-            {message && <div className="mt-2 text-green-600 font-medium">{message}</div>}
-          </CardContent>
-        </Card>
-      </div>
+          )}
+          {message && <div className="mt-2 text-green-600 font-medium">{message}</div>}
+        </CardContent>
+      </Card>
     </div>
   )
 }
