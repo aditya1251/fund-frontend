@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from 'next/image'
 import { usePathname } from "next/navigation";
 import {
 	BadgeIndianRupee,
@@ -18,6 +19,7 @@ import {
 	Timer,
 	Users,
 } from "lucide-react";
+import logo from "../../../public/assets/logo.png"; // Adjust the path as necessary
 
 interface NavItem {
 	href: string;
@@ -71,20 +73,19 @@ const Sidebar = () => {
 			<div>
 				{/* Header */}
 				<div className="text-black flex items-center justify-between px-4 py-4 border-b border-gray-200">
-					{/* Logo */}
-					<div
-						className={`overflow-hidden transition-[width] duration-300 ${
-							open ? "w-8" : "w-0"
-						}`}
-					>
-						<div className="w-8 h-8 rounded-full overflow-hidden bg-[#ddd]">
-							<img
-								src="/placeholder.svg"
-								alt="Logo"
-								className="w-full h-full object-cover"
+					<Link href="/crm">
+						<Image
+							src={logo}
+							alt="Logo"
+							width={40}
+							height={40}
+							className={`transition-all duration-300 ${open ? "w-10 h-10" : "w-0 h-0"}`}
+							quality={100}
+							placeholder="blur"
+							blurDataURL="/placeholder.svg" // Placeholder image for blur effect
 							/>
-						</div>
-					</div>
+							</Link>
+					
 
 					<button
 						onClick={toggleSidebar}
