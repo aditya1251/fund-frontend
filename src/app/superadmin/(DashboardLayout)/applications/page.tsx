@@ -5,7 +5,7 @@ import ApplicationCard from "@/components/ApplicationCard";
 import {
   useGetApplicationsQuery,
   useUpdateApplicationStatusMutation,
-} from "@/lib/superadminApi";
+} from "@/redux/superadminApi";
 
 // TypeScript interface for application data
 interface Application {

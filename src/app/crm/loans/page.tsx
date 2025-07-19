@@ -18,19 +18,20 @@ import {
 	StatusBadge,
 	ViewAllButton,
 } from "@/components/ui/data-table";
-import leads from "@/app/crm/sample-data";
-
 import { House, User, Car, Building, LandPlot } from "lucide-react";
 import Link from "next/link";
+import { useGetLoansQuery } from "@/redux/adminApi";
+
 
 export default function Page() {
+	const { data: loansData = [] } = useGetLoansQuery({ loanType: "loan" });
 	return (
 		<div>
 			<h4 className="font-semibold mb-6 text-black">Loan Types</h4>
 
 			<Tabs defaultValue="personal">
 				<TabsList>
-					<Link href="/crm/loan-form?type=loan&subtype=personal">
+					<Link href="/crm/loan-form?subtype=personal">
 						<TabsTrigger value="personal">
 							<TabsIcon>
 								<User />
@@ -43,7 +44,7 @@ export default function Page() {
 							</TabsLabel>
 						</TabsTrigger>
 					</Link>
-					<Link href="/crm/loan-form?type=loan&subtype=home">
+					<Link href="/crm/loan-form?subtype=home">
 						<TabsTrigger value="home">
 							<TabsIcon>
 								<House />
@@ -57,7 +58,7 @@ export default function Page() {
 						</TabsTrigger>
 					</Link>
 
-					<Link href="/crm/loan-form?type=loan&subtype=business">
+					<Link href="/crm/loan-form?subtype=business">
 						<TabsTrigger value="business">
 							<TabsIcon>
 								<Building />
@@ -70,7 +71,7 @@ export default function Page() {
 							</TabsLabel>
 						</TabsTrigger>
 					</Link>
-					<Link href="/crm/loan-form?type=loan&subtype=car">
+					<Link href="/crm/loan-form?subtype=car">
 						<TabsTrigger value="car">
 							<TabsIcon>
 								<Car />
@@ -84,7 +85,7 @@ export default function Page() {
 						</TabsTrigger>
 					</Link>
 
-					<Link href="/crm/loan-form?type=loan&subtype=property">
+					<Link href="/crm/loan-form?subtype=property">
 						<TabsTrigger value="property">
 							<TabsIcon>
 								<LandPlot />
@@ -121,18 +122,18 @@ export default function Page() {
 								]}
 							/>
 							<tbody>
-								{leads.map((lead, index) => (
+								{loansData.map((lead, index) => (
 									<TableRow
 										key={index}
 										row={[
-											lead.fileNo,
-											lead.loan,
-											lead.mode,
-											lead.applicant,
-											lead.subscriber,
-											<EmailCell email={lead.email} />,
-											lead.phone,
-											lead.review,
+											lead._id,
+											lead.loanSubType,
+											lead.mode ? lead.mode : "Online",
+											<EmailCell email={lead.applicant} />,
+											lead.values.Name,
+											<EmailCell email={lead.values.Email} />,
+											lead.values.Phone,
+											lead.rejectionMessage,
 											<StatusBadge
 												status={
 													lead.status.toLowerCase() as

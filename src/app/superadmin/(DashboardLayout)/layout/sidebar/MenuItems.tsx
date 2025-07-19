@@ -111,15 +111,21 @@ const Menuitems: MenuitemsType[] = [
 
     {
         id: uniqueId(),
-        title: "Applications",
+        title: "User Applications",
         icon: "window-frame-broken",
         href: "/superadmin/applications",
     },
     {
         id: uniqueId(),
-        title: "Manage Admins",
-        icon: "user-square-linear",
-        href: "/superadmin/admins",
+        title: "DSA Applications",
+        icon: "window-frame-broken",
+        href: "/superadmin/dsaapplications",
+    },
+    {
+        id: uniqueId(),
+        title: "Loan Template",
+        icon: "window-frame-broken",
+        href: "/superadmin/loan-templates",
     },
     {
         id: uniqueId(),

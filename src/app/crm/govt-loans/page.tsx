@@ -19,8 +19,11 @@ import {
 } from "@/components/ui/data-table";
 import leads from "@/app/crm/sample-data";
 import Link from "next/link";
+import { useGetLoansQuery } from "@/redux/adminApi";
 
 export default function Page() {
+	
+	const { data: loansData = [] } = useGetLoansQuery({ loanType: "gov" });
 	return (
 		<div>
 			<h4 className="font-semibold mb-6 text-black">Govt. Loan Types</h4>
@@ -106,24 +109,24 @@ export default function Page() {
 								]}
 							/>
 							<tbody>
-								{leads.map((lead, index) => (
+								{loansData.map((lead, index) => (
 									<TableRow
 										key={index}
 										row={[
-											lead.fileNo,
-											lead.loan,
-											lead.mode,
-											lead.applicant,
-											lead.subscriber,
-											<EmailCell email={lead.email} />,
-											lead.phone,
-											lead.review,
+											lead._id,
+											lead.loanSubType,
+											lead.mode ? lead.mode : "Online",
+											<EmailCell email={lead.applicant} />,
+											lead.values.Name,
+											<EmailCell email={lead.values.Email} />,
+											lead.values.Phone,
+											lead.rejectionMessage,
 											<StatusBadge
 												status={
 													lead.status.toLowerCase() as
-														| "approved"
-														| "pending"
-														| "rejected"
+													| "approved"
+													| "pending"
+													| "rejected"
 												}
 											/>,
 										]}

@@ -4,8 +4,7 @@ import { Inter, Space_Grotesk } from 'next/font/google';
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { Provider } from 'react-redux';
-import { store } from '@/lib/store';
-import TokenSync from "@/components/TokenSync";
+import { store } from '@/redux/store';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -42,7 +41,6 @@ export default function RootLayout({
       >
         <SessionProvider>
           <Provider store={store}>
-            <TokenSync />
             {children}
           </Provider>
         </SessionProvider>

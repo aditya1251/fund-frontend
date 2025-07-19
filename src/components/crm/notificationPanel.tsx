@@ -10,7 +10,7 @@ import React, { useEffect } from "react";
 import {
 	useGetNotificationsQuery,
 	useMarkAsReadMutation,
-} from "@/lib/notificationApi";
+} from "@/redux/notificationApi";
 
 type Notification = {
 	_id: string;

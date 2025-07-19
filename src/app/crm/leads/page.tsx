@@ -13,7 +13,7 @@ import {
 	ViewAllButton,
 } from "@/components/ui/data-table";
 import leads from "@/app/crm/sample-data";
-import { useGetLoansQuery } from "@/lib/adminApi";
+import { useGetLoansQuery } from "@/redux/adminApi";
 import { useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -29,54 +29,6 @@ interface StatusCardData {
 }
 
 const TABS: Tab[] = ["Loans", "Govt Loans", "Insurance"];
-
-const LOANS_DATA: StatusCardData[] = [
-	{
-		label: "All Leads",
-		value: "08",
-		variant: "primary",
-		icon: <Users />,
-		className: "font-bold",
-	},
-	{ label: "Check Bureau", value: "0", variant: "secondary" },
-	{ label: "Leads Generated", value: "17", variant: "columned" },
-	{ label: "Credit Reports", value: "8", variant: "columned" },
-	{ label: "Leads Processing", value: "11", variant: "columned" },
-	{ label: "Lender Section", value: "1", variant: "columned" },
-	{ label: "Application Fulfillment", value: "6", variant: "secondary" },
-	{ label: "Action Pending", value: "0", variant: "primary" },
-	{ label: "Login", value: "4", variant: "primary" },
-	{ label: "Sanctioned", value: "0", variant: "primary" },
-	{ label: "Disbursed", value: "0", variant: "secondary" },
-	{ label: "Allocate Leads", value: "0", variant: "primary" },
-	{ label: "Under Process", value: "5", variant: "primary" },
-	{ label: "Closed", value: "0", variant: "secondary" },
-];
-
-const GOVT_DATA: StatusCardData[] = [
-	{
-		label: "All Leads",
-		value: "08",
-		variant: "primary",
-		icon: <Users />,
-		className: "font-bold",
-	},
-	{ label: "Action Pending", value: "2", variant: "secondary" },
-	{ label: "Under Process", value: "4", variant: "secondary" },
-	{ label: "Closed", value: "1", variant: "primary" },
-];
-const INSURANCE_DATA: StatusCardData[] = [
-	{
-		label: "All Leads",
-		value: "08",
-		variant: "primary",
-		icon: <Users />,
-		className: "font-bold",
-	},
-	{ label: "Action Pending", value: "0", variant: "secondary" },
-	{ label: "Under Process", value: "6", variant: "secondary" },
-	{ label: "Closed", value: "0", variant: "primary" },
-];
 
 
 
@@ -176,7 +128,7 @@ const getDataByTab = (tab: Tab, loansData: any[] = []): StatusCardData[] => {
 
 const LeadActivityStatus: React.FC = () => {
 	const [activeTab, setActiveTab] = useState<Tab>("Loans");
-	const { data: loansData = [] } = useGetLoansQuery({ templateId: "" });
+	const { data: loansData = [] } = useGetLoansQuery({ loanType: "" });
 	const data = getDataByTab(activeTab, loansData);
 
 	// New state for search/filter/sort
@@ -321,7 +273,7 @@ const LeadActivityStatus: React.FC = () => {
 											lead.values.Name,
 											<EmailCell email={lead.values.Email} />,
 											lead.values.Phone,
-											lead.review,
+											lead.rejectionMessage,
 											<StatusBadge
 												status={
 													lead.status.toLowerCase() as
