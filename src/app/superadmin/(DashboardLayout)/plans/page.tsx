@@ -23,10 +23,7 @@ const PlansPage = () => {
     isLoading,
     error,
     refetch,
-  } = useGetPlansQuery(undefined, {
-    pollingInterval: 3000,
-    refetchOnMountOrArgChange: true,
-  });
+  } = useGetPlansQuery(undefined);
   const [deletePlan] = useDeletePlanMutation();
   const [toggleStatus] = useUpdateActiveStatusMutation();
   const [activeTab, setActiveTab] = useState("All Plans");
