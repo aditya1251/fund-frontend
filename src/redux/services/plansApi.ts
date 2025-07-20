@@ -1,8 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { RootState } from './store';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithAuth } from './baseQuery';
-
-
 
 export const PlansApi = createApi({
   reducerPath: 'PlansApi',

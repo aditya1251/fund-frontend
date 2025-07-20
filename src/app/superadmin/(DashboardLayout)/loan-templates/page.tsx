@@ -7,20 +7,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Textarea } from "@/components/ui/textarea"
 import {
   useGetLoanTemplatesQuery,
   useGetLoanTemplateByIdQuery,
   useCreateLoanTemplateMutation,
   useUpdateLoanTemplateMutation,
   useDeleteLoanTemplateMutation,
-} from '@/redux/adminApi';
+} from '@/redux/services/loanTemplateApi';
 
 interface TemplateField {
   label: string
   type: string
   required?: boolean
   options?: string[]
+  acceptedTypes?: string[]
+  maxSize?: number
 }
 
 interface LoanFormTemplate {
@@ -38,13 +39,20 @@ const FIELD_TYPES = [
   { value: "select", label: "Select" },
   { value: "checkbox", label: "Checkbox" },
   { value: "textarea", label: "Textarea" },
+  { value: "document", label: "Document" },
 ]
 
 export default function LoanTemplateBuilder() {
   const [templates, setTemplates] = useState<LoanFormTemplate[]>([])
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>("")
   const [template, setTemplate] = useState<LoanFormTemplate>({ name: "", loanType: "", fields: [], createdBy: "superadmin" })
-  const [fieldDraft, setFieldDraft] = useState<TemplateField>({ label: "", type: "text", required: false })
+  const [fieldDraft, setFieldDraft] = useState<TemplateField>({ 
+    label: "", 
+    type: "text", 
+    required: false,
+    acceptedTypes: ["pdf", "jpg", "jpeg", "png"],
+    maxSize: 5
+  })
   const [isEditingField, setIsEditingField] = useState<number | null>(null)
   const [message, setMessage] = useState<string>("")
 
@@ -73,7 +81,13 @@ export default function LoanTemplateBuilder() {
   const addField = () => {
     if (!fieldDraft.label) return
     setTemplate(prev => ({ ...prev, fields: [...prev.fields, fieldDraft] }))
-    setFieldDraft({ label: "", type: "text", required: false })
+    setFieldDraft({ 
+      label: "", 
+      type: "text", 
+      required: false,
+      acceptedTypes: ["pdf", "jpg", "jpeg", "png"],
+      maxSize: 5
+    })
     setIsEditingField(null)
   }
   const editField = (idx: number) => {
@@ -86,7 +100,13 @@ export default function LoanTemplateBuilder() {
       ...prev,
       fields: prev.fields.map((f, i) => (i === isEditingField ? fieldDraft : f)),
     }))
-    setFieldDraft({ label: "", type: "text", required: false })
+    setFieldDraft({ 
+      label: "", 
+      type: "text", 
+      required: false,
+      acceptedTypes: ["pdf", "jpg", "jpeg", "png"],
+      maxSize: 5
+    })
     setIsEditingField(null)
   }
   const removeField = (idx: number) => {
@@ -158,12 +178,29 @@ export default function LoanTemplateBuilder() {
               <Label>Fields</Label>
               <div className="space-y-2">
                 {template.fields.map((field, idx) => (
-                  <div key={idx} className="flex items-center justify-between">
-                    <span className="font-medium w-4/8">{field.label}</span>
-                    <span className="text-xs w-1/8 text-gray-500">({field.type})</span>
-                    {field.required && <Badge className="bg-yellow-400 text-black">Required</Badge>}
-                    <Button size="sm" variant="outline" onClick={() => editField(idx)}>Edit</Button>
-                    <Button size="sm" variant="outline" onClick={() => removeField(idx)}>Remove</Button>
+                  <div key={idx} className="flex items-center justify-between p-2 border rounded">
+                    <div className="flex-1">
+                      <div className="flex items-center">
+                        <span className="font-medium w-6/8">{field.label}</span>
+                        <span className="text-xs w-1/8 text-gray-500 ml-2">({field.type})</span>
+                        {field.required && <Badge className="bg-yellow-400 text-black ml-2">Required</Badge>}
+                      </div>
+                      {field.type === "document" && (
+                        <div className="text-xs text-gray-600 mt-1">
+                          <span>Types: {field.acceptedTypes?.join(", ") || "pdf, jpg, jpeg, png"}</span>
+                          <span className="ml-2">Max: {field.maxSize || 5}MB</span>
+                        </div>
+                      )}
+                      {field.type === "select" && field.options && (
+                        <div className="text-xs text-gray-600 mt-1">
+                          Options: {field.options.join(", ")}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex gap-2 ml-2">
+                      <Button size="sm" variant="outline" onClick={() => editField(idx)}>Edit</Button>
+                      <Button size="sm" variant="outline" onClick={() => removeField(idx)}>Remove</Button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -200,6 +237,21 @@ export default function LoanTemplateBuilder() {
                     onChange={e => handleFieldChange("options", e.target.value.split(",").map(s => s.trim()))}
                     className="w-64"
                   />
+                )}
+                {fieldDraft.type === "document" && (
+                  <div className="flex flex-col gap-2 w-64">
+                    <Input
+                      placeholder="Accepted file types (comma separated)"
+                      value={fieldDraft.acceptedTypes?.join(",") || ""}
+                      onChange={e => handleFieldChange("acceptedTypes", e.target.value.split(",").map(s => s.trim()))}
+                    />
+                    <Input
+                      type="number"
+                      placeholder="Max file size (MB)"
+                      value={fieldDraft.maxSize || 5}
+                      onChange={e => handleFieldChange("maxSize", parseInt(e.target.value) || 5)}
+                    />
+                  </div>
                 )}
                 {isEditingField !== null ? (
                   <Button size="sm" onClick={updateField}>Update</Button>

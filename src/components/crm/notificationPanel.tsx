@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Bell, X } from "lucide-react";
 import React, { useState } from "react";
-import { useGetNotificationsQuery, useMarkAsReadMutation } from "@/redux/notificationApi";
+import { useGetNotificationsQuery, useMarkAsReadMutation } from "@/redux/services/notificationApi";
 
 type Notification = {
   _id: string;

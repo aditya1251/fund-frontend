@@ -5,7 +5,7 @@ import ApplicationCard from "@/components/ApplicationCard";
 import {
   useGetApplicationsQuery,
   useUpdateApplicationStatusMutation,
-} from "@/redux/superadminApi";
+} from "@/redux/services/applicationApi";
 
 // TypeScript interface for application data
 interface Application {
@@ -39,10 +39,7 @@ export default function SuperAdminApplications() {
     isLoading,
     isError,
     refetch,
-  } = useGetApplicationsQuery(undefined, {
-    skip: !token,
-    extra: { token },
-  });
+  } = useGetApplicationsQuery(undefined);
   const [updateStatus, { isLoading: isUpdating }] = useUpdateApplicationStatusMutation();
 
   const showNotification = (message: string, type: "success" | "error") => {
@@ -53,7 +50,7 @@ export default function SuperAdminApplications() {
   const handleUpdateStatus = async (id: string, newStatus: "approved" | "rejected", data: any) => {
     if (!token) return;
     try {
-      await updateStatus({ id, status: newStatus }, { extra: { token } }).unwrap();
+      await updateStatus({ id, status: newStatus }).unwrap();
       showNotification(
         newStatus === "approved"
           ? "User application approved successfully!"

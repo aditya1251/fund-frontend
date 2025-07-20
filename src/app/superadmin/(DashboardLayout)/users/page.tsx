@@ -19,12 +19,14 @@ import { useSession } from "next-auth/react";
 import {
   useGetAdminsQuery,
   useDeleteAdminMutation,
-} from "@/redux/superadminApi";
+} from "@/redux/services/superadminApi";
 
 interface Admin {
   _id: string;
   name: string;
   email: string;
+  role:string;
+  planName:string;
   createdAt: string;
 }
 
@@ -38,16 +40,13 @@ export default function ManageAdmins() {
     isLoading,
     isError,
     refetch,
-  } = useGetAdminsQuery(undefined, {
-    skip: !token,
-    extra: { token },
-  });
+  } = useGetAdminsQuery(undefined,);
   const [deleteAdmin, { isLoading: isDeleting }] = useDeleteAdminMutation();
 
   const handleDelete = async (id: string) => {
     if (!token) return;
     try {
-      await deleteAdmin(id, { extra: { token } }).unwrap();
+      await deleteAdmin(id).unwrap();
       setSnackbar({ open: true, message: "Admin deleted", severity: "success" });
       refetch();
     } catch (error) {
@@ -66,6 +65,8 @@ export default function ManageAdmins() {
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Email</TableCell>
+                <TableCell>Plan</TableCell>
+                <TableCell>Role</TableCell>
                 <TableCell>Created At</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
@@ -88,9 +89,11 @@ export default function ManageAdmins() {
                   <TableRow key={admin._id}>
                     <TableCell>{admin.name}</TableCell>
                     <TableCell>{admin.email}</TableCell>
+                    <TableCell>{admin.planName}</TableCell>
+                    <TableCell>{admin.role}</TableCell>
                     <TableCell>{new Date(admin.createdAt).toLocaleString()}</TableCell>
                     <TableCell>
-                      <IconButton color="error" onClick={() => handleDelete(admin._id)} disabled={isDeleting}>
+                      <IconButton color="error" onClick={() => handleDelete(admin._id)} disabled={isDeleting||admin.role==="SUPERADMIN"}>
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>

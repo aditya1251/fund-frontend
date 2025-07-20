@@ -16,7 +16,7 @@ export default async function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/images/favicon.ico" />
-        <title>Spike Next.js + Ts + Mui</title>
+        <title>Super Admin</title>
       </head>
       <body>
         <DashboardContextProvider>
