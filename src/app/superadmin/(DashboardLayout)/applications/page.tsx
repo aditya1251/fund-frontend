@@ -9,7 +9,7 @@ import {
 
 // TypeScript interface for application data
 interface Application {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   phone: string;
@@ -159,7 +159,7 @@ export default function SuperAdminApplications() {
           <div className="space-y-6">
             {filteredApplications.map((application: Application) => (
               <ApplicationCard
-                key={application.id}
+                key={application._id}
                 application={application}
                 onUpdateStatus={handleUpdateStatus}
               />

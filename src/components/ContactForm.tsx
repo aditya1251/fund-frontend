@@ -15,12 +15,13 @@ import {
   Loader2,
 } from "lucide-react";
 import { useAddApplicationMutation } from "@/redux/services/applicationApi";
+import { applicationSchema, Application } from "@/lib/validation/applicationSchema";
 import React from "react";
 
 export default function ContactForm() {
   const [addApplication,{isLoading}]= useAddApplicationMutation();
   // Form state
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Application>({
     name: "",
     email: "",
     phone: "",
@@ -28,12 +29,7 @@ export default function ContactForm() {
   });
 
   // Form validation state
-  const [errors, setErrors] = useState<{
-    name?: string;
-    email?: string;
-    phone?: string;
-    message?: string;
-  }>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof Application, string>>>({});
 
   // Remove isSubmitting, use isLoading from mutation
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -60,43 +56,24 @@ export default function ContactForm() {
     }
   };
 
-  // Validate form
+  // Validate form using Zod
   const validateForm = () => {
-    const newErrors: {
-      name?: string;
-      email?: string;
-      phone?: string;
-      message?: string;
-    } = {};
-
-    // Name validation
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
+    try {
+      applicationSchema.parse(formData);
+      setErrors({});
+      return true;
+    } catch (err: any) {
+      if (err.errors) {
+        const zodErrors: Partial<Record<keyof Application, string>> = {};
+        err.errors.forEach((e: any) => {
+          if (e.path && e.path[0]) {
+            zodErrors[e.path[0] as keyof Application] = e.message;
+          }
+        });
+        setErrors(zodErrors);
+      }
+      return false;
     }
-
-    // Email validation
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)
-    ) {
-      newErrors.email = "Invalid email address";
-    }
-
-    // Phone validation
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Phone number is required";
-    } else if (!/^\d{10,}$/i.test(formData.phone.replace(/[\s-()]/g, ""))) {
-      newErrors.phone = "Please enter a valid phone number";
-    }
-
-    // Message validation
-    if (!formData.message.trim()) {
-      newErrors.message = "Message is required";
-    }
-    setErrors(newErrors);
-
-    return Object.keys(newErrors).length === 0;
   };
 
   // Handle form submission

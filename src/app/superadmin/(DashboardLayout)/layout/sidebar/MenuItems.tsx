@@ -129,12 +129,6 @@ const Menuitems: MenuitemsType[] = [
     },
     {
         id: uniqueId(),
-        title: "Sample Page",
-        icon: "window-frame-broken",
-        href: "/superadmin/sample-page",
-    },
-    {
-        id: uniqueId(),
         title: "Typography",
         icon: "text-bold-square-line-duotone",
         href: "/superadmin/utilities/typography",

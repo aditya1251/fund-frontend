@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 
 interface Application {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   phone: string;
@@ -21,7 +21,7 @@ interface Application {
 interface ApplicationCardProps {
   application: Application;
   onUpdateStatus: (
-    id: string,
+    _id: string,
     status: "approved" | "rejected",
     data: any
   ) => void;
@@ -35,12 +35,11 @@ export default function ApplicationCard({
     addSuffix: true,
   });
 
-  // Approve and Reject handlers (single click, no dialogs)
   const handleApprove = () => {
-    onUpdateStatus(application.id, "approved", {});
+    onUpdateStatus(application._id, "approved", {});
   };
   const handleReject = () => {
-    onUpdateStatus(application.id, "rejected", {});
+    onUpdateStatus(application._id, "rejected", {});
   };
 
   return (

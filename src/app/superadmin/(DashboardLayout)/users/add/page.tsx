@@ -68,7 +68,7 @@ const page = () => {
                                 <MenuItem value="">Loading...</MenuItem>
                             ) : (
                                 [<MenuItem value="" key="empty">Select a plan</MenuItem>,
-                                ...plans.map((plan: any) => (
+                                ...plans.filter((plan: any) => plan.isActive).map((plan: any) => (
                                     <MenuItem value={plan._id} key={plan._id}>{plan.name}</MenuItem>
                                 ))]
                             )}
