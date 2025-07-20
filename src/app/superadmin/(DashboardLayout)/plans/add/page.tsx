@@ -3,11 +3,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { planSchema, PlanFormData } from "@/lib/validation/planSchema";
 import { features } from "../page";
-import { usePlansCreatePlanMutation } from "@/redux/store";
+import { useCreatePlanMutation } from "@/redux/services/plansApi";
 
 const AddPlanPage = () => {
   const router = useRouter();
-  const [createPlan] = usePlansCreatePlanMutation();
+  const [createPlan] = useCreatePlanMutation();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

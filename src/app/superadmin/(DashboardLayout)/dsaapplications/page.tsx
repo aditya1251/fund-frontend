@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from "react";
-import { useGetLoansQuery, useUpdateLoanMutation } from "@/redux/adminApi";
+import React, { useState, useMemo } from "react";
+import { useGetLoansQuery, useUpdateLoanMutation } from "@/redux/services/loanApi";
 import { Button, Paper, Snackbar, Alert, Typography, Box } from "@mui/material";
 
 interface LoanApplication {
@@ -8,6 +8,7 @@ interface LoanApplication {
   values: Record<string, any>;
   status: "pending" | "approved" | "rejected";
   createdAt?: string;
+  adminEmail?: string;
   [key: string]: any;
 }
 
@@ -18,6 +19,58 @@ const DsaApplicationsPage = () => {
   const [updateLoan] = useUpdateLoanMutation();
   const [rejectionReason, setRejectionReason] = useState<string>("");
   const [showRejectionInput, setShowRejectionInput] = useState<string | null>(null);
+
+  // Filter/Sort/Search state
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [sortBy, setSortBy] = useState("date-desc");
+
+  // Filtered and sorted loans
+  const filteredLoans = useMemo(() => {
+    let loans = loansData;
+    // Search by applicant name or email
+    if (search) {
+      loans = loans.filter((loan: any) =>
+        (loan.values?.Name || "").toLowerCase().includes(search.toLowerCase()) ||
+        (loan.values?.Email || "").toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    // Status filter
+    if (statusFilter) {
+      loans = loans.filter((loan: any) => (loan.status || "").toLowerCase() === statusFilter.toLowerCase());
+    }
+    // Sort
+    loans = loans.slice().sort((a: any, b: any) => {
+      if (sortBy === "date-desc") {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (dateA === dateB) {
+          return (b._id || "").localeCompare(a._id || "");
+        }
+        return dateB - dateA;
+      }
+      if (sortBy === "date-asc") {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (dateA === dateB) {
+          return (a._id || "").localeCompare(b._id || "");
+        }
+        return dateA - dateB;
+      }
+      if (sortBy === "name-asc") {
+        const nameA = (a.values?.Name || "").toLowerCase();
+        const nameB = (b.values?.Name || "").toLowerCase();
+        return nameA.localeCompare(nameB);
+      }
+      if (sortBy === "name-desc") {
+        const nameA = (a.values?.Name || "").toLowerCase();
+        const nameB = (b.values?.Name || "").toLowerCase();
+        return nameB.localeCompare(nameA);
+      }
+      return 0;
+    });
+    return loans;
+  }, [loansData, search, statusFilter, sortBy]);
 
   const handleUpdateStatus = async (id: string, newStatus: "approved" | "rejected") => {
     setUpdatingId(id);
@@ -47,60 +100,107 @@ const DsaApplicationsPage = () => {
       ) : error ? (
         <Alert severity="error">Failed to load loan applications.</Alert>
       ) : (
-        <Box display="flex" flexDirection="column" gap={2}>
-          {loansData.length === 0 ? (
-            <Paper sx={{ p: 3, textAlign: "center" }}>No loan applications found.</Paper>
-          ) : (
-            loansData.map((loan: LoanApplication) => (
-              <Paper key={loan._id} sx={{ p: 3, display: "flex", flexDirection: "column", gap: 1 }}>
-                <Typography variant="subtitle1" fontWeight={600}>
-                  Applicant: {loan.values?.Name || "-"}
-                </Typography>
-                <Typography variant="body2">Email: {loan.values?.Email || "-"}</Typography>
-                <Typography variant="body2">Phone: {loan.values?.Phone || "-"}</Typography>
-                <Typography variant="body2">Status: <b>{loan.status}</b></Typography>
-                <Typography variant="body2">Submitted: {loan.createdAt ? new Date(loan.createdAt).toLocaleString() : "-"}</Typography>
-                <Box mt={1} display="flex" gap={2}>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    disabled={loan.status === "approved" || updatingId === loan._id}
-                    onClick={() => handleUpdateStatus(loan._id, "approved")}
-                  >
-                    Approve
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    disabled={loan.status === "rejected" || updatingId === loan._id}
-                    onClick={() => handleUpdateStatus(loan._id, "rejected")}
-                  >
-                    Reject
-                  </Button>
-                </Box>
-                {showRejectionInput === loan._id && (
-                  <Box mt={2} display="flex" gap={1} alignItems="center">
-                    <input
-                      type="text"
-                      placeholder="Rejection reason"
-                      value={rejectionReason}
-                      onChange={e => setRejectionReason(e.target.value)}
-                      className="border px-2 py-1 rounded w-full"
-                    />
+        <>
+          {/* Filter/Sort/Search Controls */}
+          <Box mb={3} display="flex" flexWrap="wrap" gap={2} alignItems="center">
+            <input
+              type="text"
+              placeholder="Search by name or email"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="border bg-white px-2 py-1 rounded"
+              style={{ minWidth: 200 }}
+            />
+            <select
+              value={statusFilter}
+              onChange={e => setStatusFilter(e.target.value)}
+              className="border bg-white px-2 py-1 rounded"
+              style={{ minWidth: 150 }}
+            >
+              <option value="">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value)}
+              className="border bg-white px-2 py-1 rounded"
+              style={{ minWidth: 180 }}
+            >
+              <option value="date-desc">Sort by Latest</option>
+              <option value="date-asc">Sort by Oldest</option>
+              <option value="name-asc">Sort by Name (A-Z)</option>
+              <option value="name-desc">Sort by Name (Z-A)</option>
+            </select>
+          </Box>
+          <Box display="flex" flexDirection="column" gap={2}>
+            {filteredLoans.length === 0 ? (
+              <Paper sx={{ p: 3, textAlign: "center" }}>No loan applications found.</Paper>
+            ) : (
+              filteredLoans.map((loan: LoanApplication) => (
+                <Paper key={loan._id} sx={{ p: 3, display: "flex", flexDirection: "column", gap: 1 }}>
+                  <Box display="flex" flexDirection={{ xs: "column", md: "row" }} justifyContent="space-between" gap={2}>
+                    {/* Left Side: Applicant Info */}
+                    <Box flex={1} minWidth={200}>
+                      <Typography variant="subtitle1" fontWeight={600}>
+                        Applicant: {loan.values?.Name || "-"}
+                      </Typography>
+                      <Typography variant="body2">Email: {loan.values?.Email || "-"}</Typography>
+                      <Typography variant="body2">Age: {loan.values?.Age || "-"}</Typography>
+                      <Typography variant="body2">Phone: {loan.values?.Phone || "-"}</Typography>
+                    </Box>
+                    {/* Right Side: Admin/Status Info */}
+                    <Box flex={1} minWidth={200}>
+                      <Typography variant="body2">Admin Email: {loan.adminEmail || "-"}</Typography>
+                      <Typography variant="body2">Submitted: {loan.createdAt ? new Date(loan.createdAt).toLocaleString() : "-"}</Typography>
+                      <Typography variant="body2">Status: <b>{loan.status}</b></Typography>
+                    </Box>
+                  </Box>
+                  {/* Action Buttons */}
+                  <Box mt={2} display="flex" gap={2}>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      disabled={loan.status !== "pending" || updatingId === loan._id}
+                      onClick={() => handleUpdateStatus(loan._id, "approved")}
+                    >
+                      Approve
+                    </Button>
                     <Button
                       variant="contained"
                       color="error"
+                      disabled={loan.status !== "pending" || updatingId === loan._id}
                       onClick={() => handleUpdateStatus(loan._id, "rejected")}
-                      disabled={updatingId === loan._id || !rejectionReason.trim()}
                     >
-                      Confirm Reject
+                      Reject
                     </Button>
                   </Box>
-                )}
-              </Paper>
-            ))
-          )}
-        </Box>
+                  {showRejectionInput === loan._id && (
+                    <Box mt={2} display="flex" gap={1} alignItems="center">
+                      <input
+                        type="text"
+                        placeholder="Rejection reason"
+                        value={rejectionReason}
+                        onChange={e => setRejectionReason(e.target.value)}
+                        className="border px-2 py-1 rounded w-full"
+                      />
+                      <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => handleUpdateStatus(loan._id, "rejected")}
+                        disabled={updatingId === loan._id || !rejectionReason.trim()}
+                        style={{ whiteSpace: "nowrap", minWidth: 140 }}
+                      >
+                        Confirm Reject
+                      </Button>
+                    </Box>
+                  )}
+                </Paper>
+              ))
+            )}
+          </Box>
+        </>
       )}
       <Snackbar
         open={snackbar.open}

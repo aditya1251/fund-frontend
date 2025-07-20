@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { planSchema, PlanFormData } from "@/lib/validation/planSchema";
-import { useGetPlanByIdQuery, useUpdatePlansMutation } from "@/lib/plansApi";
+import { useGetPlanByIdQuery, useUpdatePlansMutation } from "@/redux/services/plansApi";
 import { features } from "../../page";
 
 const EditPlanPage = () => {

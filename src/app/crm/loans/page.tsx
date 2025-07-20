@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/data-table";
 import { House, User, Car, Building, LandPlot } from "lucide-react";
 import Link from "next/link";
-import { useGetLoansQuery } from "@/redux/adminApi";
+import { useGetLoansQuery } from "@/redux/services/loanApi";
 
 
 export default function Page() {
@@ -113,7 +113,7 @@ export default function Page() {
 									"File No.",
 									"Loan",
 									"Loan Mode",
-									"Applicant name",
+									"Applicant",
 									"Subscriber",
 									"Email",
 									"Phone",
@@ -122,15 +122,15 @@ export default function Page() {
 								]}
 							/>
 							<tbody>
-								{loansData.map((lead, index) => (
+								{loansData.map((lead:any, index:number) => (
 									<TableRow
 										key={index}
 										row={[
 											lead._id,
 											lead.loanSubType,
 											lead.mode ? lead.mode : "Online",
-											<EmailCell email={lead.applicant} />,
 											lead.values.Name,
+											<EmailCell email={lead.subscriber} />,
 											<EmailCell email={lead.values.Email} />,
 											lead.values.Phone,
 											lead.rejectionMessage,

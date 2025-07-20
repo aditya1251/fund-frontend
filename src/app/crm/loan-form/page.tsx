@@ -10,34 +10,14 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { useSession } from "next-auth/react"
 import {
-  useGetLoanTemplateByNameQuery,
   useCreateLoanMutation,
-} from '@/redux/adminApi';
+} from '@/redux/services/loanApi';
+import {
+  useGetLoanTemplateByNameQuery,
+} from '@/redux/services/loanTemplateApi';
 import { useSearchParams } from 'next/navigation';
 
-interface TemplateField {
-  label: string
-  type: string
-  required?: boolean
-  options?: string[]
-}
 
-interface LoanFormTemplate {
-  _id?: string
-  name: string
-  loanType?: string
-  fields: TemplateField[]
-  createdBy: string
-}
-
-const FIELD_TYPES = [
-  { value: "text", label: "Text" },
-  { value: "number", label: "Number" },
-  { value: "date", label: "Date" },
-  { value: "select", label: "Select" },
-  { value: "checkbox", label: "Checkbox" },
-  { value: "textarea", label: "Textarea" },
-]
 
 export default function LoanForm() {
   // Remove: const [template, setTemplate] = useState<LoanFormTemplate | null>(null)
@@ -67,9 +47,9 @@ export default function LoanForm() {
         return;
       }
     }
-    const applicant = session?.user?.email;
+    const subscriber = session?.user?.email;
     try {
-      await createLoanFormSubmission({ values: formValues, applicant, loanSubType: templateData.name, loanType: templateData.loanType }).unwrap();
+      await createLoanFormSubmission({ values: formValues, subscriber, loanSubType: templateData.name, loanType: templateData.loanType }).unwrap();
       setMessage("Form submitted successfully!");
       setFormValues({});
     } catch (err) {
@@ -143,6 +123,42 @@ export default function LoanForm() {
                           value={formValues[field.label] || ""}
                           onChange={e => handleFormValueChange(field.label, e.target.value)}
                         />
+                      </div>
+                    )
+                  case "document":
+                    return (
+                      <div key={idx}>
+                        <Label>{field.label}{field.required && " *"}</Label>
+                        <div className="space-y-2">
+                          <Input
+                            type="file"
+                            accept={field.acceptedTypes?.map((type: string) => `.${type}`).join(",") || ".pdf,.jpg,.jpeg,.png"}
+                            onChange={e => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                // Check file size
+                                const maxSizeMB = field.maxSize || 5;
+                                const maxSizeBytes = maxSizeMB * 1024 * 1024;
+                                if (file.size > maxSizeBytes) {
+                                  setMessage(`File size must be less than ${maxSizeMB}MB`);
+                                  e.target.value = '';
+                                  return;
+                                }
+                                handleFormValueChange(field.label, file);
+                              }
+                            }}
+                            className="cursor-pointer"
+                          />
+                          <div className="text-xs text-gray-500">
+                            Accepted types: {field.acceptedTypes?.join(", ") || "pdf, jpg, jpeg, png"} | 
+                            Max size: {field.maxSize || 5}MB
+                          </div>
+                          {formValues[field.label] && (
+                            <div className="text-sm text-green-600">
+                              File selected: {formValues[field.label].name}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     )
                   default:

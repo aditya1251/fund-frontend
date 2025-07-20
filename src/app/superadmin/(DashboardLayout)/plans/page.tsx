@@ -1,9 +1,7 @@
 "use client";
-
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { usePlansDeletePlanMutation, usePlansGetPlansQuery } from "@/redux/store";
-import { useUpdateActiveStatusMutation } from "@/redux/plansApi";
+import { useDeletePlanMutation, useGetPlansQuery, useUpdateActiveStatusMutation } from "@/redux/services/plansApi";
 
 export const features = [
   "Leads",
@@ -25,11 +23,11 @@ const PlansPage = () => {
     isLoading,
     error,
     refetch,
-  } = usePlansGetPlansQuery(undefined, {
+  } = useGetPlansQuery(undefined, {
     pollingInterval: 3000,
     refetchOnMountOrArgChange: true,
   });
-  const [deletePlan] = usePlansDeletePlanMutation();
+  const [deletePlan] = useDeletePlanMutation();
   const [toggleStatus] = useUpdateActiveStatusMutation();
   const [activeTab, setActiveTab] = useState("All Plans");
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -145,12 +143,12 @@ const PlansPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {plans
-          .filter((plan) => {
+          .filter((plan:any) => {
             if (activeTab === "Active") return plan.isActive;
             if (activeTab === "Inactive") return !plan.isActive;
             return true;
           })
-          .map((plan) => (
+          .map((plan:any) => (
             <div
               key={plan.id}
               className={`flex flex-col bg-white rounded-[16px] p-6 border-3 border-black transition-all duration-300 ease-in-out ${

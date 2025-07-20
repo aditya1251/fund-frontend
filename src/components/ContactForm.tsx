@@ -14,9 +14,11 @@ import {
   Linkedin,
   Loader2,
 } from "lucide-react";
-import axios from "axios";
+import { useAddApplicationMutation } from "@/redux/services/applicationApi";
+import React from "react";
 
 export default function ContactForm() {
+  const [addApplication,{isLoading}]= useAddApplicationMutation();
   // Form state
   const [formData, setFormData] = useState({
     name: "",
@@ -33,9 +35,11 @@ export default function ContactForm() {
     message?: string;
   }>({});
 
-  // Form submission state
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // Remove isSubmitting, use isLoading from mutation
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  // Snackbar state
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: "success" | "error" }>({ open: false, message: "", severity: "success" });
 
   // Handle input changes
   const handleChange = (
@@ -98,34 +102,24 @@ export default function ContactForm() {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // Validate form
     if (!validateForm()) {
       return;
     }
-
-    setIsSubmitting(true);
-
     try {
-      // Send form data to backend
-      await axios.post("http://localhost:5000/api/users/application", formData);
-      setSubmitSuccess(true);
+      await addApplication(formData).unwrap()
       setFormData({
         name: "",
         email: "",
         phone: "",
         message: "",
       });
-      setTimeout(() => {
-        setSubmitSuccess(false);
-      }, 5000);
+      setSnackbar({ open: true, message: "Application sent successfully!", severity: "success" });
     } catch (error: any) {
       setErrors({
         ...errors,
         message: error?.response?.data?.message || "Failed to submit. Try again later.",
       });
-    } finally {
-      setIsSubmitting(false);
+      setSnackbar({ open: true, message: error?.response?.data?.message || "Failed to submit. Try again later.", severity: "error" });
     }
   };
 
@@ -222,7 +216,7 @@ export default function ContactForm() {
                       }`}
                       value={formData.name}
                       onChange={handleChange}
-                      disabled={isSubmitting}
+                      disabled={isLoading}
                     />
                     {errors.name && (
                       <p className="text-xs text-red-500 mt-1">{errors.name}</p>
@@ -241,7 +235,7 @@ export default function ContactForm() {
                       }`}
                       value={formData.email}
                       onChange={handleChange}
-                      disabled={isSubmitting}
+                      disabled={isLoading}
                     />
                     {errors.email && (
                       <p className="text-xs text-red-500 mt-1">
@@ -262,7 +256,7 @@ export default function ContactForm() {
                     }`}
                     value={formData.phone}
                     onChange={handleChange}
-                    disabled={isSubmitting}
+                    disabled={isLoading}
                   />
                   {errors.phone && (
                     <p className="text-xs text-red-500 mt-1">{errors.phone}</p>
@@ -281,7 +275,7 @@ export default function ContactForm() {
                     }`}
                     value={formData.message}
                     onChange={handleChange}
-                    disabled={isSubmitting}
+                    disabled={isLoading}
                   />
                   {errors.message && (
                     <p className="text-xs text-red-500 mt-1">
@@ -292,9 +286,9 @@ export default function ContactForm() {
                 <Button
                   type="submit"
                   className="w-full bg-[#F7C430] hover:bg-[#E76F51] text-white font-semibold py-4 rounded-lg transition-colors text-lg flex items-center justify-center cursor-pointer"
-                  disabled={isSubmitting}
+                  disabled={isLoading}
                 >
-                  {isSubmitting ? (
+                  {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                       Submitting...
@@ -308,6 +302,17 @@ export default function ContactForm() {
           </div>
         </div>
       </div>
+      {/* Snackbar */}
+      {snackbar.open && (
+        <div
+          className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transition-all duration-300
+            ${snackbar.severity === "success" ? "bg-green-600" : "bg-red-600"}`}
+          onClick={() => setSnackbar({ ...snackbar, open: false })}
+          style={{ minWidth: 250, textAlign: "center", cursor: "pointer" }}
+        >
+          {snackbar.message}
+        </div>
+      )}
     </div>
   );
 }

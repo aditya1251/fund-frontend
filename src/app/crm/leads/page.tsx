@@ -1,10 +1,8 @@
 "use client";
-
 import React, { useState } from "react";
 import { Users } from "lucide-react";
 import { MetricGrid, MetricCard } from "@/components/ui/dashboard-metric";
 import {
-	TableHeader,
 	TableWrapper,
 	TableHeadings,
 	TableRow,
@@ -12,8 +10,7 @@ import {
 	StatusBadge,
 	ViewAllButton,
 } from "@/components/ui/data-table";
-import leads from "@/app/crm/sample-data";
-import { useGetLoansQuery } from "@/redux/adminApi";
+import { useGetLoansQuery } from "@/redux/services/loanApi";
 import { useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -253,7 +250,7 @@ const LeadActivityStatus: React.FC = () => {
 									"File No.",
 									"Loan",
 									"Loan Mode",
-									"Applicant email",
+									"Applicant",
 									"Subscriber",
 									"Email",
 									"Phone",
@@ -269,8 +266,8 @@ const LeadActivityStatus: React.FC = () => {
 											lead._id,
 											lead.loanSubType,
 											lead.mode ? lead.mode : "Online",
-											<EmailCell email={lead.applicant} />,
 											lead.values.Name,
+											<EmailCell email={lead.subscriber} />,
 											<EmailCell email={lead.values.Email} />,
 											lead.values.Phone,
 											lead.rejectionMessage,
