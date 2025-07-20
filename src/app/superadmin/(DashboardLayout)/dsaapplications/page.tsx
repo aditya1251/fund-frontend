@@ -2,15 +2,7 @@
 import React, { useState, useMemo } from "react";
 import { useGetLoansQuery, useUpdateLoanMutation } from "@/redux/services/loanApi";
 import { Button, Paper, Snackbar, Alert, Typography, Box } from "@mui/material";
-
-interface LoanApplication {
-  _id: string;
-  values: Record<string, any>;
-  status: "pending" | "approved" | "rejected";
-  createdAt?: string;
-  adminEmail?: string;
-  [key: string]: any;
-}
+import { loanApplicationSchema, LoanApplication } from '@/lib/validation/loanSchema';
 
 const DsaApplicationsPage = () => {
   const { data: loansData = [], isLoading, error, refetch } = useGetLoansQuery({});
@@ -27,20 +19,26 @@ const DsaApplicationsPage = () => {
 
   // Filtered and sorted loans
   const filteredLoans = useMemo(() => {
-    let loans = loansData;
+    let loans: LoanApplication[] = loansData;
     // Search by applicant name or email
     if (search) {
-      loans = loans.filter((loan: any) =>
-        (loan.values?.Name || "").toLowerCase().includes(search.toLowerCase()) ||
-        (loan.values?.Email || "").toLowerCase().includes(search.toLowerCase())
-      );
+      loans = loans.filter((loan: LoanApplication) => {
+        const name = typeof loan.values?.Name === 'string' ? loan.values.Name : '';
+        const email = typeof loan.values?.Email === 'string' ? loan.values.Email : '';
+        return (
+          name.toLowerCase().includes(search.toLowerCase()) ||
+          email.toLowerCase().includes(search.toLowerCase())
+        );
+      });
     }
     // Status filter
     if (statusFilter) {
-      loans = loans.filter((loan: any) => (loan.status || "").toLowerCase() === statusFilter.toLowerCase());
+      loans = loans.filter((loan: LoanApplication) =>
+        typeof loan.status === 'string' && loan.status.toLowerCase() === statusFilter.toLowerCase()
+      );
     }
     // Sort
-    loans = loans.slice().sort((a: any, b: any) => {
+    loans = loans.slice().sort((a: LoanApplication, b: LoanApplication) => {
       if (sortBy === "date-desc") {
         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
         const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
@@ -58,13 +56,13 @@ const DsaApplicationsPage = () => {
         return dateA - dateB;
       }
       if (sortBy === "name-asc") {
-        const nameA = (a.values?.Name || "").toLowerCase();
-        const nameB = (b.values?.Name || "").toLowerCase();
+        const nameA = typeof a.values?.Name === 'string' ? a.values.Name.toLowerCase() : '';
+        const nameB = typeof b.values?.Name === 'string' ? b.values.Name.toLowerCase() : '';
         return nameA.localeCompare(nameB);
       }
       if (sortBy === "name-desc") {
-        const nameA = (a.values?.Name || "").toLowerCase();
-        const nameB = (b.values?.Name || "").toLowerCase();
+        const nameA = typeof a.values?.Name === 'string' ? a.values.Name.toLowerCase() : '';
+        const nameB = typeof b.values?.Name === 'string' ? b.values.Name.toLowerCase() : '';
         return nameB.localeCompare(nameA);
       }
       return 0;
@@ -144,15 +142,15 @@ const DsaApplicationsPage = () => {
                     {/* Left Side: Applicant Info */}
                     <Box flex={1} minWidth={200}>
                       <Typography variant="subtitle1" fontWeight={600}>
-                        Applicant: {loan.values?.Name || "-"}
+                        Applicant: {typeof loan.values?.Name === 'string' ? loan.values.Name : "-"}
                       </Typography>
-                      <Typography variant="body2">Email: {loan.values?.Email || "-"}</Typography>
-                      <Typography variant="body2">Age: {loan.values?.Age || "-"}</Typography>
-                      <Typography variant="body2">Phone: {loan.values?.Phone || "-"}</Typography>
+                      <Typography variant="body2">Email: {typeof loan.values?.Email === 'string' ? loan.values.Email : "-"}</Typography>
+                      <Typography variant="body2">Age: {typeof loan.values?.Age === 'string' ? loan.values.Age : "-"}</Typography>
+                      <Typography variant="body2">Phone: {typeof loan.values?.Phone === 'string' ? loan.values.Phone : "-"}</Typography>
                     </Box>
                     {/* Right Side: Admin/Status Info */}
                     <Box flex={1} minWidth={200}>
-                      <Typography variant="body2">Admin Email: {loan.adminEmail || "-"}</Typography>
+                      <Typography variant="body2">Subscriber: {loan.subscriber || "-"}</Typography>
                       <Typography variant="body2">Submitted: {loan.createdAt ? new Date(loan.createdAt).toLocaleString() : "-"}</Typography>
                       <Typography variant="body2">Status: <b>{loan.status}</b></Typography>
                     </Box>

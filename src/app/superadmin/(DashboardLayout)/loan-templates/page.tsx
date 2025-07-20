@@ -14,23 +14,7 @@ import {
   useUpdateLoanTemplateMutation,
   useDeleteLoanTemplateMutation,
 } from '@/redux/services/loanTemplateApi';
-
-interface TemplateField {
-  label: string
-  type: string
-  required?: boolean
-  options?: string[]
-  acceptedTypes?: string[]
-  maxSize?: number
-}
-
-interface LoanFormTemplate {
-  _id?: string
-  name: string
-  loanType?: string
-  fields: TemplateField[]
-  createdBy: string
-}
+import { loanFormTemplateSchema, templateFieldSchema, LoanFormTemplate, TemplateField } from '@/lib/validation/loanTemplateSchema';
 
 const FIELD_TYPES = [
   { value: "text", label: "Text" },
@@ -117,6 +101,7 @@ export default function LoanTemplateBuilder() {
   const saveTemplate = async () => {
     setMessage("");
     try {
+      loanFormTemplateSchema.parse(template);
       if (template._id) {
         await updateLoanTemplate({ id: template._id, data: template }).unwrap();
         setMessage("Template updated!");
@@ -125,8 +110,12 @@ export default function LoanTemplateBuilder() {
         setMessage("Template created!");
       }
       refetchTemplates();
-    } catch (err) {
-      setMessage("Error saving template");
+    } catch (err: any) {
+      if (err.errors) {
+        setMessage(err.errors.map((e: any) => e.message).join(', '));
+      } else {
+        setMessage("Error saving template");
+      }
     }
   };
 
