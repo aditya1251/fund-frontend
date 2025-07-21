@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
+import { signOut } from "next-auth/react";
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
@@ -88,10 +89,9 @@ const Profile = () => {
             px: 2
           }}>
           <Button
-            href="/authentication/login"
+            onClick={() => signOut()}
             variant="outlined"
             color="primary"
-            component={Link}
             fullWidth
           >
             Logout

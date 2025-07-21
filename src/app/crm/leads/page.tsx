@@ -14,6 +14,7 @@ import { useGetLoansQuery } from "@/redux/services/loanApi";
 import { useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { RequireFeature } from '@/components/RequireFeature';
 
 type Tab = "Loans" | "Govt Loans" | "Insurance";
 
@@ -26,8 +27,6 @@ interface StatusCardData {
 }
 
 const TABS: Tab[] = ["Loans", "Govt Loans", "Insurance"];
-
-
 
 const getDataByTab = (tab: Tab, loansData: any[] = []): StatusCardData[] => {
 	if (tab === "Loans") {
@@ -181,115 +180,117 @@ const LeadActivityStatus: React.FC = () => {
 	}, [loansData, search, statusFilter, sortBy]);
 
 	return (
-		<div>
-			<h4 className="font-semibold mb-6 text-black">Lead Activity Status</h4>
+		<RequireFeature feature="Leads">
+			<div>
+				<h4 className="font-semibold mb-6 text-black">Lead Activity Status</h4>
 
-			{/* Tabs */}
-			<div className="flex gap-2 mb-4">
-				{TABS.map((tab) => (
-					<button
-						key={tab}
-						className={`text-sm px-12 py-2 rounded ${tab === activeTab
-							? "bg-[#f5d949] text-black"
-							: "bg-white text-black border-gray-300 border"
-							}`}
-						onClick={() => setActiveTab(tab)}
-					>
-						{tab}
-					</button>
-				))}
-			</div>
+				{/* Tabs */}
+				<div className="flex gap-2 mb-4">
+					{TABS.map((tab) => (
+						<button
+							key={tab}
+							className={`text-sm px-12 py-2 rounded ${tab === activeTab
+								? "bg-[#f5d949] text-black"
+								: "bg-white text-black border-gray-300 border"
+								}`}
+							onClick={() => setActiveTab(tab)}
+						>
+							{tab}
+						</button>
+					))}
+				</div>
 
-			{/* Metric Grid */}
-			<MetricGrid>
-				{data.map(({ label, value, variant, icon, className }, index) => (
-					<MetricCard
-						key={index}
-						label={label}
-						value={value}
-						icon={icon}
-						variant={variant}
-						className={className}
-					/>
-				))}
-			</MetricGrid>
+				{/* Metric Grid */}
+				<MetricGrid>
+					{data.map(({ label, value, variant, icon, className }, index) => (
+						<MetricCard
+							key={index}
+							label={label}
+							value={value}
+							icon={icon}
+							variant={variant}
+							className={className}
+						/>
+					))}
+				</MetricGrid>
 
-			{/* Search, Filter, Sort Controls */}
+				{/* Search, Filter, Sort Controls */}
 
 
-			{/* All Leads Table */}
-			<div className="mt-6">
-				<div className="py-4">
-					<div className="flex justify-between items-center"><h4 className="text-lg font-semibold text-black">All Leads</h4>
-						<div className="flex gap-2 mb-4 mt-4">
-							<Input
-								type="text"
-								placeholder="Search by name or email"
-								value={search}
-								onChange={e => setSearch(e.target.value)}
-								className="border bg-white px-2 py-1 rounded"
-							/>
-							<Select value={statusFilter}  onChange={e => setStatusFilter(e.target.value)} className="border bg-white px-2 py-1 rounded">
-								<option value="">All Statuses</option>
-								<option value="pending">Pending</option>
-								<option value="approved">Approved</option>
-								<option value="rejected">Rejected</option>
-							</Select>
-							<Select value={sortBy} onChange={e => setSortBy(e.target.value)} className="border bg-white px-2 py-1 rounded">
-								<option value="date-desc">Sort by Latest</option>
-								<option value="date-asc">Sort by Oldest</option>
-								<option value="name-asc">Sort by Name (A-Z)</option>
-								<option value="name-desc">Sort by Name (Z-A)</option>
-							</Select>
-						</div></div>
+				{/* All Leads Table */}
+				<div className="mt-6">
+					<div className="py-4">
+						<div className="flex justify-between items-center"><h4 className="text-lg font-semibold text-black">All Leads</h4>
+							<div className="flex gap-2 mb-4 mt-4">
+								<Input
+									type="text"
+									placeholder="Search by name or email"
+									value={search}
+									onChange={e => setSearch(e.target.value)}
+									className="border bg-white px-2 py-1 rounded"
+								/>
+								<Select value={statusFilter}  onChange={e => setStatusFilter(e.target.value)} className="border bg-white px-2 py-1 rounded">
+									<option value="">All Statuses</option>
+									<option value="pending">Pending</option>
+									<option value="approved">Approved</option>
+									<option value="rejected">Rejected</option>
+								</Select>
+								<Select value={sortBy} onChange={e => setSortBy(e.target.value)} className="border bg-white px-2 py-1 rounded">
+									<option value="date-desc">Sort by Latest</option>
+									<option value="date-asc">Sort by Oldest</option>
+									<option value="name-asc">Sort by Name (A-Z)</option>
+									<option value="name-desc">Sort by Name (Z-A)</option>
+								</Select>
+							</div></div>
 
-					<TableWrapper>
-						<table className="w-full bg-white overflow-hidden text-sm">
-							<TableHeadings
-								columns={[
-									"File No.",
-									"Loan",
-									"Loan Mode",
-									"Applicant",
-									"Subscriber",
-									"Email",
-									"Phone",
-									"Review",
-									"Status",
-								]}
-							/>
-							<tbody>
-								{filteredLeads.map((lead: any, index: number) => (
-									<TableRow
-										key={index}
-										row={[
-											lead._id,
-											lead.loanSubType,
-											lead.mode ? lead.mode : "Online",
-											lead.values.Name,
-											<EmailCell email={lead.subscriber} />,
-											<EmailCell email={lead.values.Email} />,
-											lead.values.Phone,
-											lead.rejectionMessage,
-											<StatusBadge
-												status={
-													lead.status.toLowerCase() as
-													| "approved"
-													| "pending"
-													| "rejected"
-												}
-											/>,
-										]}
-									/>
-								))}
-							</tbody>
-						</table>
-					</TableWrapper>
+						<TableWrapper>
+							<table className="w-full bg-white overflow-hidden text-sm">
+								<TableHeadings
+									columns={[
+										"File No.",
+										"Loan",
+										"Loan Mode",
+										"Applicant",
+										"Subscriber",
+										"Email",
+										"Phone",
+										"Review",
+										"Status",
+									]}
+								/>
+								<tbody>
+									{filteredLeads.map((lead: any, index: number) => (
+										<TableRow
+											key={index}
+											row={[
+												lead._id,
+												lead.loanSubType,
+												lead.mode ? lead.mode : "Online",
+												lead.values.Name,
+												<EmailCell email={lead.subscriber} />,
+												<EmailCell email={lead.values.Email} />,
+												lead.values.Phone,
+												lead.rejectionMessage,
+												<StatusBadge
+													status={
+														lead.status.toLowerCase() as
+														| "approved"
+														| "pending"
+														| "rejected"
+													}
+												/>,
+											]}
+										/>
+									))}
+								</tbody>
+							</table>
+						</TableWrapper>
 
-					<ViewAllButton />
+						<ViewAllButton />
+					</div>
 				</div>
 			</div>
-		</div>
+		</RequireFeature>
 	);
 };
 

@@ -3,16 +3,10 @@ import Profile from './Profile';
 import { useEffect, useState, useContext } from 'react';
 import { Icon } from '@iconify/react';
 import { DashboardContext } from '@/app/superadmin/context/DashboardContext';
-import { IconBellRinging } from "@tabler/icons-react";
 import Notification from './Notification'
 
 const Header = () => {
   const [_height, setHeight] = useState('0px');
-
-
-
-
-
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
@@ -43,15 +37,7 @@ const Header = () => {
   }, []);
 
   const { isMobileSidebar, setIsMobileSidebar } = useContext(DashboardContext);
-  const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
 
   return (

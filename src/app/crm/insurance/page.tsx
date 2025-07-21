@@ -22,6 +22,7 @@ import {
 import { HousePlus, ShieldPlus, CarFront, HeartPulse } from "lucide-react";
 import { useGetLoansQuery } from "@/redux/services/loanApi";
 import React, { useState, useMemo } from "react";
+import { RequireFeature } from '@/components/RequireFeature';
 
 export default function Page() {
 	const { data: insuranceLoans = [] } = useGetLoansQuery({ loanType: "insurance" });
@@ -76,148 +77,150 @@ export default function Page() {
 	}, [insuranceLoans, search, statusFilter, sortBy]);
 
 	return (
-		<div>
-			<h4 className="font-semibold mb-6 text-black">
-				Secure Your Future with Trusted Insurance Plans
-			</h4>
+		<RequireFeature feature="Insurance">
+			<div>
+				<h4 className="font-semibold mb-6 text-black">
+					Secure Your Future with Trusted Insurance Plans
+				</h4>
 
-			<Tabs defaultValue="health">
-				<TabsList>
-					<TabsTrigger value="health">
-						<TabsIcon>
-							<ShieldPlus />
-						</TabsIcon>
-						<TabsLabel>
-							Health Insurance
-							<TabsDescription>
-								Cover medical expenses and ensure care when it matters most.
-							</TabsDescription>
-						</TabsLabel>
-					</TabsTrigger>
+				<Tabs defaultValue="health">
+					<TabsList>
+						<TabsTrigger value="health">
+							<TabsIcon>
+								<ShieldPlus />
+							</TabsIcon>
+							<TabsLabel>
+								Health Insurance
+								<TabsDescription>
+									Cover medical expenses and ensure care when it matters most.
+								</TabsDescription>
+							</TabsLabel>
+						</TabsTrigger>
 
-					<TabsTrigger value="life">
-						<TabsIcon>
-							<HeartPulse />
-						</TabsIcon>
-						<TabsLabel>
-							Life Insurance
-							<TabsDescription>
-								Ensure your family's financial safety with life coverage plans.
-							</TabsDescription>
-						</TabsLabel>
-					</TabsTrigger>
+						<TabsTrigger value="life">
+							<TabsIcon>
+								<HeartPulse />
+							</TabsIcon>
+							<TabsLabel>
+								Life Insurance
+								<TabsDescription>
+									Ensure your family's financial safety with life coverage plans.
+								</TabsDescription>
+							</TabsLabel>
+						</TabsTrigger>
 
-					<TabsTrigger value="car">
-						<TabsIcon>
-							<CarFront />
-						</TabsIcon>
-						<TabsLabel>
-							Car Insurance
-							<TabsDescription>
-								Drive worry-free with comprehensive vehicle protection plans.
-							</TabsDescription>
-						</TabsLabel>
-					</TabsTrigger>
+						<TabsTrigger value="car">
+							<TabsIcon>
+								<CarFront />
+							</TabsIcon>
+							<TabsLabel>
+								Car Insurance
+								<TabsDescription>
+									Drive worry-free with comprehensive vehicle protection plans.
+								</TabsDescription>
+							</TabsLabel>
+						</TabsTrigger>
 
-					<TabsTrigger value="home">
-						<TabsIcon>
-							<HousePlus />
-						</TabsIcon>
-						<TabsLabel>
-							Home Insurance
-							<TabsDescription>
-								Protect your property against natural disasters, fire, and
-								theft.
-							</TabsDescription>
-						</TabsLabel>
-					</TabsTrigger>
-				</TabsList>
-			</Tabs>
+						<TabsTrigger value="home">
+							<TabsIcon>
+								<HousePlus />
+							</TabsIcon>
+							<TabsLabel>
+								Home Insurance
+								<TabsDescription>
+									Protect your property against natural disasters, fire, and
+									theft.
+								</TabsDescription>
+							</TabsLabel>
+						</TabsTrigger>
+					</TabsList>
+				</Tabs>
 
-			{/* Insurance Leads Table */}
-			<div className="mt-6">
-				<div className="py-4">
-          {/* Filter/Sort/Search Controls */}
-          <div className="flex gap-2 mb-4 mt-4">
-            <input
-              type="text"
-              placeholder="Search by name or email"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="border bg-white px-2 py-1 rounded"
-              style={{ minWidth: 200 }}
-            />
-            <select
-              value={statusFilter}
-              onChange={e => setStatusFilter(e.target.value)}
-              className="border bg-white px-2 py-1 rounded"
-              style={{ minWidth: 150 }}
-            >
-              <option value="">All Statuses</option>
-              <option value="pending">Pending</option>
-              <option value="approved">Approved</option>
-              <option value="rejected">Rejected</option>
-            </select>
-            <select
-              value={sortBy}
-              onChange={e => setSortBy(e.target.value)}
-              className="border bg-white px-2 py-1 rounded"
-              style={{ minWidth: 180 }}
-            >
-              <option value="date-desc">Sort by Latest</option>
-              <option value="date-asc">Sort by Oldest</option>
-              <option value="name-asc">Sort by Name (A-Z)</option>
-              <option value="name-desc">Sort by Name (Z-A)</option>
-            </select>
-          </div>
-					<TableHeader>Insurance Leads</TableHeader>
-
-					<TableWrapper>
-						<table className="w-full bg-white overflow-hidden text-sm">
-							<TableHeadings
-								columns={[
-									"File No.",
-									"Loan",
-									"Loan Mode",
-									"Applicant",
-									"Subscriber",
-									"Email",
-									"Phone",
-									"Review",
-									"Status",
-								]}
+				{/* Insurance Leads Table */}
+				<div className="mt-6">
+					<div className="py-4">
+						{/* Filter/Sort/Search Controls */}
+						<div className="flex gap-2 mb-4 mt-4">
+							<input
+								type="text"
+								placeholder="Search by name or email"
+								value={search}
+								onChange={e => setSearch(e.target.value)}
+								className="border bg-white px-2 py-1 rounded"
+								style={{ minWidth: 200 }}
 							/>
-							<tbody>
-								{filteredLeads.map((lead: any, index: number) => (
-									<TableRow
-										key={index}
-										row={[
-											lead._id,
-											lead.loanSubType,
-											lead.mode ? lead.mode : "Online",
-											lead.values.Name,
-											<EmailCell email={lead.subscriber} />,
-											<EmailCell email={lead.values.Email} />,
-											lead.values.Phone,
-											lead.rejectionMessage,
-											<StatusBadge
-												status={
-													lead.status.toLowerCase() as
-													| "approved"
-													| "pending"
-													| "rejected"
-												}
-											/>,
-										]}
-									/>
-								))}
-							</tbody>
-						</table>
-					</TableWrapper>
+							<select
+								value={statusFilter}
+								onChange={e => setStatusFilter(e.target.value)}
+								className="border bg-white px-2 py-1 rounded"
+								style={{ minWidth: 150 }}
+							>
+								<option value="">All Statuses</option>
+								<option value="pending">Pending</option>
+								<option value="approved">Approved</option>
+								<option value="rejected">Rejected</option>
+							</select>
+							<select
+								value={sortBy}
+								onChange={e => setSortBy(e.target.value)}
+								className="border bg-white px-2 py-1 rounded"
+								style={{ minWidth: 180 }}
+							>
+								<option value="date-desc">Sort by Latest</option>
+								<option value="date-asc">Sort by Oldest</option>
+								<option value="name-asc">Sort by Name (A-Z)</option>
+								<option value="name-desc">Sort by Name (Z-A)</option>
+							</select>
+						</div>
+						<TableHeader>Insurance Leads</TableHeader>
 
-					<ViewAllButton />
+						<TableWrapper>
+							<table className="w-full bg-white overflow-hidden text-sm">
+								<TableHeadings
+									columns={[
+										"File No.",
+										"Loan",
+										"Loan Mode",
+										"Applicant",
+										"Subscriber",
+										"Email",
+										"Phone",
+										"Review",
+										"Status",
+									]}
+								/>
+								<tbody>
+									{filteredLeads.map((lead: any, index: number) => (
+										<TableRow
+											key={index}
+											row={[
+												lead._id,
+												lead.loanSubType,
+												lead.mode ? lead.mode : "Online",
+												lead.values.Name,
+												<EmailCell email={lead.subscriber} />,
+												<EmailCell email={lead.values.Email} />,
+												lead.values.Phone,
+												lead.rejectionMessage,
+												<StatusBadge
+													status={
+														lead.status.toLowerCase() as
+														| "approved"
+														| "pending"
+														| "rejected"
+													}
+												/>,
+											]}
+										/>
+									))}
+								</tbody>
+							</table>
+						</TableWrapper>
+
+						<ViewAllButton />
+					</div>
 				</div>
 			</div>
-		</div>
+		</RequireFeature>
 	);
 }

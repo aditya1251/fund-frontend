@@ -29,7 +29,7 @@ const page = () => {
             return;
         }
         try {
-            await createAdmin({ ...form, plan: form.planId, role: "DSA", type: "adminCreation" }).unwrap();
+            await createAdmin({ ...form, role: "DSA", type: "adminCreation" }).unwrap();
             setSnackbar({ open: true, message: "Admin created successfully!", severity: "success" });
             setForm({ name: "", email: "", password: "", planId: "" });
         } catch (error: any) {
