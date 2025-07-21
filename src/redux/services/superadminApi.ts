@@ -8,10 +8,22 @@ export const superadminApi = createApi({
     getAdmins: builder.query<any, void>({
       query: () => "superadmin",
     }),
+    getAdminById: builder.query<any, string>({
+      query: (id) => ({
+        url: `superadmin/${id}`,
+      }),
+    }),
     createAdmin: builder.mutation<any, any>({
       query: (body) => ({
-        url: "superadmin/register",
+        url: "superadmin",
         method: "POST",
+        body,
+      }),
+    }),
+    updateAdmin: builder.mutation<any, { id: string, body: any }>({
+      query: ({ id, body }) => ({
+        url: `superadmin/${id}`,
+        method: "PUT",
         body,
       }),
     }),
@@ -26,6 +38,8 @@ export const superadminApi = createApi({
 
 export const {
   useGetAdminsQuery,
+  useUpdateAdminMutation,
+  useGetAdminByIdQuery,
   useCreateAdminMutation,
   useDeleteAdminMutation,
 } = superadminApi;

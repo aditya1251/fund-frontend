@@ -8,12 +8,12 @@ export const features = [
   "Loans",
   "Govt-Loans",
   "Insurance",
-  "QuickLoans",
-  "Capaign-Marketing",
+  "Quick-Loans",
+  "Campaign-Marketing",
   "Taxation",
-  "emiCalculator",
-  "TrainingAndSupport",
-  "FeedbackAndGrievance",
+  "Emi-Calculator",
+  "Training-Support",
+  "Feedback-Grievance",
 ];
 
 const PlansPage = () => {

@@ -14,7 +14,7 @@ import {
   useUpdateLoanTemplateMutation,
   useDeleteLoanTemplateMutation,
 } from '@/redux/services/loanTemplateApi';
-import { loanFormTemplateSchema, templateFieldSchema, LoanFormTemplate, TemplateField } from '@/lib/validation/loanTemplateSchema';
+import { loanFormTemplateSchema, LoanFormTemplate, TemplateField } from '@/lib/validation/loanTemplateSchema';
 
 const FIELD_TYPES = [
   { value: "text", label: "Text" },

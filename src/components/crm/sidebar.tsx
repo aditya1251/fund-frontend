@@ -20,6 +20,7 @@ import {
 	Users,
 } from "lucide-react";
 import logo from "../../../public/assets/logo.png"; // Adjust the path as necessary
+import { signOut } from "next-auth/react";
 
 interface NavItem {
 	href: string;
@@ -66,9 +67,8 @@ const Sidebar = () => {
 
 	return (
 		<aside
-			className={`relative flex flex-col justify-between bg-white shadow-lg transition-[width] duration-300 ease-in-out ${
-				open ? "w-64" : "w-20"
-			}`}
+			className={`relative flex flex-col justify-between bg-white shadow-lg transition-[width] duration-300 ease-in-out ${open ? "w-64" : "w-20"
+				}`}
 		>
 			<div>
 				{/* Header */}
@@ -83,9 +83,9 @@ const Sidebar = () => {
 							quality={100}
 							placeholder="blur"
 							blurDataURL="/placeholder.svg" // Placeholder image for blur effect
-							/>
-							</Link>
-					
+						/>
+					</Link>
+
 
 					<button
 						onClick={toggleSidebar}
@@ -105,11 +105,10 @@ const Sidebar = () => {
 								<li key={href}>
 									<Link
 										href={`${baseUrl}${href}`}
-										className={`flex items-center p-2 gap-3 rounded-lg text-sm transition-colors duration-200 ${
-											isActive
-												? "bg-[#f5d949] text-black"
-												: "text-black hover:bg-gray-200"
-										}`}
+										className={`flex items-center p-2 gap-3 rounded-lg text-sm transition-colors duration-200 ${isActive
+											? "bg-[#f5d949] text-black"
+											: "text-black hover:bg-gray-200"
+											}`}
 									>
 										<div>{icon}</div>
 										{open && <span>{label}</span>}
@@ -120,13 +119,13 @@ const Sidebar = () => {
 					</ul>
 
 					{/* Logout */}
-					<Link
-						href="/logout"
+					<div
+						onClick={() => signOut()}
 						className="flex items-center p-2 gap-3 rounded-lg text-sm text-neutral-500 hover:bg-gray-200 transition-colors duration-200"
 					>
 						<LogOutIcon />
 						{open && <span>Log Out</span>}
-					</Link>
+					</div>
 				</nav>
 			</div>
 		</aside>

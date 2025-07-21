@@ -15,6 +15,10 @@ import {
   Alert,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from '@mui/icons-material/Edit';
+import Chip from '@mui/material/Chip';
+import Tooltip from '@mui/material/Tooltip';
+import { useRouter } from 'next/navigation';
 import { useSession } from "next-auth/react";
 import {
   useGetAdminsQuery,
@@ -25,15 +29,17 @@ interface Admin {
   _id: string;
   name: string;
   email: string;
-  role:string;
-  planName:string;
+  role: string;
+  planName: string;
   createdAt: string;
+  isDeleted?: boolean;
 }
 
 export default function ManageAdmins() {
   const { data: session } = useSession();
   const token = session?.user?.token;
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: "success" | "error" }>({ open: false, message: "", severity: "success" });
+  const router = useRouter();
 
   const {
     data: admins = [],
@@ -54,6 +60,10 @@ export default function ManageAdmins() {
     }
   };
 
+  const handleEdit = (id: string) => {
+    router.push(`/superadmin/users/edit?id=${id}`);
+  };
+
   return (
     <Box p={4}>
       <Typography variant="h4" fontWeight="bold" mb={2}>Manage Admins</Typography>
@@ -68,19 +78,20 @@ export default function ManageAdmins() {
                 <TableCell>Plan</TableCell>
                 <TableCell>Role</TableCell>
                 <TableCell>Created At</TableCell>
+                <TableCell>Status</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {isLoading || isDeleting ? (
                 <TableRow>
-                  <TableCell colSpan={4} align="center">
+                  <TableCell colSpan={7} align="center">
                     Loading...
                   </TableCell>
                 </TableRow>
               ) : isError ? (
                 <TableRow>
-                  <TableCell colSpan={4} align="center">
+                  <TableCell colSpan={7} align="center">
                     Failed to load admins.
                   </TableCell>
                 </TableRow>
@@ -93,9 +104,23 @@ export default function ManageAdmins() {
                     <TableCell>{admin.role}</TableCell>
                     <TableCell>{new Date(admin.createdAt).toLocaleString()}</TableCell>
                     <TableCell>
-                      <IconButton color="error" onClick={() => handleDelete(admin._id)} disabled={isDeleting||admin.role==="SUPERADMIN"}>
-                        <DeleteIcon />
-                      </IconButton>
+                      {admin.isDeleted ? <Chip label="Deleted" color="error" size="small" /> : <Chip label="Active" color="success" size="small" />}
+                    </TableCell>
+                    <TableCell>
+                      <Tooltip title="Edit">
+                        <span>
+                          <IconButton color="primary" onClick={() => handleEdit(admin._id)} disabled={isDeleting || admin.role === "SUPERADMIN" || admin.isDeleted}>
+                            <EditIcon />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
+                      <Tooltip title="Delete">
+                        <span>
+                          <IconButton color="error" onClick={() => handleDelete(admin._id)} disabled={isDeleting || admin.role === "SUPERADMIN" || admin.isDeleted}>
+                            <DeleteIcon />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))
