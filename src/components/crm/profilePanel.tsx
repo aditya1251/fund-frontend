@@ -129,13 +129,13 @@ const PanelItem: React.FC<PanelItemProps> = ({
 	redirect,
 	suffix,
 }) => (
-	<button className="flex items-center justify-between px-3 py-2 rounded hover:bg-gray-100 transition">
+	<a href={redirect} className="flex items-center justify-between px-3 py-2 rounded hover:bg-gray-100 transition">
 		<div className="flex items-center gap-3 text-sm text-black">
 			{icon}
-			<a href={redirect}>{label}</a>
+			<span>{label}</span>
 		</div>
 		{suffix ?? <ChevronRight className="w-4 h-4 text-gray-400" />}
-	</button>
+	</a>
 );
 
 export default ProfilePanel;
