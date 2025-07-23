@@ -30,6 +30,12 @@ const Menuitems: MenuitemsType[] = [
     },
     {
         id: uniqueId(),
+        title: "Loans",
+        icon: "dollar-line-duotone",
+        href: "/superadmin/loans",
+    },
+    {
+        id: uniqueId(),
         title: "Users",
         icon: "user-line-duotone",
         href: "/superadmin/users",
@@ -41,6 +47,43 @@ const Menuitems: MenuitemsType[] = [
         href: "/superadmin/plans",
     },
 
+    {
+        navlabel: true,
+        subheader: "Loans",
+    },
+    
+
+    {
+        id: uniqueId(),
+        title: "Loans",
+        icon: "dollar-line-duotone",
+        href: "/superadmin/loans",
+
+        children: [
+            {
+                id: uniqueId(),
+                title: "Applications",
+                chip: "3",
+                chipColor: "primary",
+                href: "/superadmin/loans/applications",
+            },
+            {
+                id: uniqueId(),
+                title: "Personal Loans",
+                href: "/superadmin/loans/personal",
+            },
+            {
+                id: uniqueId(),
+                title: "Government Loans",
+                href: "/superadmin/loans/government",
+            },
+            {
+                id: uniqueId(),
+                title: "Insurance",
+                href: "/superadmin/loans/insurance",
+            },
+        ]
+    },
     {
         navlabel: true,
         subheader: "USERS",
@@ -61,6 +104,18 @@ const Menuitems: MenuitemsType[] = [
             },
         ]
     },
+    {
+        navlabel: true,
+        subheader: "CONTACTS",
+    },
+    {
+        id: uniqueId(),
+        title: "Contacts",
+        chip: "5",
+        chipColor: "primary",
+        icon: "book-line-duotone",
+        href: "/superadmin/contacts",
+    },
 
     {
         navlabel: true,
@@ -80,16 +135,7 @@ const Menuitems: MenuitemsType[] = [
             },
         ]
     },
-    {
-        navlabel: false,
-        subheader: "CONTACTS",
-    },
-    {
-        id: uniqueId(),
-        title: "Contacts",
-        icon: "book-line-duotone",
-        href: "/superadmin/contacts",
-    },
+    
     {
         navlabel: true,
         subheader: "UTILITIES",
@@ -107,25 +153,6 @@ const Menuitems: MenuitemsType[] = [
         title: "Table",
         icon: "tablet-line-duotone",
         href: "/superadmin/table",
-    },
-
-    {
-        id: uniqueId(),
-        title: "User Applications",
-        icon: "window-frame-broken",
-        href: "/superadmin/applications",
-    },
-    {
-        id: uniqueId(),
-        title: "DSA Applications",
-        icon: "window-frame-broken",
-        href: "/superadmin/dsaapplications",
-    },
-    {
-        id: uniqueId(),
-        title: "Loan Template",
-        icon: "window-frame-broken",
-        href: "/superadmin/loan-templates",
     },
     {
         id: uniqueId(),
