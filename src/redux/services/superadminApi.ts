@@ -20,10 +20,10 @@ export const superadminApi = createApi({
         body,
       }),
     }),
-    updateAdmin: builder.mutation<any, { id: string, body: any }>({
+    updateAdmin: builder.mutation<any, { id: string; body: any }>({
       query: ({ id, body }) => ({
         url: `superadmin/${id}`,
-        method: "PUT",
+        method: "PATCH",
         body,
       }),
     }),
@@ -31,6 +31,23 @@ export const superadminApi = createApi({
       query: (id) => ({
         url: `superadmin/${id}`,
         method: "DELETE",
+      }),
+    }),
+    resetPass: builder.mutation<any, { email: string }>({
+      query: ({ email }) => ({
+        url: `superadmin/reset-pass`,
+        method: "POST",
+        body: { email },
+      }),
+    }),
+    verifyResetPass: builder.mutation<
+      any,
+      { resetCode: number; newPassword: string,email: string }
+    >({
+      query: ({ resetCode, newPassword ,email }) => ({
+        url: `superadmin/verify-reset`,
+        method: "POST",
+        body: { resetCode, newPassword,email },
       }),
     }),
   }),
@@ -42,4 +59,6 @@ export const {
   useGetAdminByIdQuery,
   useCreateAdminMutation,
   useDeleteAdminMutation,
+  useResetPassMutation,
+  useVerifyResetPassMutation,
 } = superadminApi;

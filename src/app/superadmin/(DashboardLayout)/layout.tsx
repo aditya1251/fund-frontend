@@ -6,8 +6,7 @@ import { baselightTheme } from "@/utils/theme/DefaultColors";
 import React from "react";
 import Header from "@/app/superadmin/(DashboardLayout)/layout/header/Header";
 import Sidebar from "@/app/superadmin/(DashboardLayout)/layout/sidebar/Sidebar";
-import Topbar from "./layout/header/Topbar";
-import Footer from "./layout/footer/page";
+
 
 const MainWrapper = styled("div")(() => ({
   display: "flex",

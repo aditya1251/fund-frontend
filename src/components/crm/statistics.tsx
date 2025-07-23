@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 interface StatsItem {
   label: string;
@@ -44,7 +44,47 @@ const StatsCard: React.FC<StatsItem> = ({
   </div>
 );
 
-const Statistics: React.FC = () => {
+const Statistics: React.FC = ({data}) => {
+  const [stats, setStats] = useState([
+  {
+    label: "Approved",
+    value: "0",
+    bgColor: "bg-[#2d2c2c]",
+    textColor: "text-white",
+  },
+  {
+    label: "Rejected",
+    value: "0",
+    bgColor: "bg-[#f5d949]",
+    textColor: "text-black",
+  },
+  {
+    label: "Disbursed",
+    value: "0",
+    bgColor: "bg-[#2d2c2c]",
+    textColor: "text-white",
+  },
+])
+useEffect(() => {
+  setStats((prev) => {
+        return prev.map((card) => {
+          if (card.label === "Approved") {
+            const activeCount = data?.filter(lead => lead.status === "approved").length;
+            return { ...card, value: activeCount };
+          }
+          if (card.label === "Rejected") {
+            const activeCount = data?.filter(lead => lead.status === "rejected").length;
+            return { ...card, value: activeCount };
+          }
+          if (card.label === "Disbursed") {
+            const activeCount = data?.filter(lead => lead.status === "pending").length;
+            return { ...card, value: activeCount };
+          }
+          return card;
+        });
+      });
+}, [data])
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
       {/* Stats column */}

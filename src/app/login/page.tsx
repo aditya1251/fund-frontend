@@ -7,7 +7,6 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ui4 from "../../../public/assets/Team.png";
 
-
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,7 +48,10 @@ export default function LoginPage() {
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium text-black">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-black"
+              >
                 Email Address
               </label>
               <input
@@ -58,14 +60,16 @@ export default function LoginPage() {
                 placeholder="Enter your email"
                 className="w-full px-3 py-3 bg-[#f1f1f1] rounded-md border-0 outline-none text-black"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 autoFocus
               />
             </div>
-
             <div className="space-y-2">
-              <label htmlFor="password" className="block text-sm font-medium text-black">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-black"
+              >
                 Password
               </label>
               <div className="relative">
@@ -75,7 +79,7 @@ export default function LoginPage() {
                   placeholder="Enter your password"
                   className="w-full px-3 py-3 bg-[#f1f1f1] rounded-md border-0 outline-none text-black"
                   value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
                 <button
@@ -93,25 +97,9 @@ export default function LoginPage() {
                 </button>
               </div>
             </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 accent-[#f7c430] border-gray-300 rounded"
-                  checked={checked}
-                  onChange={e => setChecked(e.target.checked)}
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-black">
-                  Remember me
-                </label>
-              </div>
-              <Link href="#" className="text-sm underline text-black">
-                Forgot Password ?
-              </Link>
-            </div>
-
+            <Link href="/reset-pass" className="text-sm underline text-black float-right">
+              Forgot Password ?
+            </Link>{" "}
             <button
               type="submit"
               className="w-full bg-[#f7c430] py-3 px-4 rounded-md font-medium text-black cursor-pointer hover:bg-[#f7c430]/90 transition-colors duration-200"
@@ -119,9 +107,10 @@ export default function LoginPage() {
               Log In
             </button>
             {error && (
-              <div className="text-red-600 text-sm text-center mt-2">{error}</div>
+              <div className="text-red-600 text-sm text-center mt-2">
+                {error}
+              </div>
             )}
-
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300"></div>
@@ -130,7 +119,6 @@ export default function LoginPage() {
                 <span className="px-2 bg-white text-gray-500">or</span>
               </div>
             </div>
-
             <div className="text-center text-sm text-black">
               Don't have an account?{" "}
               <Link href="#" className="font-semibold">

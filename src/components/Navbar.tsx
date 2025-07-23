@@ -324,10 +324,10 @@ export default function NavigationHeader() {
         {/* Auth buttons */}
         {status === "authenticated" && (
           <>
-            {session.user?.role === "CRM" && (
+            {session.user?.role === "DSA" && (
               <Link href="/crm" onClick={toggle}>
                 <Button className="w-full mt-4 bg-[#f7c430] text-black font-medium">
-                  Admin Panel
+                  CRM Panel
                 </Button>
               </Link>
             )}
@@ -383,10 +383,10 @@ export default function NavigationHeader() {
             <div className="flex items-center space-x-2">
               {/* Auth buttons (desktop) */}
               <div className="hidden md:flex items-center space-x-2">
-                {status === "authenticated" && session?.user?.role === "CRM" && (
+                {status === "authenticated" && session?.user?.role === "DSA" && (
                   <Link href="/crm">
                     <Button className="bg-[#f7c430] text-black font-medium px-4 py-2 rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
-                      Admin Panel
+                      CRM Panel
                     </Button>
                   </Link>
                 )}

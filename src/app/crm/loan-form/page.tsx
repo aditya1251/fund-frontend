@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
+import { DatePicker } from "@/components/ui/date-picker"
 import { useSession } from "next-auth/react"
 import {
   useCreateLoanMutation,
@@ -77,7 +78,6 @@ export default function LoanForm() {
                   switch (field.type) {
                     case "text":
                     case "number":
-                    case "date":
                       return (
                         <div key={idx}>
                           <Label>{field.label}{field.required && " *"}</Label>
@@ -86,6 +86,17 @@ export default function LoanForm() {
                             required={field.required}
                             value={formValues[field.label] || ""}
                             onChange={e => handleFormValueChange(field.label, e.target.value)}
+                          />
+                        </div>
+                      )
+                    case "date":
+                      return (
+                        <div key={idx}>
+                          <Label>{field.label}{field.required && " *"}</Label>
+                          <DatePicker
+                            date={formValues[field.label] ? new Date(formValues[field.label]) : undefined}
+                            setDate={(date) => handleFormValueChange(field.label, date ? date.toISOString().split('T')[0] : "")}
+                            className="cursor-pointer"
                           />
                         </div>
                       )

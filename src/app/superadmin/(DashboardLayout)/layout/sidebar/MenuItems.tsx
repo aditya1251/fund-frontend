@@ -141,23 +141,6 @@ const Menuitems: MenuitemsType[] = [
     },
     {
         navlabel: true,
-        subheader: "AUTH",
-    },
-    {
-        id: uniqueId(),
-        title: "Login",
-        icon: "login-2-broken",
-        href: "/superadmin/authentication/login",
-    },
-    {
-        id: uniqueId(),
-        title: "Register",
-        icon: "shield-user-linear",
-        href: "/superadmin/authentication/register",
-    },
-
-    {
-        navlabel: true,
         subheader: "OTHER",
     },
     {
