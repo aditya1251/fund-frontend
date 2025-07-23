@@ -25,23 +25,15 @@ const AddPlanPage = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowDropdown(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -51,9 +43,7 @@ const AddPlanPage = () => {
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
-    if (name === "isActive") {
-      setFormData((prev) => ({ ...prev, isActive: checked }));
-    }
+    setFormData((prev) => ({ ...prev, [name]: checked }));
   };
 
   const handleFeatureToggle = (feature: string) => {
@@ -77,17 +67,15 @@ const AddPlanPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = planSchema.safeParse(formData);
-
     if (!result.success) {
-      const errorMessages = result.error.issues.map((e) => e.message).join(", ");
-      setError(errorMessages);
+      const messages = result.error.issues.map((e) => e.message).join(", ");
+      setError(messages);
       return;
     }
 
     setLoading(true);
     try {
-      const createdPlan = await createPlan(result.data).unwrap();
-      console.log("Plan created:", createdPlan);
+      await createPlan(result.data).unwrap();
       router.push("/superadmin/plans");
     } catch (err: any) {
       setError(err?.data?.message || "Failed to create plan");
@@ -96,178 +84,157 @@ const AddPlanPage = () => {
     }
   };
 
-  const handleCancel = () => router.back();
-
   return (
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
-            ADD NEW <span className="text-[#ffd439]">PLAN</span>
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Create a new subscription plan for users
-          </p>
-        </div>
+    <div className="min-h-screen py-10 px-4 bg-white">
+      <div className="max-w-3xl mx-auto bg-white border-2 border-black shadow-[6px_6px_0_0_#000] rounded-xl p-6">
+        <h1 className="text-3xl md:text-4xl font-bold text-black text-center mb-2">
+          Add <span className="text-[#FFD439]">Plan</span>
+        </h1>
+        <p className="text-center text-gray-600 mb-6">Create a new subscription plan</p>
 
         {error && (
-          <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          <div className="mb-6 p-4 bg-red-100 border border-red-300 text-red-700 rounded-xl">
             {error}
           </div>
         )}
 
-        <div className="flex flex-col items-start gap-6 w-full p-6 rounded-[16px] border-3 border-black bg-[#FFD439] transition-all duration-300 shadow-[10px_10px_0_0_#000]">
-          <form onSubmit={handleSubmit} className="space-y-8 w-full">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-black mb-1">Plan Name *</label>
+            <input
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
+              className="w-full px-4 py-2 border-2 border-black rounded-lg bg-white focus:ring-2 focus:ring-black"
+              placeholder="Enter plan name"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-black mb-2">
-                Plan Name *
-              </label>
+              <label className="block text-sm font-medium text-black mb-1">Amount (₹) *</label>
               <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
+                name="amount"
+                type="number"
+                min="1"
+                value={formData.amount}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border-2 border-black rounded-lg focus:ring-2 focus:ring-[#ffd439] focus:border-black bg-white"
-                placeholder="Enter plan name"
                 required
+                className="w-full px-4 py-2 border-2 border-black rounded-lg bg-white"
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <label htmlFor="amount" className="block text-sm font-medium text-black mb-2">
-                  Amount (₹) *
-                </label>
-                <input
-                  type="number"
-                  id="amount"
-                  name="amount"
-                  value={formData.amount}
-                  onChange={handleInputChange}
-                  min="1"
-                  className="w-full px-4 py-3 border-2 border-black rounded-lg bg-white"
-                  placeholder="Enter amount"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="duration" className="block text-sm font-medium text-black mb-2">
-                  Duration (months) * (0 = lifetime)
-                </label>
-                <input
-                  type="number"
-                  id="duration"
-                  name="duration"
-                  value={formData.duration}
-                  onChange={handleInputChange}
-                  min="0"
-                  className="w-full px-4 py-3 border-2 border-black rounded-lg bg-white"
-                  placeholder="Enter duration"
-                  required
-                />
-              </div>
-            </div>
-
-            <div ref={dropdownRef} className="relative">
-              <label className="block text-sm font-medium text-black mb-2">
-                Features * (Search and select)
-              </label>
+            <div>
+              <label className="block text-sm font-medium text-black mb-1">Duration (months) *</label>
               <input
-                type="text"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                onFocus={() => setShowDropdown(true)}
-                className="w-full px-4 py-3 border-2 border-black rounded-lg bg-white"
-                placeholder="Search features..."
+                name="duration"
+                type="number"
+                min="0"
+                value={formData.duration}
+                onChange={handleInputChange}
+                required
+                className="w-full px-4 py-2 border-2 border-black rounded-lg bg-white"
               />
+            </div>
+          </div>
 
-              {showDropdown && (
-                <div className="absolute z-10 w-full mt-1 bg-white border-2 border-black rounded-lg shadow-[6px_6px_0_0_#000] max-h-60 overflow-y-auto">
-                  <div className="flex justify-end px-4 pt-2">
-                    <button
-                      type="button"
-                      onClick={() => setShowDropdown(false)}
-                      className="text-sm text-black hover:text-gray-700"
-                    >
-                      ✕ Close
-                    </button>
-                  </div>
-                  {filteredFeatures.map((feature) => (
-                    <div
-                      key={feature}
-                      className={`flex items-center px-4 py-2 cursor-pointer hover:bg-[#ffd439] ${
-                        formData.features.includes(feature) ? "bg-[#ffd439]" : ""
-                      }`}
-                      onClick={() => handleFeatureToggle(feature)}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={formData.features.includes(feature)}
-                        readOnly
-                        className="w-5 h-5 border-2 border-black rounded"
-                      />
-                      <span className="ml-3 text-sm text-black">
-                        {feature.replace(/([A-Z])/g, " $1").trim()}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
+          <div ref={dropdownRef}>
+            <label className="block text-sm font-medium text-black mb-1">
+              Features * (search to select)
+            </label>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onFocus={() => setShowDropdown(true)}
+              className="w-full px-4 py-2 border-2 border-black rounded-lg bg-white"
+              placeholder="Search features..."
+            />
 
-              <div className="mt-4 flex flex-wrap gap-2">
-                {formData.features.map((feature) => (
-                  <span
-                    key={feature}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-black text-white"
+            {showDropdown && (
+              <div className="mt-2 border-2 border-black rounded-xl bg-white shadow-[6px_6px_0_0_#000] max-h-60 overflow-y-auto">
+                <div className="flex justify-end px-4 py-2 border-b border-black">
+                  <button
+                    type="button"
+                    onClick={() => setShowDropdown(false)}
+                    className="text-sm text-black hover:text-gray-600"
                   >
-                    {feature.replace(/([A-Z])/g, " $1").trim()}
-                    <button
-                      type="button"
-                      onClick={() => handleFeatureToggle(feature)}
-                      className="ml-2 text-white hover:text-[#ffd439]"
-                    >
-                      ×
-                    </button>
-                  </span>
+                    ✕ Close
+                  </button>
+                </div>
+                {filteredFeatures.map((feature) => (
+                  <div
+                    key={feature}
+                    onClick={() => handleFeatureToggle(feature)}
+                    className={`flex items-center px-4 py-2 cursor-pointer hover:bg-[#FFD439] ${
+                      formData.features.includes(feature) ? "bg-[#FFD439]" : ""
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={formData.features.includes(feature)}
+                      readOnly
+                      className="w-4 h-4 border-2 border-black rounded"
+                    />
+                    <span className="ml-3 text-sm">{feature.replace(/([A-Z])/g, " $1").trim()}</span>
+                  </div>
                 ))}
               </div>
-            </div>
+            )}
 
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="isActive"
-                name="isActive"
-                checked={formData.isActive}
-                onChange={handleCheckboxChange}
-                className="w-5 h-5 border-2 border-black rounded"
-              />
-              <label htmlFor="isActive" className="ml-3 text-sm font-medium text-black">
-                Active Plan
-              </label>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {formData.features.map((feature) => (
+                <span
+                  key={feature}
+                  className="flex items-center bg-black text-white text-sm px-3 py-1 rounded-full"
+                >
+                  {feature.replace(/([A-Z])/g, " $1").trim()}
+                  <button
+                    type="button"
+                    onClick={() => handleFeatureToggle(feature)}
+                    className="ml-2 hover:text-[#FFD439]"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
             </div>
+          </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t-2 border-black">
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-black hover:bg-gray-800 disabled:bg-gray-600 text-white px-10 py-4 rounded-lg font-medium flex items-center justify-center border-2 border-black transition-all duration-300"
-              >
-                {loading ? "Creating..." : "Create Plan"}
-              </button>
-              <button
-                type="button"
-                onClick={handleCancel}
-                disabled={loading}
-                className="bg-white hover:bg-gray-100 disabled:bg-gray-50 text-black px-10 py-4 rounded-lg font-medium border-2 border-black transition-all duration-300"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
+          <div className="flex items-center mt-2">
+            <input
+              type="checkbox"
+              name="isActive"
+              id="isActive"
+              checked={formData.isActive}
+              onChange={handleCheckboxChange}
+              className="w-4 h-4 border-2 border-black rounded"
+            />
+            <label htmlFor="isActive" className="ml-3 text-sm text-black">
+              Active Plan
+            </label>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t-2 border-black">
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-lg border-2 border-black font-medium"
+            >
+              {loading ? "Creating..." : "Create Plan"}
+            </button>
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="bg-white text-black hover:bg-gray-100 px-8 py-3 rounded-lg border-2 border-black font-medium"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
+    </div>
   );
 };
 
