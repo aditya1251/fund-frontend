@@ -1,37 +1,73 @@
 "use client";
 import Image from "next/image";
 import { Eye, Plus, ArrowUpRight } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
-const cards = [
+
+export default function LeadOverview({data}) {
+  const session = useSession();
+  const [overview, setOverview] = useState([
   {
-    title: "Funds Raize's Gold Plan",
+    titleName: "Funds Raize's Gold Plan",
     type: "plan",
     bgImage: "/plan.svg",
-    renewal: "02/2026",
-    user: "Ruth Mishra",
+    renewal: "",
+    user: "",
   },
   {
-    title: "All Leads",
-    type: "metric",
-    count: 100,
+    titleName: "All Leads",
+    type: "leads",
+    count: 0,
     buttonLabel: "Add Leads",
     buttonIcon: <Plus className="h-4 w-4" />,
     bgImage: "/all-leads.svg",
   },
   {
-    title: "Active Leads",
-    type: "metric",
-    count: 40,
+    titleName: "Active Leads",
+    type: "active",
+    count: 0,
     buttonLabel: "View Leads",
     buttonIcon: <Eye className="h-4 w-4" />,
     bgImage: "/active-leads.svg",
   },
-];
+])
+  useEffect(() => {
+   setOverview((prev) => {
+    return prev.map((card) => {
+      if (card.type === "plan") {
+        return {
+          ...card,
+          user: session.data?.user?.name,
+          titleName: `Funds Raize's ${session.data?.user?.planName }`,
+        };
+      }
+      return card;
+    });
+  });
+  }, [session.data]);
 
-export default function LeadOverview() {
+  useEffect(() => {
+    if (data) {
+      setOverview((prev) => {
+        return prev.map((card) => {
+          if (card.type === "leads") {
+            const count = data?.length;
+            return { ...card, count };
+          }
+          if (card.type === "active") {
+            const activeCount = data?.filter(lead => lead.status === "approved").length;
+            return { ...card, count: activeCount };
+          }
+          return card;
+        });
+      });
+    }
+  }, [data]);
+
   return (
     <section className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-      {cards.map((card, index) => {
+      {overview.map((card, index) => {
         if (card.type === "plan") {
           return (
             <div
@@ -40,7 +76,7 @@ export default function LeadOverview() {
               style={{ backgroundImage: `url(${card.bgImage})` }}
             >
               <h5 className="px-3 py-1.5 md:px-4 md:py-2 text-sm md:text-base font-inter text-black drop-shadow">
-                {card.title}
+                {card.titleName}
               </h5>
               <div className="bg-gradient-to-br from-[#121212] to-[#353535] px-3 py-2 md:px-4 md:py-3 rounded-b-lg flex items-end justify-between">
                 <div className="flex flex-col">
@@ -67,7 +103,7 @@ export default function LeadOverview() {
             style={{ backgroundImage: `url(${card.bgImage})` }}
           >
             <h4 className="text-lg md:text-xl font-bold text-black drop-shadow">
-              {card.title}
+              {card.titleName}
             </h4>
             <div className="flex items-center justify-between">
               <span className="text-xl md:text-2xl font-bold text-black drop-shadow">
