@@ -78,18 +78,22 @@ const ProfilePanel = ({
 							<PanelItem
 								icon={<User className="w-4 h-4" />}
 								label="My Profile"
+								redirect="/crm/profile"
 							/>
 							<PanelItem
 								icon={<Wallet className="w-4 h-4" />}
 								label="My Payout"
+								redirect="/crm/payout"
 							/>
 							<PanelItem
 								icon={<BadgeCheck className="w-4 h-4" />}
 								label="My Plan"
+								redirect="/crm/plan"
 							/>
 							<PanelItem
 								icon={<Info className="w-4 h-4" />}
 								label="My RM Details"
+								redirect="/crm/rm-details"
 							/>
 							<PanelItem
 								icon={<Bell className="w-4 h-4" />}
@@ -115,14 +119,20 @@ const ProfilePanel = ({
 interface PanelItemProps {
 	icon: React.ReactNode;
 	label: string;
+	redirect?: string;
 	suffix?: React.ReactNode;
 }
 
-const PanelItem: React.FC<PanelItemProps> = ({ icon, label, suffix }) => (
+const PanelItem: React.FC<PanelItemProps> = ({
+	icon,
+	label,
+	redirect,
+	suffix,
+}) => (
 	<button className="flex items-center justify-between px-3 py-2 rounded hover:bg-gray-100 transition">
 		<div className="flex items-center gap-3 text-sm text-black">
 			{icon}
-			<span>{label}</span>
+			<a href={redirect}>{label}</a>
 		</div>
 		{suffix ?? <ChevronRight className="w-4 h-4 text-gray-400" />}
 	</button>

@@ -15,6 +15,19 @@ export const NotificationApi = createApi({
 			providesTags: ["Notifications"],
 		}),
 
+		// ✅ POST: Create a new notification
+		createNotification: builder.mutation<
+			any,
+			{ title: string; userId: string; message: string }
+		>({
+			query: ({ userId, message, title }) => ({
+				url: `notifications`,
+				method: "POST",
+				body: { userId, message, title },
+			}),
+			invalidatesTags: ["Notifications"],
+		}),
+
 		// ✅ PATCH: Mark a notification as read
 		markAsRead: builder.mutation<any, string>({
 			query: (id) => ({
@@ -37,6 +50,7 @@ export const NotificationApi = createApi({
 
 export const {
 	useGetNotificationsQuery,
+	useCreateNotificationMutation,
 	useMarkAsReadMutation,
 	useDeleteNotificationMutation,
 } = NotificationApi;
