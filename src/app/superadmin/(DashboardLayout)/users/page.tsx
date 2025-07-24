@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Bell } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import {
@@ -49,6 +49,10 @@ export default function ManageAdmins() {
     router.push(`/superadmin/users/edit?id=${id}`);
   };
 
+  const handleNotify = (id: string) => {
+    router.push(`/superadmin/users/notify?id=${id}`);
+  };
+    
   const filteredAdmins = admins.filter((admin: Admin) => {
     const matchesSearch =
       admin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -164,6 +168,17 @@ export default function ManageAdmins() {
                         </span>
                       </td>
                       <td className="px-4 py-3 border-b border-black flex gap-2">
+                        <button
+                          className={`p-2 rounded-full transition-all ${
+                            disabled
+                              ? "bg-gray-300 cursor-not-allowed"
+                              : "bg-black hover:bg-gray-800 text-white"
+                          }`}
+                          disabled={disabled}
+                          onClick={() => handleNotify(admin._id)}
+                        >
+                          <Bell className="w-4 h-4" />
+                        </button>
                         <button
                           className={`p-2 rounded-full transition-all ${
                             disabled
