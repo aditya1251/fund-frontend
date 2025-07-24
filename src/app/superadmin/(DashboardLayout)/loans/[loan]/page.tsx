@@ -1,266 +1,517 @@
-"use client"
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
+"use client";
+
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import {
   useGetLoanTemplatesQuery,
   useGetLoanTemplateByIdQuery,
   useCreateLoanTemplateMutation,
   useUpdateLoanTemplateMutation,
   useDeleteLoanTemplateMutation,
-} from '@/redux/services/loanTemplateApi';
-import { loanFormTemplateSchema, LoanFormTemplate, TemplateField } from '@/lib/validation/loanTemplateSchema';
+} from "@/redux/services/loanTemplateApi";
+import LoanHeader from "./loanheader";
+import { Button } from "@/components/ui/button";
+import { Trash2, Save, Plus, ArrowUp, ArrowDown } from "lucide-react";
+import { toast } from "sonner";
 
-const FIELD_TYPES = [
-  { value: "text", label: "Text" },
-  { value: "number", label: "Number" },
-  { value: "date", label: "Date" },
-  { value: "select", label: "Select" },
-  { value: "checkbox", label: "Checkbox" },
-  { value: "textarea", label: "Textarea" },
-  { value: "document", label: "Document" },
-]
+interface Field {
+  label: string;
+  type: string;
+  required: boolean;
+  fixed: boolean;
+  placeholder: string;
+  defaultValue: string;
+  options: string[];
+}
+
+interface Page {
+  title: string;
+  description: string;
+  fixed: boolean;
+  pageNumber: number;
+  fields: Field[];
+}
+
+interface Template {
+  _id?: string;
+  name: string;
+  loanType: string;
+  icon: string;
+  description: string;
+  createdBy: string;
+  pages: Page[];
+}
+
+interface FieldDraft extends Field {
+  optionDraft?: string;
+}
 
 export default function LoanTemplateBuilder() {
-  const [templates, setTemplates] = useState<LoanFormTemplate[]>([])
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string>("")
-  const [template, setTemplate] = useState<LoanFormTemplate>({ name: "", loanType: "", fields: [], createdBy: "superadmin" })
-  const [fieldDraft, setFieldDraft] = useState<TemplateField>({ 
-    label: "", 
-    type: "text", 
-    required: false,
-    acceptedTypes: ["pdf", "jpg", "jpeg", "png"],
-    maxSize: 5
-  })
-  const [isEditingField, setIsEditingField] = useState<number | null>(null)
-  const [message, setMessage] = useState<string>("")
+  const params = useParams();
+  const loan = params.loan as string;
 
-  const { data: templatesData, refetch: refetchTemplates } = useGetLoanTemplatesQuery();
-  const { data: selectedTemplateData } = useGetLoanTemplateByIdQuery(selectedTemplateId, { skip: !selectedTemplateId });
+  const [selected, setSelected] = useState<string | null>(null);
+  const [template, setTemplate] = useState<Template>({
+    name: "",
+    loanType: "",
+    icon: "",
+    description: "",
+    createdBy: "superadmin",
+    pages: [],
+  });
+  const [pageDraft, setPageDraft] = useState<Partial<Page>>({
+    title: "",
+    description: "",
+    fixed: false,
+  });
+  const [fieldDrafts, setFieldDrafts] = useState<Record<number, FieldDraft>>(
+    {}
+  );
+  const router = useRouter();
+
+  const { data: selectedTemplateData, refetch: refetchTemplates } = useGetLoanTemplateByIdQuery(
+    selected!,
+    { skip: !selected }
+  );
   const [createLoanTemplate] = useCreateLoanTemplateMutation();
   const [updateLoanTemplate] = useUpdateLoanTemplateMutation();
   const [deleteLoanTemplate] = useDeleteLoanTemplateMutation();
 
   useEffect(() => {
-    if (templatesData) setTemplates(templatesData);
-  }, [templatesData]);
-
-  useEffect(() => {
-    if (selectedTemplateId && selectedTemplateData) {
+    if (selected && selectedTemplateData) {
       setTemplate(selectedTemplateData);
-    } else if (!selectedTemplateId) {
-      setTemplate({ name: "", loanType: "", fields: [], createdBy: "superadmin" });
+    } else if (!selected) {
+      setTemplate({
+        name: "",
+        loanType: "",
+        icon: "",
+        description: "",
+        createdBy: "superadmin",
+        pages: [],
+      });
     }
-  }, [selectedTemplateId, selectedTemplateData]);
+  }, [selected, selectedTemplateData]);
 
-  // Field builder handlers
-  const handleFieldChange = (key: keyof TemplateField, value: any) => {
-    setFieldDraft(prev => ({ ...prev, [key]: value }))
-  }
-  const addField = () => {
-    if (!fieldDraft.label) return
-    setTemplate(prev => ({ ...prev, fields: [...prev.fields, fieldDraft] }))
-    setFieldDraft({ 
-      label: "", 
-      type: "text", 
+  const handleInputChange = (e: any, key: string) => {
+    const val = e.target.value;
+    setTemplate({ ...template, [key]: val });
+  };
+
+  const updateFieldDraft = (pi: number, key: keyof FieldDraft, value: any) => {
+    const currentDraft = fieldDrafts[pi] || {
+      label: "",
+      type: "text",
       required: false,
-      acceptedTypes: ["pdf", "jpg", "jpeg", "png"],
-      maxSize: 5
-    })
-    setIsEditingField(null)
-  }
-  const editField = (idx: number) => {
-    setFieldDraft(template.fields[idx])
-    setIsEditingField(idx)
-  }
-  const updateField = () => {
-    if (isEditingField === null) return
-    setTemplate(prev => ({
+      fixed: false,
+      placeholder: "",
+      defaultValue: "",
+      options: [],
+    };
+    const updatedDraft = { ...currentDraft, [key]: value };
+    setFieldDrafts({ ...fieldDrafts, [pi]: updatedDraft });
+  };
+
+  
+
+  const addPage = () => {
+    if (!pageDraft.title?.trim()) {
+      toast.warning("⚠️ Page title is required.");
+      return;
+    }
+
+    const newPage: Page = {
+      title: pageDraft.title.trim(),
+      description: pageDraft.description?.trim() || "",
+      fixed: pageDraft.fixed || false,
+      pageNumber: template.pages.length + 1,
+      fields: [],
+    };
+    setTemplate((prev) => ({ ...prev, pages: [...prev.pages, newPage] }));
+    setPageDraft({ title: "", description: "", fixed: false });
+  };
+
+  const movePage = (index: number, dir: "up" | "down") => {
+    if (index === 0) {
+      toast.warning("⚠️ Page 1 cannot be moved.");
+      return;
+    }
+
+    const pages = [...template.pages];
+    const swap = dir === "up" ? index - 1 : index + 1;
+
+    if (swap <= 0 || swap >= pages.length) {
+      toast.warning("⚠️ Cannot move page further.");
+      return;
+    }
+
+    [pages[index], pages[swap]] = [pages[swap], pages[index]];
+    pages.forEach((p, i) => (p.pageNumber = i + 1));
+    setTemplate({ ...template, pages });
+  };
+
+  const removePage = (i: number) => {
+    const pages = template.pages.filter((_, idx) => idx !== i);
+    pages.forEach((p, i2) => (p.pageNumber = i2 + 1));
+    setTemplate({ ...template, pages });
+    const newDrafts = { ...fieldDrafts };
+    delete newDrafts[i];
+    setFieldDrafts(newDrafts);
+    toast.success("🗑️ Page removed!");
+    router.refresh();
+  };
+
+  const addFieldToPage = (i: number) => {
+    const fieldDraft = fieldDrafts[i];
+    if (!fieldDraft || !fieldDraft.label.trim()) {
+      toast.warning("⚠️ Field label is required.");
+      return;
+    }
+
+    const { optionDraft, ...fieldToAdd } = fieldDraft;
+
+    const newPages = template.pages.map((page, index) => {
+      if (index === i) {
+        return {
+          ...page,
+          fields: [...page.fields, fieldToAdd],
+        };
+      }
+      return page;
+    });
+
+    setTemplate((prev) => ({
       ...prev,
-      fields: prev.fields.map((f, i) => (i === isEditingField ? fieldDraft : f)),
-    }))
-    setFieldDraft({ 
-      label: "", 
-      type: "text", 
-      required: false,
-      acceptedTypes: ["pdf", "jpg", "jpeg", "png"],
-      maxSize: 5
-    })
-    setIsEditingField(null)
-  }
-  const removeField = (idx: number) => {
-    setTemplate(prev => ({ ...prev, fields: prev.fields.filter((_, i) => i !== idx) }))
-  }
+      pages: newPages,
+    }));
 
-  // Template save/update
+    setFieldDrafts((prev) => ({
+      ...prev,
+      [i]: {
+        label: "",
+        type: "text",
+        required: false,
+        fixed: false,
+        placeholder: "",
+        defaultValue: "",
+        options: [],
+      },
+    }));
+  };
+
+  const removeFieldFromPage = (pi: number, fi: number) => {
+    const pages = [...template.pages];
+    pages[pi].fields.splice(fi, 1);
+    setTemplate({ ...template, pages });
+  };
+
   const saveTemplate = async () => {
-    setMessage("");
     try {
-      loanFormTemplateSchema.parse(template);
       if (template._id) {
         await updateLoanTemplate({ id: template._id, data: template }).unwrap();
-        setMessage("Template updated!");
+        toast.success("✅ Template updated!");
       } else {
         await createLoanTemplate(template).unwrap();
-        setMessage("Template created!");
+        toast.success("✅ Template created!");
+        setSelected(null);
       }
       refetchTemplates();
-    } catch (err: any) {
-      if (err.errors) {
-        setMessage(err.errors.map((e: any) => e.message).join(', '));
-      } else {
-        setMessage("Error saving template");
-      }
+    } catch (error: any) {
+      toast.error(
+        `❌ Error saving template: ${error.message || "Unknown error"}`
+      );
     }
   };
 
-  const handleDeleteTemplate = async (id: string) => {
-    setMessage("");
+  const handleDeleteTemplate = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this template? This action cannot be undone."
+    );
+    if (!confirmed) return;
+
     try {
-      await deleteLoanTemplate(id).unwrap();
-      setMessage("Template deleted!");
-      setSelectedTemplateId("");
-      refetchTemplates();
-    } catch (err) {
-      setMessage("Error deleting template");
+      if (template._id) {
+        await deleteLoanTemplate(template._id).unwrap();
+        toast.success("🗑️ Template deleted!");
+        setSelected(null);
+        refetchTemplates();
+        window.location.reload();
+
+      }
+    } catch (error: any) {
+      toast.error(
+        `❌ Error deleting template: ${error.message || "Unknown error"}`
+      );
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#f3f3f3] p-4">
-      <div className="max-w-4xl mx-auto">
-        <Card className="mb-6 shadow-sm border-0">
-          <CardHeader>
-            <h1 className="text-lg font-semibold text-[#2d2c2c]">Loan Template Builder (Superadmin)</h1>
-          </CardHeader>
-        </Card>
-        <Card className="mb-6 shadow-sm border-0">
-          <CardContent>
-            <div className="mb-4">
-              <Label>Select Template</Label>
-              <Select value={selectedTemplateId} onValueChange={setSelectedTemplateId}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Choose a template or create new" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">New Template</SelectItem>
-                  {templates.map(t => (
-                    <SelectItem key={t._id} value={t._id!}>{t.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+    <div className="min-h-screen px-4 py-6">
+      <div className="max-w-5xl mx-auto space-y-6">
+        <LoanHeader loan={loan} selected={selected} setSelected={setSelected} />
+
+        {selected && (
+          <div className="bg-white rounded-xl shadow-[6px_6px_0_0_#000] p-8 space-y-6">
+            {/* Basic Info */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block mb-2 font-medium">Loan Name</label>
+                <input
+                  className="w-full border border-gray-300 px-3 py-2 rounded"
+                  value={template.name}
+                  onChange={(e) => handleInputChange(e, "name")}
+                />
+              </div>
             </div>
-            <div className="mb-4">
-              <Label>Template Name (Loan Sub Type)</Label>
-              <Input value={template.name} onChange={e => setTemplate({ ...template, name: e.target.value })} />
+
+            <div>
+              <label className="block mb-2 font-medium">Description</label>
+              <textarea
+                className="w-full border border-gray-300 px-3 py-2 rounded"
+                value={template.description}
+                onChange={(e) => handleInputChange(e, "description")}
+              />
             </div>
-            <div className="mb-4">
-              <Label>Loan Type</Label>
-              <Input value={template.loanType || ""} onChange={e => setTemplate({ ...template, loanType: e.target.value })} />
+
+            {/* Add New Page */}
+            <div className="border-t pt-6 space-y-4">
+              <h3 className="text-lg font-semibold">Add New Page</h3>
+              <div className="flex flex-wrap gap-2">
+                <input
+                  className="flex-1 border border-gray-300 px-3 py-2 rounded"
+                  placeholder="Title"
+                  value={pageDraft.title || ""}
+                  onChange={(e) =>
+                    setPageDraft({ ...pageDraft, title: e.target.value })
+                  }
+                />
+                <input
+                  className="flex-1 border border-gray-300 px-3 py-2 rounded"
+                  placeholder="Description"
+                  value={pageDraft.description || ""}
+                  onChange={(e) =>
+                    setPageDraft({ ...pageDraft, description: e.target.value })
+                  }
+                />
+                <Button
+                  onClick={addPage}
+                  className="flex items-center gap-2 bg-black text-white px-4 py-2 shadow hover:bg-gray-800 cursor-pointer">
+                  <Plus className="w-4 h-4" /> Add Page
+                </Button>
+              </div>
             </div>
-            <div className="mb-4">
-              <Label>Fields</Label>
-              <div className="space-y-2">
-                {template.fields.map((field, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-2 border rounded">
-                    <div className="flex-1">
-                      <div className="flex items-center">
-                        <span className="font-medium w-6/8">{field.label}</span>
-                        <span className="text-xs w-1/8 text-gray-500 ml-2">({field.type})</span>
-                        {field.required && <Badge className="bg-yellow-400 text-black ml-2">Required</Badge>}
+
+            {/* Pages & Fields */}
+            <div className="space-y-4">
+              {template.pages.map((page, pi) => (
+                <div key={pi} className="bg-[#f9f9f9] rounded p-4 shadow-sm">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold">
+                      Page {page.pageNumber}: {page.title}
+                    </h4>
+                    {!page.fixed && (
+                      <div className="flex items-center gap-3">
+                        <Button
+                          onClick={() => movePage(pi, "up")}
+                          variant="ghost"
+                          className="hover:bg-gray-100 cursor-pointer">
+                          <ArrowUp />
+                        </Button>
+                        <Button
+                          onClick={() => movePage(pi, "down")}
+                          variant="ghost"
+                          className="hover:bg-gray-100 cursor-pointer">
+                          <ArrowDown />
+                        </Button>
+                        <Button
+                          onClick={() => removePage(pi)}
+                          variant="ghost"
+                          className="text-red-600 hover:bg-gray-100 cursor-pointer">
+                          <Trash2 />
+                        </Button>
                       </div>
-                      {field.type === "document" && (
-                        <div className="text-xs text-gray-600 mt-1">
-                          <span>Types: {field.acceptedTypes?.join(", ") || "pdf, jpg, jpeg, png"}</span>
-                          <span className="ml-2">Max: {field.maxSize || 5}MB</span>
+                    )}
+                  </div>
+
+                  {/* Field Inputs */}
+                  <div className="flex flex-col gap-2 mb-2">
+                    <div className="flex flex-wrap gap-2">
+                      <input
+                        className="border border-gray-300 px-2 py-1 rounded flex-1"
+                        placeholder="Field Label"
+                        value={fieldDrafts[pi]?.label || ""}
+                        onChange={(e) =>
+                          updateFieldDraft(pi, "label", e.target.value)
+                        }
+                      />
+                      <select
+                        className="border border-gray-300 px-2 py-1 rounded w-32"
+                        value={fieldDrafts[pi]?.type || "text"}
+                        onChange={(e) =>
+                          updateFieldDraft(pi, "type", e.target.value)
+                        }>
+                        {[
+                          "text",
+                          "number",
+                          "select",
+                          "date",
+                          "checkbox",
+                          "textarea",
+                          "document",
+                        ].map((t) => (
+                          <option key={t} value={t}>
+                            {t}
+                          </option>
+                        ))}
+                      </select>
+                      <label className="flex items-center gap-1">
+                        <input
+                          type="checkbox"
+                          checked={fieldDrafts[pi]?.required || false}
+                          onChange={(e) =>
+                            updateFieldDraft(pi, "required", e.target.checked)
+                          }
+                        />
+                        Required
+                      </label>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <input
+                        className="border border-gray-300 px-2 py-1 rounded flex-1"
+                        placeholder="Placeholder"
+                        value={fieldDrafts[pi]?.placeholder || ""}
+                        onChange={(e) =>
+                          updateFieldDraft(pi, "placeholder", e.target.value)
+                        }
+                      />
+                      <input
+                        className="border border-gray-300 px-2 py-1 rounded flex-1"
+                        placeholder="Default Value"
+                        value={fieldDrafts[pi]?.defaultValue || ""}
+                        onChange={(e) =>
+                          updateFieldDraft(pi, "defaultValue", e.target.value)
+                        }
+                      />
+                    </div>
+                    {fieldDrafts[pi]?.type === "select" && (
+                      <>
+                        <div className="flex flex-wrap gap-2">
+                          <input
+                            className="border border-gray-300 px-2 py-1 rounded flex-1"
+                            placeholder="Type options separated by commas"
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === ",") {
+                                e.preventDefault();
+                                const val = (
+                                  e.currentTarget.value || ""
+                                ).trim();
+                                if (val) {
+                                  const newOpts = val
+                                    .split(",")
+                                    .map((opt) => opt.trim())
+                                    .filter((opt) => opt !== "");
+                                  updateFieldDraft(pi, "options", [
+                                    ...(fieldDrafts[pi]?.options || []),
+                                    ...newOpts,
+                                  ]);
+                                  e.currentTarget.value = "";
+                                }
+                              }
+                            }}
+                            onBlur={(e) => {
+                              const val = (e.currentTarget.value || "").trim();
+                              if (val) {
+                                const newOpts = val
+                                  .split(",")
+                                  .map((opt) => opt.trim())
+                                  .filter((opt) => opt !== "");
+                                updateFieldDraft(pi, "options", [
+                                  ...(fieldDrafts[pi]?.options || []),
+                                  ...newOpts,
+                                ]);
+                                e.currentTarget.value = "";
+                              }
+                            }}
+                          />
                         </div>
-                      )}
-                      {field.type === "select" && field.options && (
-                        <div className="text-xs text-gray-600 mt-1">
-                          Options: {field.options.join(", ")}
-                        </div>
+
+                        {fieldDrafts[pi]?.options?.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {fieldDrafts[pi].options.map((option, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center gap-2 bg-black text-white text-sm px-2 py-1 rounded-full shadow">
+                                {option}
+                                <button
+                                  onClick={() => {
+                                    const updated = fieldDrafts[
+                                      pi
+                                    ].options.filter((_, i) => i !== idx);
+                                    updateFieldDraft(pi, "options", updated);
+                                  }}
+                                  className="text-xs hover:text-red-400 cursor-pointer">
+                                  ✕
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                    <Button
+                      onClick={() => addFieldToPage(pi)}
+                      className="flex items-center gap-2 bg-black text-white px-3 py-1 shadow hover:bg-gray-800 cursor-pointer">
+                      <Plus className="w-4 h-4" /> Add Field
+                    </Button>
+                  </div>
+
+                  {/* Existing Fields */}
+                  {page.fields.map((field, fi) => (
+                    <div
+                      key={fi}
+                      className="flex justify-between items-center bg-white px-3 py-2 rounded shadow-sm mb-1">
+                      <span>
+                        {field.label} ({field.type})
+                        {field.required && (
+                          <span className="ml-2 text-sm text-red-600">
+                            *required
+                          </span>
+                        )}
+                      </span>
+                      {!field.fixed && (
+                        <Button
+                          onClick={() => removeFieldFromPage(pi, fi)}
+                          variant="ghost"
+                          className="text-red-600 hover:bg-gray-100 cursor-pointer">
+                          <Trash2 />
+                        </Button>
                       )}
                     </div>
-                    <div className="flex gap-2 ml-2">
-                      <Button size="sm" variant="outline" onClick={() => editField(idx)}>Edit</Button>
-                      <Button size="sm" variant="outline" onClick={() => removeField(idx)}>Remove</Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ))}
             </div>
-            <div className="mb-4 p-4 bg-gray-50 rounded">
-              <h4 className="font-semibold mb-2">{isEditingField !== null ? "Edit Field" : "Add Field"}</h4>
-              <div className="flex flex-col md:flex-row gap-2 items-center">
-                <Input
-                  placeholder="Label"
-                  value={fieldDraft.label}
-                  onChange={e => handleFieldChange("label", e.target.value)}
-                  className="w-40"
-                />
-                <Select value={fieldDraft.type} onValueChange={v => handleFieldChange("type", v)}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue placeholder="Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {FIELD_TYPES.map(ft => (
-                      <SelectItem key={ft.value} value={ft.value}>{ft.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Checkbox
-                  checked={!!fieldDraft.required}
-                  onCheckedChange={checked => handleFieldChange("required", !!checked)}
-                  className="ml-2"
-                />
-                <span className="text-xs">Required</span>
-                {fieldDraft.type === "select" && (
-                  <Input
-                    placeholder="Comma separated options"
-                    value={fieldDraft.options?.join(",") || ""}
-                    onChange={e => handleFieldChange("options", e.target.value.split(",").map(s => s.trim()))}
-                    className="w-64"
-                  />
-                )}
-                {fieldDraft.type === "document" && (
-                  <div className="flex flex-col gap-2 w-64">
-                    <Input
-                      placeholder="Accepted file types (comma separated)"
-                      value={fieldDraft.acceptedTypes?.join(",") || ""}
-                      onChange={e => handleFieldChange("acceptedTypes", e.target.value.split(",").map(s => s.trim()))}
-                    />
-                    <Input
-                      type="number"
-                      placeholder="Max file size (MB)"
-                      value={fieldDraft.maxSize || 5}
-                      onChange={e => handleFieldChange("maxSize", parseInt(e.target.value) || 5)}
-                    />
-                  </div>
-                )}
-                {isEditingField !== null ? (
-                  <Button size="sm" onClick={updateField}>Update</Button>
-                ) : (
-                  <Button size="sm" onClick={addField}>Add</Button>
-                )}
-              </div>
-            </div>
-            <Button className="bg-yellow-400 text-black font-medium px-8 py-3 h-12" onClick={saveTemplate}>
-              {template._id ? "Update Template" : "Save Template"}
-            </Button>
-            {template._id && (
-              <Button className="ml-4 bg-red-500 text-white font-medium px-8 py-3 h-12" onClick={() => handleDeleteTemplate(template._id!)}>
-                Delete Template
+
+            {/* Save/Delete */}
+            <div className="flex items-center gap-4 pt-6 border-t">
+              <Button
+                onClick={saveTemplate}
+                className="flex items-center gap-2 bg-[#ffd439] text-black px-6 py-2 shadow hover:bg-yellow-300 cursor-pointer">
+                <Save className="w-4 h-4" />
+                {template._id ? "Update Template" : "Save Template"}
               </Button>
-            )}
-            {message && <div className="mt-2 text-green-600 font-medium">{message}</div>}
-          </CardContent>
-        </Card>
+              {template._id && (
+                <Button
+                  onClick={handleDeleteTemplate}
+                  className="flex items-center gap-2 bg-red-600 text-white px-6 py-2 shadow hover:bg-red-700 cursor-pointer">
+                  <Trash2 className="w-4 h-4" /> Delete Template
+                </Button>
+              )}
+              
+            </div>
+          </div>
+        )}
       </div>
     </div>
-  )
-} 
+  );
+}

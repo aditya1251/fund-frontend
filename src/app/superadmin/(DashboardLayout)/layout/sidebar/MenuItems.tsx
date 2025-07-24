@@ -69,8 +69,8 @@ const Menuitems: MenuitemsType[] = [
             },
             {
                 id: uniqueId(),
-                title: "Personal Loans",
-                href: "/superadmin/loans/personal",
+                title: "Private Loans",
+                href: "/superadmin/loans/private",
             },
             {
                 id: uniqueId(),
