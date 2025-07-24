@@ -15,6 +15,9 @@ export const loanTemplateApi = createApi({
     getLoanTemplateById: builder.query<any, string>({
       query: (id) => `loan-templates/temp/${id}`,
     }),
+    getLoanTemplatesByType: builder.query<any, string>({
+      query: (loanType) => `loan-templates/by-type/${loanType}`,
+    }),
     createLoanTemplate: builder.mutation<any, any>({
       query: (body) => ({
         url: 'loan-templates',
@@ -42,7 +45,8 @@ export const {
   useGetLoanTemplatesQuery,
   useGetLoanTemplateByNameQuery,
   useGetLoanTemplateByIdQuery,
+  useGetLoanTemplatesByTypeQuery,
   useCreateLoanTemplateMutation,
   useUpdateLoanTemplateMutation,
   useDeleteLoanTemplateMutation,
-} = loanTemplateApi; 
+} = loanTemplateApi;

@@ -6,7 +6,7 @@ import { baselightTheme } from "@/utils/theme/DefaultColors";
 import React from "react";
 import Header from "@/app/superadmin/(DashboardLayout)/layout/header/Header";
 import Sidebar from "@/app/superadmin/(DashboardLayout)/layout/sidebar/Sidebar";
-
+import { Toaster } from "sonner";
 
 const MainWrapper = styled("div")(() => ({
   display: "flex",
@@ -35,26 +35,23 @@ export default function RootLayout({
           <Sidebar />
           <Box
             sx={{
-              '@media (min-width:1200px)': {
-                marginLeft: '270px',
+              "@media (min-width:1200px)": {
+                marginLeft: "270px",
               },
-            }}
-          >
-
+            }}>
             <Header />
             <Container
               sx={{
                 paddingTop: "20px",
                 maxWidth: "1200px",
-                minHeight: 'calc(100vh - 229px)'
-              }}
-            >
+                minHeight: "calc(100vh - 229px)",
+              }}>
               <Box>{children}</Box>
             </Container>
           </Box>
+          <Toaster richColors position="top-right" />
         </PageWrapper>
       </MainWrapper>
     </ThemeProvider>
   );
 }
-

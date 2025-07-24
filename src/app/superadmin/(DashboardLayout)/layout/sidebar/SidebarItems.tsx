@@ -71,7 +71,7 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
                 badge={item.chip ? true : false}
                 badgeContent={item.chip || ""}
                 badgeColor={item.chipColor || 'secondary'}
-                badgeTextColor="#0085db"
+                badgeTextColor="#000"
                 disabled={item.disabled}
                 badgeType={item.variant || "filled"}
             >
