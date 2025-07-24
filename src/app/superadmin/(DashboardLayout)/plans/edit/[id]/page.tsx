@@ -9,6 +9,7 @@ import { features } from "../../page";
 const EditPlanPage = () => {
   const router = useRouter();
   const params = useParams();
+  
   const planId = params.id as string;
   
   const { data: plan, isLoading: planLoading, error: planError } = useGetPlanByIdQuery(planId);
