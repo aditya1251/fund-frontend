@@ -10,6 +10,7 @@ import {
 	Info,
 	Bell,
 	X,
+	AlertTriangle,
 } from "lucide-react";
 
 const ProfilePanel = ({
@@ -18,6 +19,21 @@ const ProfilePanel = ({
 	user: { name?: string; email?: string };
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+	
+	const handleDeleteClick = () => {
+		setShowDeleteConfirmation(true);
+	};
+	
+	const handleCancelDelete = () => {
+		setShowDeleteConfirmation(false);
+	};
+	
+	const handleConfirmDelete = () => {
+		// Add your delete account logic here
+		console.log("Account deletion confirmed");
+		setShowDeleteConfirmation(false);
+	};
 	return (
 		<>
 			{/* Avatar Button */}
@@ -103,13 +119,48 @@ const ProfilePanel = ({
 
 							{/* Footer */}
 							<div className="py-4">
-								<button className="w-full bg-red-500 hover:bg-red-600 text-white text-sm font-medium py-2 rounded flex items-center justify-center gap-3">
+								<button 
+									className="w-full bg-red-500 hover:bg-red-600 text-white text-sm font-medium py-2 rounded flex items-center justify-center gap-3"
+									onClick={handleDeleteClick}
+								>
 									<Trash2 className="w-4 h-4" />
 									Delete Account
 								</button>
 							</div>
 						</div>
 					</aside>
+				</div>
+			)}
+			
+			{/* Delete Account Confirmation Dialog */}
+			{showDeleteConfirmation && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center">
+					<div className="fixed inset-0 bg-black opacity-50" onClick={handleCancelDelete}></div>
+					<div className="relative z-50 bg-white rounded-lg p-6 w-80 max-w-full shadow-xl">
+						<div className="flex items-center mb-4 text-red-500">
+							<AlertTriangle className="w-6 h-6 mr-2" />
+							<h3 className="text-lg font-bold">Delete Account</h3>
+						</div>
+						
+						<p className="mb-6 text-sm text-gray-600">
+							Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently lost.
+						</p>
+						
+						<div className="flex gap-3">
+							<button 
+								onClick={handleCancelDelete}
+								className="flex-1 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100 text-sm font-medium transition-colors"
+							>
+								Cancel
+							</button>
+							<button 
+								onClick={handleConfirmDelete}
+								className="flex-1 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm font-medium transition-colors"
+							>
+								Confirm Delete
+							</button>
+						</div>
+					</div>
 				</div>
 			)}
 		</>

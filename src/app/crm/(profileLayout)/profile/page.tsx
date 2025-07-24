@@ -1,77 +1,121 @@
 "use client";
-import React, { useState } from "react";
-import { Pencil, Save, X, ChevronRight, RefreshCw } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Pencil, Save, X, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import {
+	useGetDsaDetailsQuery,
+	useUpdateDsaDetailsMutation,
+} from "@/redux/services/dsaApi";
 
 export default function Page() {
 	const [isEditMode, setIsEditMode] = useState(false);
 	const router = useRouter();
+	const { data: session, update: updateSession } = useSession();
+	const userId = session?.user.id;
+	const { data: dsaData, isLoading } = useGetDsaDetailsQuery(userId!);
+	const [updateDsaDetails] = useUpdateDsaDetailsMutation();
+	const [successMessage, setSuccessMessage] = useState("");
 
-	const handleBack = () => {
-		router.push("/crm");
+	const [formData, setFormData] = useState({
+		name: "",
+		email: "",
+		phone: "",
+		age: "",
+		dsaCode: "",
+		accountHolderName: "",
+		accountNumber: "",
+		ifsc: "",
+		branchName: "",
+		bankName: "",
+	});
+
+	const updateFormData = () => {
+		setFormData({
+			name: dsaData.name || "",
+			email: dsaData.email || "",
+			phone: dsaData.phone || "",
+			age: dsaData.age || "",
+			dsaCode: dsaData.dsaCode || "",
+			accountHolderName: dsaData.accountHolderName || "",
+			accountNumber: dsaData.accountNumber || "",
+			ifsc: dsaData.ifsc || "",
+			branchName: dsaData.branchName || "",
+			bankName: dsaData.bankName || "",
+		});
+	};
+
+	// Update form data when DSA data is loaded
+	useEffect(() => {
+		if (dsaData) {
+			updateFormData();
+		}
+	}, [dsaData]);
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+	};
+
+	const handleSave = async () => {
+		try {
+			// Update DSA details in the database
+			const updatedData = await updateDsaDetails({ id: userId!, data: formData }).unwrap();
+			
+			// Update session with new user data
+			await updateSession({
+				...session,
+				user: {
+					...session?.user,
+					name: formData.name,
+					email: formData.email,
+				}
+			});
+			await updateSession();
+			
+			setIsEditMode(false);
+			setSuccessMessage("Profile updated successfully!");
+			
+			// Clear success message after 5 seconds
+			setTimeout(() => {
+				setSuccessMessage("");
+			}, 5000);
+		} catch (error) {
+			console.error("Failed to update DSA details:", error);
+		}
+	};
+
+	const handleCancel = () => {
+		if (dsaData) {
+			updateFormData();
+		}
+		setIsEditMode(false);
 	};
 
 	const handleResetPassword = () => {
 		router.push("/reset-pass");
 	};
 
-	const [formData, setFormData] = useState({
-		fullName: "Ruth Mishra",
-		email: "example@gmail.com",
-		phone: "9370539617",
-		age: "18",
-		dsaCode: "556845",
-		password: "ruthmishra@123",
-		accountHolderName: "Ruth Mishra",
-		accountNumber: "example@gmail.com",
-		ifsc: "9370539617",
-		branchName: "18",
-		bankName: "556845",
-	});
-
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
-	};
-
-	const handleSave = () => {
-		setIsEditMode(false);
-	};
-
-	const handleCancel = () => {
-		setIsEditMode(false);
-	};
-
-
+	if (isLoading) {
+		return (
+			<div className="flex justify-center items-center h-screen">
+				Loading...
+			</div>
+		);
+	}
 
 	return (
-		<div className="px-8">
-			<div className="w-full py-2 flex items-center gap-4 border-b border-gray-100">
-				<div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200">
-					<img
-						src="/placeholder.svg"
-						alt="User Avatar"
-						className="w-full h-full object-cover"
-					/>
-				</div>
-				<div>
-					<div className="font-medium text-md text-black">{"user?.name"}</div>
-					<div className="text-sm text-gray-500">{"user?.email"}</div>
-				</div>
-				<div className="ml-auto">
-					<button
-						onClick={handleBack}
-						className="text-sm text-black bg-[#f5d949] rounded-md px-4 py-2 flex items-center gap-2"
-					>
-						BACK <ChevronRight className="w-4 h-4" />
-					</button>
-				</div>
-			</div>
+		<>
 			<div className="max-w-5xl mx-auto py-8 rounded-md">
+				{successMessage && (
+					<div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 relative">
+						<span className="block sm:inline">{successMessage}</span>
+					</div>
+				)}
 				<div className="flex justify-between items-center mb-6">
 					<h4 className="text-xl font-semibold text-black">Basic Details</h4>
 					<button
 						onClick={() => setIsEditMode(true)}
-						className="text-[#29a073] flex items-center gap-1"
+						className="text-[#29a073] flex items-center gap-1 hover:underline cursor-pointer"
 					>
 						<Pencil size={16} />
 						Edit
@@ -82,8 +126,8 @@ export default function Page() {
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
 					<InputField
 						label="Full Name"
-						name="fullName"
-						value={formData.fullName}
+						name="name"
+						value={formData.name}
 						editable={isEditMode}
 						onChange={handleChange}
 					/>
@@ -112,29 +156,21 @@ export default function Page() {
 						label="DSA Code"
 						name="dsaCode"
 						value={formData.dsaCode}
-						editable={isEditMode}
+						editable={false} // DSA Code should not be editable
 						onChange={handleChange}
 					/>
-					{isEditMode ? (
-						<div className="flex gap-4 mt-6">
+					<div className="flex flex-col">
+						<label className="text-sm text-gray-700 mb-1">Password</label>
+						<div className="flex items-center h-[42px]">
 							<button
 								onClick={handleResetPassword}
-								className="bg-red-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-red-700"
+								className="bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-blue-700"
 							>
 								<RefreshCw size={16} />
 								Reset Password
 							</button>
 						</div>
-					) : (
-						<InputField
-							label="Password"
-							name="password"
-							value="********"
-							editable={isEditMode}
-							onChange={handleChange}
-							type="password"
-						/>
-					)}
+					</div>
 				</div>
 
 				<h4 className="text-xl font-semibold mb-4 text-black">Bank Details</h4>
@@ -197,7 +233,7 @@ export default function Page() {
 					)}
 				</div>
 			</div>
-		</div>
+		</>
 	);
 }
 
@@ -225,10 +261,10 @@ const InputField = ({
 			name={name}
 			value={value}
 			onChange={onChange}
-			readOnly={!editable}
+			disabled={!editable}
 			className={`px-3 py-2 border rounded ${
 				editable
-					? "border-gray-400 text-gray-400"
+					? "border-gray-400 text-gray-600"
 					: "border-black bg-gray-100 text-gray-600"
 			}`}
 		/>
