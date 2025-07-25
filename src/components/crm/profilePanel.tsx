@@ -5,35 +5,50 @@ import {
 	ChevronRight,
 	Trash2,
 	User,
-	Wallet,
 	BadgeCheck,
 	Info,
 	Bell,
 	X,
 	AlertTriangle,
+	RefreshCw,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useDeleteAdminMutation } from "@/redux/services/superadminApi";
 
 const ProfilePanel = ({
 	user,
 }: {
-	user: { name?: string; email?: string };
+	user: { id: string; name?: string; email?: string };
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-	
+	const router = useRouter();
+	const [deleteAdmin] = useDeleteAdminMutation();
+
 	const handleDeleteClick = () => {
 		setShowDeleteConfirmation(true);
 	};
-	
+
 	const handleCancelDelete = () => {
 		setShowDeleteConfirmation(false);
 	};
-	
+
 	const handleConfirmDelete = () => {
-		// Add your delete account logic here
-		console.log("Account deletion confirmed");
+		deleteAdmin(user.id)
+			.unwrap()
+			.then(() => {
+				router.push("/login");
+			})
+			.catch((error) => {
+				console.error("Failed to delete account:", error);
+			});
 		setShowDeleteConfirmation(false);
 	};
+
+	const handleResetPassword = () => {
+		router.push("/reset-pass");
+	};
+
 	return (
 		<>
 			{/* Avatar Button */}
@@ -97,11 +112,6 @@ const ProfilePanel = ({
 								redirect="/crm/profile"
 							/>
 							<PanelItem
-								icon={<Wallet className="w-4 h-4" />}
-								label="My Payout"
-								redirect="/crm/payout"
-							/>
-							<PanelItem
 								icon={<BadgeCheck className="w-4 h-4" />}
 								label="My Plan"
 								redirect="/crm/plan"
@@ -117,10 +127,16 @@ const ProfilePanel = ({
 								suffix={<span className="text-xs text-gray-400">Allow</span>}
 							/>
 
-							{/* Footer */}
-							<div className="py-4">
-								<button 
-									className="w-full bg-red-500 hover:bg-red-600 text-white text-sm font-medium py-2 rounded flex items-center justify-center gap-3"
+							<div className="py-4 flex flex-col gap-4">
+								<button
+									className="w-full bg-[#fbb700] hover:bg-yellow-600 text-white text-sm font-medium py-2 rounded flex items-center justify-center gap-3 cursor-pointer"
+									onClick={handleResetPassword}
+								>
+									<RefreshCw className="w-4 h-4" />
+									Reset Password
+								</button>
+								<button
+									className="w-full bg-red-500 hover:bg-red-600 text-white text-sm font-medium py-2 rounded flex items-center justify-center gap-3 cursor-pointer"
 									onClick={handleDeleteClick}
 								>
 									<Trash2 className="w-4 h-4" />
@@ -131,29 +147,33 @@ const ProfilePanel = ({
 					</aside>
 				</div>
 			)}
-			
+
 			{/* Delete Account Confirmation Dialog */}
 			{showDeleteConfirmation && (
 				<div className="fixed inset-0 z-50 flex items-center justify-center">
-					<div className="fixed inset-0 bg-black opacity-50" onClick={handleCancelDelete}></div>
+					<div
+						className="fixed inset-0 bg-black opacity-50"
+						onClick={handleCancelDelete}
+					></div>
 					<div className="relative z-50 bg-white rounded-lg p-6 w-80 max-w-full shadow-xl">
 						<div className="flex items-center mb-4 text-red-500">
 							<AlertTriangle className="w-6 h-6 mr-2" />
 							<h3 className="text-lg font-bold">Delete Account</h3>
 						</div>
-						
+
 						<p className="mb-6 text-sm text-gray-600">
-							Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently lost.
+							Are you sure you want to delete your account? This action cannot
+							be undone and all your data will be permanently lost.
 						</p>
-						
+
 						<div className="flex gap-3">
-							<button 
+							<button
 								onClick={handleCancelDelete}
 								className="flex-1 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100 text-sm font-medium transition-colors"
 							>
 								Cancel
 							</button>
-							<button 
+							<button
 								onClick={handleConfirmDelete}
 								className="flex-1 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm font-medium transition-colors"
 							>
@@ -180,7 +200,10 @@ const PanelItem: React.FC<PanelItemProps> = ({
 	redirect,
 	suffix,
 }) => (
-	<a href={redirect} className="flex items-center justify-between px-3 py-2 rounded hover:bg-gray-100 transition">
+	<a
+		href={redirect}
+		className="flex items-center justify-between px-3 py-2 rounded hover:bg-gray-100 transition"
+	>
 		<div className="flex items-center gap-3 text-sm text-black">
 			{icon}
 			<span>{label}</span>

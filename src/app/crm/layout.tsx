@@ -23,9 +23,7 @@ export default async function CrmLayout({
 			<Sidebar />
 			<main className="flex-1 overflow-x-hidden overscroll-y-contain">
 				<Header />
-				<div className="flex-1 px-8 pt-8 bg-gray-100 min-h-screen overflow-y-auto ">
-					{children}
-				</div>
+				<div className="flex-1 min-h-screen overflow-y-auto ">{children}</div>
 			</main>
 		</div>
 	);

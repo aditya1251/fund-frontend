@@ -3,6 +3,7 @@ import React, { useState, useMemo } from "react";
 import { useGetLoansQuery, useUpdateLoanMutation } from "@/redux/services/loanApi";
 import { Button, Paper, Snackbar, Alert, Typography, Box } from "@mui/material";
 import { LoanApplication } from '@/lib/validation/loanSchema';
+import { useGetAdminsQuery } from "@/redux/services/superadminApi";
 import { useCreateNotificationMutation } from "@/redux/services/notificationApi";
 
 const DsaApplicationsPage = () => {
@@ -10,6 +11,7 @@ const DsaApplicationsPage = () => {
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: "success" | "error" }>({ open: false, message: "", severity: "success" });
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [updateLoan] = useUpdateLoanMutation();
+  const { data: adminData } = useGetAdminsQuery();
   const [createNotification] = useCreateNotificationMutation();
   const [rejectionReason, setRejectionReason] = useState<string>("");
   const [showRejectionInput, setShowRejectionInput] = useState<string | null>(null);
@@ -84,27 +86,32 @@ const DsaApplicationsPage = () => {
       // Update the loan status
       await updateLoan({ _id: id, status: newStatus, rejectionMessage: newStatus === "rejected" ? rejectionReason : undefined }).unwrap();
       
-      // Find the loan to get user details
-      const loan = loansData.find((loan: LoanApplication) => loan._id === id);
-      const applicantName = typeof loan?.values?.Name === 'string' ? loan.values.Name : 'Applicant';
-      const userId = loan?.userId;
-      
-      // Send notification based on status
-      if (userId) {
-        if (newStatus === "approved") {
-          await createNotification({
-            userId,
-            title: "Loan Application Approved!",
-            message: `Congratulations ${applicantName}! Your loan application has been approved.`,
-          }).unwrap();
-        } else if (newStatus === "rejected") {
-          await createNotification({
-            userId,
-            title: "Loan Application Status Update",
-            message: `We're sorry to inform you that your loan application has been rejected. Reason: ${rejectionReason}`,
-          }).unwrap();
-        }
-      }
+			// Find the loan to get user details
+			const loan = loansData.find((loan: LoanApplication) => loan._id === id);
+			const user = adminData?.find(
+				(admin: any) => admin.email === loan?.subscriber
+			);
+			const applicantName = user?.name || "Applicant";
+			const userId = user?._id;
+
+			// Send notification based on status
+			if (userId) {
+				if (newStatus === "approved") {
+					await createNotification({
+						userId,
+						title: "Loan Application Approved!",
+						message: `Congratulations ${applicantName}! Your loan application has been approved.`,
+					}).unwrap();
+				} else if (newStatus === "rejected") {
+					await createNotification({
+						userId,
+						title: "Loan Application Status Update",
+						message: `We're sorry to inform you that your loan application has been rejected. ${
+							rejectionReason ? `Reason: ${rejectionReason}` : ""
+						}`,
+					}).unwrap();
+				}
+			}
       
       setSnackbar({ open: true, message: `Loan ${newStatus} and notification sent`, severity: "success" });
       setShowRejectionInput(null);

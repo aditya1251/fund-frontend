@@ -99,20 +99,20 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
 				component="div"
 				link={item.href && item.href !== "" ? item.href : undefined}
 				badge={
-					item.chip || item.title === "Applications" || item.title === "Contact"
+					item.chip || item.title === "Applications" || item.title === "Contacts"
 						? true
 						: false
 				}
 				badgeContent={
 					item.title === "Applications"
 						? pendingLoanCount
-						: item.title === "Contact"
+						: item.title === "Contacts"
 						? pendingAppCount
 						: item.chip || ""
 				}
 				badgeColor={
 					hasError &&
-					(item.title === "Applications" || item.title === "Contact")
+					(item.title === "Applications" || item.title === "Contacts")
 						? "error"
 						: item.chipColor || "secondary"
 				}
