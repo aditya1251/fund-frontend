@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Pencil, Save, X, RefreshCw } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Pencil, Save, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import {
 	useGetDsaDetailsQuery,
@@ -10,7 +9,6 @@ import {
 
 export default function Page() {
 	const [isEditMode, setIsEditMode] = useState(false);
-	const router = useRouter();
 	const { data: session, update: updateSession } = useSession();
 	const userId = session?.user.id;
 	const { data: dsaData, isLoading } = useGetDsaDetailsQuery(userId!);
@@ -23,11 +21,13 @@ export default function Page() {
 		phone: "",
 		age: "",
 		dsaCode: "",
-		accountHolderName: "",
-		accountNumber: "",
-		ifsc: "",
-		branchName: "",
-		bankName: "",
+		bankDetails: {
+			accountHolderName: "",
+			accountNumber: "",
+			ifsc: "",
+			branchName: "",
+			bankName: "",
+		},
 	});
 
 	const updateFormData = () => {
@@ -37,11 +37,13 @@ export default function Page() {
 			phone: dsaData.phone || "",
 			age: dsaData.age || "",
 			dsaCode: dsaData.dsaCode || "",
-			accountHolderName: dsaData.accountHolderName || "",
-			accountNumber: dsaData.accountNumber || "",
-			ifsc: dsaData.ifsc || "",
-			branchName: dsaData.branchName || "",
-			bankName: dsaData.bankName || "",
+			bankDetails: {
+				accountHolderName: dsaData.bankDetails?.accountHolderName || "",
+				accountNumber: dsaData.bankDetails?.accountNumber || "",
+				ifsc: dsaData.bankDetails?.ifsc || "",
+				branchName: dsaData.bankDetails?.branchName || "",
+				bankName: dsaData.bankDetails?.bankName || "",
+			},
 		});
 	};
 
@@ -53,14 +55,37 @@ export default function Page() {
 	}, [dsaData]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
+		const { name, value } = e.target;
+
+		// Check if this is a bank detail field
+		if (
+			["accountHolderName", "accountNumber", "ifsc", "branchName", "bankName"].includes(
+				name
+			)
+		) {
+			setFormData({
+				...formData,
+				bankDetails: {
+					...formData.bankDetails,
+					[name]: value,
+				},
+			});
+		} else {
+			setFormData({
+				...formData,
+				[name]: value,
+			});
+		}
 	};
 
 	const handleSave = async () => {
 		try {
 			// Update DSA details in the database
-			const updatedData = await updateDsaDetails({ id: userId!, data: formData }).unwrap();
-			
+			const updatedData = await updateDsaDetails({
+				id: userId!,
+				data: formData,
+			}).unwrap();
+
 			// Update session with new user data
 			await updateSession({
 				...session,
@@ -68,13 +93,13 @@ export default function Page() {
 					...session?.user,
 					name: formData.name,
 					email: formData.email,
-				}
+				},
 			});
 			await updateSession();
-			
+
 			setIsEditMode(false);
 			setSuccessMessage("Profile updated successfully!");
-			
+
 			// Clear success message after 5 seconds
 			setTimeout(() => {
 				setSuccessMessage("");
@@ -91,21 +116,17 @@ export default function Page() {
 		setIsEditMode(false);
 	};
 
-	const handleResetPassword = () => {
-		router.push("/reset-pass");
-	};
-
 	if (isLoading) {
 		return (
-			<div className="flex justify-center items-center h-screen">
-				Loading...
+			<div className="flex justify-center items-center min-h-[300px]">
+				<div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-yellow-500"></div>
 			</div>
 		);
 	}
 
 	return (
 		<>
-			<div className="max-w-5xl mx-auto py-8 rounded-md">
+			<div className="mx-auto py-8 rounded-md">
 				{successMessage && (
 					<div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 relative">
 						<span className="block sm:inline">{successMessage}</span>
@@ -159,18 +180,6 @@ export default function Page() {
 						editable={false} // DSA Code should not be editable
 						onChange={handleChange}
 					/>
-					<div className="flex flex-col">
-						<label className="text-sm text-gray-700 mb-1">Password</label>
-						<div className="flex items-center h-[42px]">
-							<button
-								onClick={handleResetPassword}
-								className="bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-blue-700"
-							>
-								<RefreshCw size={16} />
-								Reset Password
-							</button>
-						</div>
-					</div>
 				</div>
 
 				<h4 className="text-xl font-semibold mb-4 text-black">Bank Details</h4>
@@ -180,35 +189,35 @@ export default function Page() {
 					<InputField
 						label="Account Holder Name"
 						name="accountHolderName"
-						value={formData.accountHolderName}
+						value={formData.bankDetails.accountHolderName}
 						editable={isEditMode}
 						onChange={handleChange}
 					/>
 					<InputField
 						label="Account Number"
 						name="accountNumber"
-						value={formData.accountNumber}
+						value={formData.bankDetails.accountNumber}
 						editable={isEditMode}
 						onChange={handleChange}
 					/>
 					<InputField
 						label="IFSC Code"
 						name="ifsc"
-						value={formData.ifsc}
+						value={formData.bankDetails.ifsc}
 						editable={isEditMode}
 						onChange={handleChange}
 					/>
 					<InputField
 						label="Branch Name"
 						name="branchName"
-						value={formData.branchName}
+						value={formData.bankDetails.branchName}
 						editable={isEditMode}
 						onChange={handleChange}
 					/>
 					<InputField
 						label="Bank Name"
 						name="bankName"
-						value={formData.bankName}
+						value={formData.bankDetails.bankName}
 						editable={isEditMode}
 						onChange={handleChange}
 					/>

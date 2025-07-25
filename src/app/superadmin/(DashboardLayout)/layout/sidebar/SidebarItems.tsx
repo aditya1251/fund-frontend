@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { Box, Typography } from "@mui/material";
 import { Sidebar as MUI_Sidebar, Menu, MenuItem } from "react-mui-sidebar";
@@ -7,14 +7,44 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { Submenu } from "./Submenu";
 import { useGetLoansQuery } from "@/redux/services/loanApi";
+import { useGetApplicationsQuery } from "@/redux/services/applicationApi";
+
+// Custom hook to manage the pending counts
+const usePendingCounts = () => {
+	const {
+		data: loansData = [],
+		isLoading: isLoansLoading,
+		error: loansError,
+	} = useGetLoansQuery({});
+
+	const {
+		data: applicationsData = [],
+		isLoading: isAppsLoading,
+		error: appsError,
+	} = useGetApplicationsQuery(undefined);
+
+	// Used useMemo to avoid recalculating on every render
+	const pendingLoanCount = useMemo(() => {
+		if (isLoansLoading || loansError) return null;
+		return loansData.filter((loan: any) => loan.status === "pending").length;
+	}, [loansData, isLoansLoading, loansError]);
+
+	const pendingAppCount = useMemo(() => {
+		if (isAppsLoading || appsError) return null;
+		return applicationsData.filter((app: any) => app.status === "pending")
+			.length;
+	}, [applicationsData, isAppsLoading, appsError]);
+
+	return {
+		pendingLoanCount,
+		pendingAppCount,
+		isLoading: isLoansLoading || isAppsLoading,
+		hasError: loansError || appsError,
+	};
+};
 
 const renderMenuItems = (items: any[], pathDirect: string) => {
-	const { data: loansData = [] } = useGetLoansQuery({});
-
-	// Calculate the pending applications count
-	const pendingCount = loansData.filter(
-		(loan: any) => loan.status === "pending"
-	).length;
+	const { pendingLoanCount, pendingAppCount, hasError } = usePendingCounts();
 
 	return items.map((item) => {
 		if (item.subheader) {
@@ -50,7 +80,6 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
 		}
 
 		// If the item has no children, render a MenuItem
-
 		return (
 			<MenuItem
 				key={item.id}
@@ -69,9 +98,24 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
 				}
 				component="div"
 				link={item.href && item.href !== "" ? item.href : undefined}
-				badge={item.chip ? true : false}
-				badgeContent={item.title === "Chip" ? pendingCount : item.chip || ""}
-				badgeColor={item.chipColor || "secondary"}
+				badge={
+					item.chip || item.title === "Applications" || item.title === "Contacts"
+						? true
+						: false
+				}
+				badgeContent={
+					item.title === "Applications"
+						? pendingLoanCount
+						: item.title === "Contacts"
+						? pendingAppCount
+						: item.chip || ""
+				}
+				badgeColor={
+					hasError &&
+					(item.title === "Applications" || item.title === "Contacts")
+						? "error"
+						: item.chipColor || "secondary"
+				}
 				badgeTextColor="#000"
 				disabled={item.disabled}
 				badgeType={item.variant || "filled"}

@@ -63,7 +63,7 @@ const Menuitems: MenuitemsType[] = [
 			{
 				id: uniqueId(),
 				title: "Applications",
-				chip: "3",
+				chip: "",
 				chipColor: "primary",
 				href: "/superadmin/loans/applications",
 			},
@@ -110,7 +110,7 @@ const Menuitems: MenuitemsType[] = [
 	{
 		id: uniqueId(),
 		title: "Contacts",
-		chip: "5",
+		chip: "",
 		chipColor: "primary",
 		icon: "book-line-duotone",
 		href: "/superadmin/contacts",

@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
-import { Pencil, Check, Clock, AlertCircle } from "lucide-react";
+
+import { Check, Clock, AlertCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useGetDsaDetailsQuery } from "@/redux/services/dsaApi";
 import { useGetPlanByIdQuery } from "@/redux/services/plansApi";
@@ -18,18 +18,17 @@ export default function Page() {
 	const planId = dsaData?.planId;
 	const { data: planData, isLoading: isPlanLoading } =
 		useGetPlanByIdQuery(planId);
-	console.log("Plan Data:", planData);
 	const isLoading = isDsaLoading || isPlanLoading;
 
 	if (isLoading) {
 		return (
 			<div className="flex justify-center items-center min-h-[300px]">
-				<div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-black"></div>
+				<div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-yellow-500"></div>
 			</div>
 		);
 	}
 	return (
-		<div className="max-w-5xl mx-auto py-8 rounded-md">
+		<div className="mx-auto py-8 rounded-md">
 			<div className="flex justify-between items-center mb-6">
 				<h4 className="text-xl font-semibold text-black">My Plan Details</h4>
 				<div className="flex items-center gap-2">
@@ -74,10 +73,9 @@ export default function Page() {
 								<div className="flex items-center gap-2">
 									<Clock className="w-4 h-4 text-gray-500" />
 									<span className="text-sm text-gray-500">
-										Renewal on{" "}
-										{new Date(
-											planData.duration || Date.now()
-										).toLocaleDateString()}
+										{planData.duration === 0
+											? "Lifetime Access"
+											: `Expires in ${planData.duration} months`}
 									</span>
 								</div>
 							</div>
@@ -92,7 +90,7 @@ export default function Page() {
 								</h4>
 								{planData.features?.map((feature: string, index: number) => (
 									<div key={index} className="flex items-start gap-2">
-										<Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+										<Check className="w-5 h-5 text-yellow-500 mt-0.5 flex-shrink-0" />
 										<span className="text-gray-700">{feature}</span>
 									</div>
 								))}
@@ -111,7 +109,7 @@ export default function Page() {
 							value={dsaData?.loansProcessed || 0}
 						/>
 						<MetricCard
-							title="Commissions Earned"
+							title="Commission Earned"
 							value={`₹${dsaData?.commissionsEarned || 0}`}
 						/>
 					</div>
@@ -126,10 +124,7 @@ interface MetricCardProps {
 	value: number | string;
 }
 
-const MetricCard = ({
-	title,
-	value,
-}: MetricCardProps) => {
+const MetricCard = ({ title, value }: MetricCardProps) => {
 	return (
 		<div className="bg-white border border-gray-200 p-4 rounded-lg">
 			<h5 className="text-sm font-medium text-gray-500 mb-2">{title}</h5>

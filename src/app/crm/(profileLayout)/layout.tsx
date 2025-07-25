@@ -7,7 +7,7 @@ export default function ProfileLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<div className="px-8">
+		<div className="px-8 pt-8 bg-white">
 			<ProfileHeader />
 			{children}
 		</div>

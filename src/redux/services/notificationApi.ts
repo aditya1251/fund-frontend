@@ -28,6 +28,17 @@ export const NotificationApi = createApi({
 			invalidatesTags: ["Notifications"],
 		}),
 
+		notifySuperAdmin: builder.mutation<any, { title: string; message: string }>(
+			{
+				query: ({ message, title }) => ({
+					url: `notifications/superadmin`,
+					method: "POST",
+					body: { message, title },
+				}),
+				invalidatesTags: ["Notifications"],
+			}
+		),
+
 		// ✅ PATCH: Mark a notification as read
 		markAsRead: builder.mutation<any, string>({
 			query: (id) => ({
@@ -51,6 +62,7 @@ export const NotificationApi = createApi({
 export const {
 	useGetNotificationsQuery,
 	useCreateNotificationMutation,
+	useNotifySuperAdminMutation,
 	useMarkAsReadMutation,
 	useDeleteNotificationMutation,
 } = NotificationApi;
