@@ -18,7 +18,7 @@ import {
 } from '@/redux/services/loanTemplateApi';
 import { useSearchParams } from 'next/navigation';
 import { RequireFeature } from '@/components/RequireFeature';
-
+import { useNotifySuperAdminMutation } from "@/redux/services/notificationApi"
 
 export default function LoanForm() {
   // Remove: const [template, setTemplate] = useState<LoanFormTemplate | null>(null)
@@ -29,6 +29,7 @@ export default function LoanForm() {
   const subtype = searchParams.get('subtype')?.toLowerCase() || '';
   const { data: templateData, isLoading } = useGetLoanTemplateByNameQuery(subtype, { skip: !subtype });
   const [createLoanFormSubmission] = useCreateLoanMutation();
+  const [notifySuperAdmin] = useNotifySuperAdminMutation();
 
   // Form preview handlers
   const handleFormValueChange = (label: string, value: any) => {
@@ -51,6 +52,10 @@ export default function LoanForm() {
     const subscriber = session?.user?.email;
     try {
       await createLoanFormSubmission({ values: formValues, subscriber, loanSubType: templateData.name, loanType: templateData.loanType }).unwrap();
+      await notifySuperAdmin({
+        title: `New Loan Form Submission - ${templateData.name}`,
+        message: `A new loan form has been submitted for ${templateData.name} by ${subscriber}.`
+      }).unwrap();
       setMessage("Form submitted successfully!");
       setFormValues({});
     } catch (err) {

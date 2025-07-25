@@ -3,10 +3,14 @@ import Profile from './Profile';
 import { useEffect, useState, useContext } from 'react';
 import { Icon } from '@iconify/react';
 import { DashboardContext } from '@/app/superadmin/context/DashboardContext';
-import Notification from './Notification'
+// import Notification from './Notification'
+import NotificationPanel from '@/components/crm/notificationPanel';
+import { useSession } from 'next-auth/react';
 
 const Header = () => {
   const [_height, setHeight] = useState('0px');
+  const {data: session} = useSession();
+  const userId = session?.user?.id || '';
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
@@ -59,7 +63,7 @@ const Header = () => {
             <Icon icon="solar:list-bold" height={20} />
           </IconButton>
 
-          <Notification />
+          <NotificationPanel userId={userId} pane="right" />
 
 
           <Box flexGrow={1} />

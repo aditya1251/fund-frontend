@@ -21,11 +21,13 @@ export default function Page() {
 		phone: "",
 		age: "",
 		dsaCode: "",
-		accountHolderName: "",
-		accountNumber: "",
-		ifsc: "",
-		branchName: "",
-		bankName: "",
+		bankDetails: {
+			accountHolderName: "",
+			accountNumber: "",
+			ifsc: "",
+			branchName: "",
+			bankName: "",
+		},
 	});
 
 	const updateFormData = () => {
@@ -35,11 +37,13 @@ export default function Page() {
 			phone: dsaData.phone || "",
 			age: dsaData.age || "",
 			dsaCode: dsaData.dsaCode || "",
-			accountHolderName: dsaData.accountHolderName || "",
-			accountNumber: dsaData.accountNumber || "",
-			ifsc: dsaData.ifsc || "",
-			branchName: dsaData.branchName || "",
-			bankName: dsaData.bankName || "",
+			bankDetails: {
+				accountHolderName: dsaData.bankDetails?.accountHolderName || "",
+				accountNumber: dsaData.bankDetails?.accountNumber || "",
+				ifsc: dsaData.bankDetails?.ifsc || "",
+				branchName: dsaData.bankDetails?.branchName || "",
+				bankName: dsaData.bankDetails?.bankName || "",
+			},
 		});
 	};
 
@@ -51,7 +55,27 @@ export default function Page() {
 	}, [dsaData]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
+		const { name, value } = e.target;
+
+		// Check if this is a bank detail field
+		if (
+			["accountHolderName", "accountNumber", "ifsc", "branchName", "bankName"].includes(
+				name
+			)
+		) {
+			setFormData({
+				...formData,
+				bankDetails: {
+					...formData.bankDetails,
+					[name]: value,
+				},
+			});
+		} else {
+			setFormData({
+				...formData,
+				[name]: value,
+			});
+		}
 	};
 
 	const handleSave = async () => {
@@ -165,35 +189,35 @@ export default function Page() {
 					<InputField
 						label="Account Holder Name"
 						name="accountHolderName"
-						value={formData.accountHolderName}
+						value={formData.bankDetails.accountHolderName}
 						editable={isEditMode}
 						onChange={handleChange}
 					/>
 					<InputField
 						label="Account Number"
 						name="accountNumber"
-						value={formData.accountNumber}
+						value={formData.bankDetails.accountNumber}
 						editable={isEditMode}
 						onChange={handleChange}
 					/>
 					<InputField
 						label="IFSC Code"
 						name="ifsc"
-						value={formData.ifsc}
+						value={formData.bankDetails.ifsc}
 						editable={isEditMode}
 						onChange={handleChange}
 					/>
 					<InputField
 						label="Branch Name"
 						name="branchName"
-						value={formData.branchName}
+						value={formData.bankDetails.branchName}
 						editable={isEditMode}
 						onChange={handleChange}
 					/>
 					<InputField
 						label="Bank Name"
 						name="bankName"
-						value={formData.bankName}
+						value={formData.bankDetails.bankName}
 						editable={isEditMode}
 						onChange={handleChange}
 					/>

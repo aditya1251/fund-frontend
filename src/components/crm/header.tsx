@@ -27,7 +27,7 @@ export default function 	Header() {
 
 			{/* Right: Notification & Profile */}
 			<div className="flex items-center space-x-2 sm:space-x-4">
-				<NotificationPanel userId={session?.user?.id || ""} />
+				<NotificationPanel userId={session?.user?.id || ""} pane="left" />
 				<ProfilePanel user={{ name: session?.user?.name ?? "", email: session?.user?.email ?? "" }} />
 			</div>
 		</header>

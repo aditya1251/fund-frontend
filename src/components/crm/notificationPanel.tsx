@@ -20,7 +20,7 @@ type Notification = {
 	createdAt: string;
 };
 
-const NotificationPanel = ({ userId }: { userId: string }) => {
+const NotificationPanel = ({ userId, pane }: { userId: string, pane: "left" | "right" }) => {
 	const {
 		data: notifications = [],
 		refetch,
@@ -99,7 +99,7 @@ const NotificationPanel = ({ userId }: { userId: string }) => {
 					</DropdownMenuTrigger>
 					<DropdownMenuContent
 						className="w-80 p-4 bg-white shadow-lg rounded-xl"
-						align="end"
+						align={pane === "right" ? "start" : "end"}
 					>
 						<Content />
 					</DropdownMenuContent>
