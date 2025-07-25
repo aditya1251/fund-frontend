@@ -31,6 +31,7 @@ import { useCreateLoanMutation } from "@/redux/services/loanApi";
 import { useGetLoanTemplateByIdQuery } from "@/redux/services/loanTemplateApi";
 import { useSearchParams, useRouter } from "next/navigation";
 import { RequireFeature } from "@/components/RequireFeature";
+import { useNotifySuperAdminMutation } from "@/redux/services/notificationApi"
 import {
   Dialog,
   DialogContent,
@@ -60,6 +61,7 @@ export default function LoanForm() {
   });
 
   const [createLoanFormSubmission] = useCreateLoanMutation();
+  const [notifySuperAdmin] = useNotifySuperAdminMutation();
 
   // Load saved drafts from local storage
   useEffect(() => {
@@ -328,6 +330,10 @@ export default function LoanForm() {
         subscriber,
         loanSubType: templateData.name,
         loanType: templateData.loanType,
+      }).unwrap();
+      await notifySuperAdmin({
+        title: `New Loan Form Submission - ${templateData.name}`,
+        message: `A new loan form has been submitted for ${templateData.name} by ${subscriber}.`
       }).unwrap();
 
       setFormSubmitted(true);
