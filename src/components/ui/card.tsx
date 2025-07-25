@@ -38,4 +38,25 @@ const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
   },
 )
 CardHeader.displayName = "CardHeader"
-export {CardHeader}
+
+const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
+  ({ className, ...props }, ref) => {
+    const baseClasses = "text-2xl font-semibold leading-none tracking-tight"
+    const combinedClasses = className ? `${baseClasses} ${className}` : baseClasses
+
+    return <h3 ref={ref} className={combinedClasses} {...props} />
+  }
+)
+CardTitle.displayName = "CardTitle"
+
+const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, ...props }, ref) => {
+    const baseClasses = "text-sm text-muted-foreground"
+    const combinedClasses = className ? `${baseClasses} ${className}` : baseClasses
+
+    return <p ref={ref} className={combinedClasses} {...props} />
+  }
+)
+CardDescription.displayName = "CardDescription"
+
+export { CardHeader, CardTitle, CardDescription }

@@ -35,6 +35,7 @@ const navItems: NavItem[] = [
 	{ href: "/govt-loans", label: "Govt. Loans", icon: <Landmark /> },
 	{ href: "/insurance", label: "Insurance", icon: <Handshake /> },
 	{ href: "/quick-loans", label: "Quick Loans", icon: <Timer /> },
+	{ href: "/drafts", label: "Drafts", icon: <Timer /> },
 	{
 		href: "/campaign-marketing",
 		label: "Campaign & Marketing",

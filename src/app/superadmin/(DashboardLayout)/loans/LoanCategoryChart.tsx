@@ -21,6 +21,53 @@ const LoanCategoryChart = () => {
     setAnchorEl(null);
   };
 
+  // Import the hook at the component level
+  const { useGetLoansQuery } = require('@/redux/services/loanApi');
+  const { data: loansData = [], isLoading } = useGetLoansQuery({});
+  
+  // State for chart data
+  const [chartData, setChartData] = React.useState({
+    approved: [0, 0, 0], // [Private, Government, Insurance]
+    pending: [0, 0, 0],
+    rejected: [0, 0, 0],
+  });
+  
+  // Process loan data for the chart
+  React.useEffect(() => {
+    if (loansData && loansData.length > 0) {
+      // Initialize counters
+      const counts = {
+        approved: [0, 0, 0], // [Private, Government, Insurance]
+        pending: [0, 0, 0],
+        rejected: [0, 0, 0],
+      };
+      
+      // Process each loan
+      loansData.forEach((loan: any) => {
+        let categoryIndex = 0; // Default to Private
+        
+        // Determine category index
+        if (loan.loanType?.toLowerCase() === 'government') {
+          categoryIndex = 1;
+        } else if (loan.loanType?.toLowerCase() === 'insurance') {
+          categoryIndex = 2;
+        }
+        
+        // Count by status
+        if (loan.status.toLowerCase() === 'approved') {
+          counts.approved[categoryIndex]++;
+        } else if (loan.status.toLowerCase() === 'pending') {
+          counts.pending[categoryIndex]++;
+        } else if (loan.status.toLowerCase() === 'rejected') {
+          counts.rejected[categoryIndex]++;
+        }
+      });
+      
+      // Update chart data
+      setChartData(counts);
+    }
+  }, [loansData]);
+
   const theme = useTheme();
 
   const primary = "#FFD439"; // your website's yellow
@@ -50,7 +97,7 @@ const LoanCategoryChart = () => {
       strokeDashArray: 4,
     },
     xaxis: {
-      categories: ["Private", "Goverment", "Insurance"],
+      categories: ["Private", "Government", "Insurance"],
       axisBorder: { show: false },
       labels: {
         style: { fontWeight: 600 },
@@ -66,9 +113,7 @@ const LoanCategoryChart = () => {
       position: "top",
       fontWeight: 500,
       markers: {
-        width: 12,
-        height: 12,
-        radius: 6,
+        size: 12,
       },
     },
     tooltip: {
@@ -79,15 +124,15 @@ const LoanCategoryChart = () => {
   const chartSeries = [
     {
       name: "Approved",
-      data: [80, 30, 10],
+      data: chartData.approved,
     },
     {
       name: "Pending",
-      data: [65, 15, 10],
+      data: chartData.pending,
     },
     {
       name: "Rejected",
-      data: [50, 15, 5],
+      data: chartData.rejected,
     },
   ];
 
