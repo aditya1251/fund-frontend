@@ -326,10 +326,11 @@ export default function LoanForm() {
     try {
       // Form submission with uploaded document filenames
       await createLoanFormSubmission({
-        values: formValues,
+        formData: formValues,
         subscriber,
         loanSubType: templateData.name,
         loanType: templateData.loanType,
+        templateId: templateData._id,
       }).unwrap();
       await notifySuperAdmin({
         title: `New Loan Form Submission - ${templateData.name}`,

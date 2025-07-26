@@ -1,13 +1,12 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import ApplicationCard from "@/components/ApplicationCard";
 import {
   useGetApplicationsQuery,
   useUpdateApplicationStatusMutation,
 } from "@/redux/services/applicationApi";
+import { CheckCircle, XCircle, RefreshCw } from "lucide-react";
 
-// TypeScript interface for application data
 interface Application {
   _id: string;
   name: string;
@@ -28,7 +27,8 @@ interface Application {
 export default function SuperAdminApplications() {
   const { data: session } = useSession();
   const token = session?.user?.token;
-  const [activeTab, setActiveTab] = useState<"pending" | "approved" | "rejected">("pending");
+
+  const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -40,132 +40,166 @@ export default function SuperAdminApplications() {
     isError,
     refetch,
   } = useGetApplicationsQuery(undefined);
+
   const [updateStatus, { isLoading: isUpdating }] = useUpdateApplicationStatusMutation();
 
-  const showNotification = (message: string, type: "success" | "error") => {
-    setNotification({ message, type });
-    setTimeout(() => setNotification(null), 5000);
-  };
-
-  const handleUpdateStatus = async (id: string, newStatus: "approved" | "rejected", data: any) => {
+  const handleStatusUpdate = async (id: string, status: "approved" | "rejected") => {
     if (!token) return;
     try {
-      await updateStatus({ id, status: newStatus }).unwrap();
-      showNotification(
-        newStatus === "approved"
-          ? "User application approved successfully!"
-          : "User application rejected successfully!",
-        "success"
-      );
+      await updateStatus({ id, status }).unwrap();
+      setNotification({
+        message: status === "approved" ? "Application approved" : "Application rejected",
+        type: "success",
+      });
       refetch();
-    } catch (error) {
-      showNotification("Failed to update user application status.", "error");
+    } catch {
+      setNotification({ message: "Status update failed", type: "error" });
     }
+    setTimeout(() => setNotification(null), 4000);
   };
 
-  const filteredApplications = applications.filter((app: Application) => app.status === activeTab);
+  const filteredApps = applications.filter((app: Application) =>
+    filter === "all" ? true : app.status === filter
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen py-8 px-4">
       {/* Notification */}
       {notification && (
         <div
-          className={`fixed top-4 right-4 p-4 rounded-md shadow-lg z-50 flex items-center ${
-            notification.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+          className={`fixed top-4 right-4 z-50 flex items-center gap-2 p-4 rounded shadow-lg ${
+            notification.type === "success"
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
           }`}
         >
-          {notification.type === "success" ? (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          )}
-          {notification.message}
+          {notification.type === "success" ? <CheckCircle size={20} /> : <XCircle size={20} />}
+          <span>{notification.message}</span>
         </div>
       )}
 
-      <div className="p-4">
-        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Account Applications</h1>
-            <p className="mt-2 text-gray-600">Review and manage user account requests.</p>
-          </div>
+      <div className="max-w-6xl mx-auto space-y-12">
+        {/* Title */}
+        <div className="text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Manage <span className="text-[#FFD439]">Applications</span>
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Review, approve, or reject user account requests.
+          </p>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="border-b border-gray-200 mb-6">
-          <nav className="flex -mb-px">
-            <button
-              onClick={() => setActiveTab("pending")}
-              className={`py-4 px-6 font-medium text-sm border-b-2 ${
-                activeTab === "pending"
-                  ? "border-[#F7C430] text-[#F7C430]"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-              }`}
-            >
-              Pending
-              <span className="ml-2 bg-gray-100 text-gray-700 py-0.5 px-2 rounded-full text-xs">
-                {applications.filter((app: Application) => app.status === "pending").length}
-              </span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("approved")}
-              className={`py-4 px-6 font-medium text-sm border-b-2 ${
-                activeTab === "approved"
-                  ? "border-[#F7C430] text-[#F7C430]"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-              }`}
-            >
-              Approved
-              <span className="ml-2 bg-gray-100 text-gray-700 py-0.5 px-2 rounded-full text-xs">
-                {applications.filter((app: Application) => app.status === "approved").length}
-              </span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("rejected")}
-              className={`py-4 px-6 font-medium text-sm border-b-2 ${
-                activeTab === "rejected"
-                  ? "border-[#F7C430] text-[#F7C430]"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-              }`}
-            >
-              Rejected
-              <span className="ml-2 bg-gray-100 text-gray-700 py-0.5 px-2 rounded-full text-xs">
-                {applications.filter((app: Application) => app.status === "rejected").length}
-              </span>
-            </button>
-          </nav>
-        </div>
-
-        {/* Applications List */}
-        {isLoading || isUpdating ? (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#F7C430]"></div>
-          </div>
-        ) : isError ? (
-          <div className="bg-white rounded-lg shadow-sm p-6 text-center">
-            <p className="text-gray-500">Failed to load applications.</p>
-          </div>
-        ) : filteredApplications.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm p-6 text-center">
-            <p className="text-gray-500">No {activeTab} applications found.</p>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {filteredApplications.map((application: Application) => (
-              <ApplicationCard
-                key={application._id}
-                application={application}
-                onUpdateStatus={handleUpdateStatus}
-              />
+        {/* Status Filter */}
+         <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-300 pb-4">
+          <nav className="flex gap-4">
+            {["all", "pending", "approved", "rejected"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setFilter(tab as any)} // ✅ FIXED this line
+                className={`capitalize cursor-pointer px-4 py-2 font-semibold ${
+                  filter === tab
+                    ? "text-black bg-[#ffd439] rounded-full shadow-[4px_4px_0_0_#000]"
+                    : "text-gray-600 hover:text-black"
+                }`}
+              >
+                {tab}
+                <span className="ml-2 cursor-pointer bg-gray-100 text-gray-700 text-xs rounded-full px-2">
+                  {tab === "all"
+                    ? applications.length
+                    : applications.filter((a: Application) => a.status === tab).length}
+                </span>
+              </button>
             ))}
-          </div>
-        )}
+          </nav>
+
+          <button
+            onClick={() => refetch()}
+            className="mt-4 md:mt-0 flex items-center gap-2 bg-black text-white px-4 py-2 rounded shadow-md hover:bg-gray-800"
+          >
+            <RefreshCw size={16} /> Refresh
+          </button>
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto bg-white rounded-xl shadow border border-black">
+          <table className="w-full text-sm text-left">
+            <thead className="bg-[#FFD439] text-black uppercase text-sm">
+              <tr>
+                <th className="px-4 py-3 border-b border-black">Name</th>
+                <th className="px-4 py-3 border-b border-black">Email</th>
+                <th className="px-4 py-3 border-b border-black">Phone</th>
+                <th className="px-4 py-3 border-b border-black">Message</th>
+                <th className="px-4 py-3 border-b border-black">Status</th>
+                <th className="px-4 py-3 border-b border-black">Date</th>
+                <th className="px-4 py-3 border-b border-black">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading || isUpdating ? (
+                <tr>
+                  <td colSpan={7} className="text-center py-10">Loading...</td>
+                </tr>
+              ) : isError ? (
+                <tr>
+                  <td colSpan={7} className="text-center py-10 text-red-500">
+                    Failed to load applications
+                  </td>
+                </tr>
+              ) : filteredApps.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="text-center py-10 text-gray-500">
+                    No {filter} applications found
+                  </td>
+                </tr>
+              ) : (
+                filteredApps.map((app: Application) => (
+                  <tr key={app._id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 border-b border-black">{app.name}</td>
+                    <td className="px-4 py-3 border-b border-black">{app.email}</td>
+                    <td className="px-4 py-3 border-b border-black">{app.phone}</td>
+                    <td className="px-4 py-3 border-b border-black">{app.message}</td>
+                    <td className="px-4 py-3 border-b border-black">
+                      <span
+                        className={`text-xs font-semibold px-3 py-1 rounded-full ${
+                          app.status === "approved"
+                            ? "bg-green-100 text-green-700"
+                            : app.status === "rejected"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {app.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 border-b border-black">
+                      {new Date(app.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-3 border-b border-black space-x-2">
+                      {app.status === "pending" ? (
+                        <>
+                          <button
+                            onClick={() => handleStatusUpdate(app._id, "approved")}
+                            className="bg-green-100 text-green-700 px-3 py-1 rounded text-xs hover:bg-green-200"
+                          >
+                            Approve
+                          </button>
+                          <button
+                            onClick={() => handleStatusUpdate(app._id, "rejected")}
+                            className="bg-red-100 text-red-700 px-3 py-1 rounded text-xs hover:bg-red-200"
+                          >
+                            Reject
+                          </button>
+                        </>
+                      ) : (
+                        <span className="text-gray-400 text-xs italic">No action</span>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

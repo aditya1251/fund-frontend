@@ -31,3 +31,20 @@ export async function uploadFile(file: File): Promise<{ filename: string }> {
     throw new Error(`Upload failed: ${error.message}`);
   }
 }
+
+export async function getFileUrl(filename: string): Promise<string> {
+  try {
+    const response = await fetch(`http://localhost:5000/api/upload/${filename}`);
+    if (!response.ok) {
+      const errorData = await response.text();
+      throw new Error(`File not found: ${errorData}`);
+    }
+    
+    const data = await response.json();
+    console.log('File URL:', data.url);
+    return data.url;
+  } catch (error: any) {
+    console.error('Error getting file URL:', error);
+    throw new Error(`File not found: ${error.message}`);
+  }
+}
