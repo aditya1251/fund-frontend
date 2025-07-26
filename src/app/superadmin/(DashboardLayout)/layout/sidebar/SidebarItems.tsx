@@ -16,6 +16,11 @@ const usePendingCounts = () => {
 		isLoading: isLoansLoading,
 		error: loansError,
 	} = useGetLoansQuery({});
+	const {
+		data: quickLoansData = [],
+		isLoading: isQuickLoansLoading,
+		error: quickLoansError,
+	}	= useGetLoansQuery({loanType: "quick"});
 
 	const {
 		data: applicationsData = [],
@@ -35,16 +40,22 @@ const usePendingCounts = () => {
 			.length;
 	}, [applicationsData, isAppsLoading, appsError]);
 
+	const pendingQuickLoanCount = useMemo(() => {
+		if (isQuickLoansLoading || quickLoansError) return null;
+		return quickLoansData.filter((loan: any) => loan.status === "pending").length;
+	}, [quickLoansData, isQuickLoansLoading, quickLoansError]);
+
 	return {
 		pendingLoanCount,
 		pendingAppCount,
+		pendingQuickLoanCount,
 		isLoading: isLoansLoading || isAppsLoading,
 		hasError: loansError || appsError,
 	};
 };
 
 const renderMenuItems = (items: any[], pathDirect: string) => {
-	const { pendingLoanCount, pendingAppCount, hasError } = usePendingCounts();
+	const { pendingLoanCount, pendingAppCount,pendingQuickLoanCount, hasError } = usePendingCounts();
 
 	return items.map((item) => {
 		if (item.subheader) {
@@ -99,7 +110,7 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
 				component="div"
 				link={item.href && item.href !== "" ? item.href : undefined}
 				badge={
-					item.chip || item.title === "Applications" || item.title === "Contacts"
+					item.chip || item.title === "Applications" || item.title === "Contacts" || item.title === "Quick Applications"
 						? true
 						: false
 				}
@@ -108,6 +119,8 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
 						? pendingLoanCount
 						: item.title === "Contacts"
 						? pendingAppCount
+						: item.title === "Quick Applications"
+						? pendingQuickLoanCount
 						: item.chip || ""
 				}
 				badgeColor={

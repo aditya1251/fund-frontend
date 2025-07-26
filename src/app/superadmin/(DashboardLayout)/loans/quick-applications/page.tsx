@@ -14,7 +14,7 @@ export default function DsaApplicationsPage() {
     isLoading,
     error,
     refetch,
-  } = useGetLoansQuery({});
+  } = useGetLoansQuery({loanType: "quick"});
   const { data: adminData } = useGetAdminsQuery();
   const [updateLoan] = useUpdateLoanMutation();
   const [createNotification] = useCreateNotificationMutation();
@@ -152,7 +152,7 @@ export default function DsaApplicationsPage() {
       <div className="max-w-6xl mx-auto space-y-10">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900">
-            Manage <span className="text-[#FFD439]">Loan Applications</span>
+            Manage <span className="text-[#FFD439]">Quick Loan </span>Applications
           </h1>
           <p className="text-lg text-gray-600 mt-2">
             Approve or reject based on application review.
