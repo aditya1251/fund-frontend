@@ -82,6 +82,11 @@ const Menuitems: MenuitemsType[] = [
 				title: "Insurance",
 				href: "/superadmin/loans/insurance",
 			},
+			{
+				id: uniqueId(),
+				title: "Quick Loans",
+				href: "/superadmin/loans/quick",
+			},
 		],
 	},
 	{
@@ -133,6 +138,26 @@ const Menuitems: MenuitemsType[] = [
 				href: "/superadmin/plans/add",
 			},
 		],
+	},
+
+	{
+		navlabel: true,
+		subheader: "Others",
+	},
+
+	{
+		id: uniqueId(),
+		title: "Quick Loans",
+		icon: "stopwatch-line-duotone",
+		href: "/superadmin/loans/quick",
+	},
+	{
+		id: uniqueId(),
+		title: "Quick Applications",
+		icon: "bolt-line-duotone",
+		chip: "",
+		chipColor: "primary",
+		href: "/superadmin/loans/quick-applications",
 	},
 
 	{
