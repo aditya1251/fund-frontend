@@ -1,21 +1,24 @@
 "use client";
 import { useState, useMemo } from "react";
 import {
-  useGetLoansQuery,
+  useGetLoansByRmIdQuery,
   useUpdateLoanMutation,
 } from "@/redux/services/loanApi";
 import { useGetAdminsQuery } from "@/redux/services/superadminApi";
 import { useCreateNotificationMutation } from "@/redux/services/notificationApi";
 import { CheckCircle, X, XCircle } from "lucide-react";
 import { getFileUrl } from "@/utils/fileUploadService";
+import { useSession } from "next-auth/react";
 
 export default function DsaApplicationsPage() {
+  const session = useSession();
+  const rmId = session.data?.user?.id;
   const {
     data: loansData = [],
     isLoading,
     error,
     refetch,
-  } = useGetLoansQuery({});
+  } = useGetLoansByRmIdQuery(rmId || "");
   const { data: adminData } = useGetAdminsQuery();
   const [updateLoan] = useUpdateLoanMutation();
   const [createNotification] = useCreateNotificationMutation();
@@ -140,7 +143,8 @@ export default function DsaApplicationsPage() {
             notification.type === "success"
               ? "bg-green-100 text-green-800"
               : "bg-red-100 text-red-800"
-          }`}>
+          }`}
+        >
           {notification.type === "success" ? (
             <CheckCircle size={20} />
           ) : (
@@ -177,7 +181,8 @@ export default function DsaApplicationsPage() {
                   filter === tab
                     ? "bg-[#FFD439] text-black shadow-[4px_4px_0_0_#000]"
                     : "text-gray-600 hover:text-black"
-                }`}>
+                }`}
+              >
                 {tab}
               </button>
             ))}
@@ -207,7 +212,8 @@ export default function DsaApplicationsPage() {
               return (
                 <div
                   key={loan._id}
-                  className="bg-white border border-black shadow-[6px_6px_0_0_#000] rounded-lg p-6">
+                  className="bg-white border border-black shadow-[6px_6px_0_0_#000] rounded-lg p-6"
+                >
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <h3 className="font-bold text-lg">{name || "N/A"}</h3>
@@ -228,45 +234,10 @@ export default function DsaApplicationsPage() {
                       </p>
                     </div>
                   </div>
-
-                  {loan.status === "pending" && (
-                    <div className="mt-4 flex flex-col md:flex-row gap-2">
-                      <button
-                        onClick={() => handleStatusChange(loan._id, "approved")}
-                        disabled={updatingId === loan._id}
-                        className="bg-green-100 text-green-800 px-4 py-2 rounded hover:bg-green-200 text-sm font-medium">
-                        Approve
-                      </button>
-                      <button
-                        onClick={() => handleStatusChange(loan._id, "rejected")}
-                        disabled={updatingId === loan._id}
-                        className="bg-red-100 text-red-700 px-4 py-2 rounded hover:bg-red-200 text-sm font-medium">
-                        Reject
-                      </button>
-                    </div>
-                  )}
-
-                  {showReasonInputId === loan._id && (
-                    <div className="mt-3 flex flex-col md:flex-row gap-2 items-start">
-                      <input
-                        type="text"
-                        className="w-full border border-gray-300 px-3 py-2 rounded"
-                        placeholder="Enter rejection reason"
-                        value={rejectionReason}
-                        onChange={(e) => setRejectionReason(e.target.value)}
-                      />
-                      <button
-                        onClick={() => handleStatusChange(loan._id, "rejected")}
-                        disabled={!rejectionReason.trim()}
-                        className="bg-red-600 text-white px-4 py-2 rounded shadow hover:bg-red-700">
-                        Confirm Reject
-                      </button>
-                    </div>
-                  )}
-
                   <button
                     onClick={() => openModal(loan)}
-                    className="bg-blue-100 text-blue-800 px-4 py-2 rounded hover:bg-blue-200 text-sm font-medium mt-4">
+                    className="bg-blue-100 text-blue-800 px-4 py-2 rounded hover:bg-blue-200 text-sm font-medium mt-4"
+                  >
                     View Details
                   </button>
                 </div>
@@ -281,7 +252,8 @@ export default function DsaApplicationsPage() {
           <div className="bg-white w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 rounded-xl border-2 border-black shadow-[8px_8px_0_0_#000] relative">
             <button
               onClick={closeModal}
-              className="absolute top-3 right-3 text-black hover:text-gray-600">
+              className="absolute top-3 right-3 text-black hover:text-gray-600"
+            >
               <X className="w-5 h-5" />
             </button>
             <h3 className="text-2xl font-bold mb-6 text-black">
@@ -298,7 +270,8 @@ export default function DsaApplicationsPage() {
                     {page.fields.map((field: any, index: number) => (
                       <div
                         key={index}
-                        className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                        className="bg-gray-100 p-4 rounded-lg border border-gray-300"
+                      >
                         <label className="block text-sm font-medium text-black mb-1">
                           {field.label}
                         </label>
@@ -329,10 +302,10 @@ export const FileViewer = ({ fileKey }: { fileKey: string }) => {
     setLoading(true);
     try {
       const url = await getFileUrl(fileKey);
-      window.open(url, '_blank', 'noopener,noreferrer');
+      window.open(url, "_blank", "noopener,noreferrer");
     } catch (err) {
-      console.error('Error fetching file:', err);
-      alert('Failed to open file');
+      console.error("Error fetching file:", err);
+      alert("Failed to open file");
     } finally {
       setLoading(false);
     }
@@ -344,8 +317,7 @@ export const FileViewer = ({ fileKey }: { fileKey: string }) => {
       className="text-blue-600 underline text-sm break-all"
       disabled={loading}
     >
-      {loading ? 'Loading...' : 'View Document'}
+      {loading ? "Loading..." : "View Document"}
     </button>
   );
 };
-
