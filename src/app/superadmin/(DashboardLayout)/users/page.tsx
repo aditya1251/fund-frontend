@@ -17,6 +17,11 @@ interface Admin {
 	planName: string;
 	createdAt: string;
 	isDeleted?: boolean;
+	rmId?: {
+		_id: string;
+		name: string;
+		email: string;
+	};
 }
 
 export default function ManageAdmins() {
@@ -49,7 +54,8 @@ export default function ManageAdmins() {
 		isLoading,
 		isError,
 		refetch,
-	} = useGetAdminsQuery(undefined);
+	} = useGetAdminsQuery();
+	console.log("Admins data:", admins);
 	const [deleteAdmin, { isLoading: isDeleting }] = useDeleteAdminMutation();
 	const [createNotification, { isLoading: isSendingNotification }] =
 		useCreateNotificationMutation();
@@ -137,7 +143,7 @@ export default function ManageAdmins() {
 	});
 
 	return (
-		<div className="min-h-screen py-16 px-4">
+		<div className="min-h-screen py-16">
 			<div className="max-w-6xl mx-auto space-y-12">
 				<div className="text-center">
 					<h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -248,8 +254,9 @@ export default function ManageAdmins() {
 						className="w-full border border-black rounded-xl px-4 py-3 text-sm"
 					>
 						<option value="all">All Roles</option>
-						<option value="admin">Admin</option>
 						<option value="superadmin">Superadmin</option>
+						<option value="rm">RM</option>
+						<option value="dsa">DSA</option>
 					</select>
 					<button
 						className=" px-6 py-3 bg-[#FFD439] text-black font-semibold rounded-xl shadow hover:bg-yellow-400 transition"
@@ -269,6 +276,7 @@ export default function ManageAdmins() {
 									"Email",
 									"Plan",
 									"Role",
+									"RM Details",
 									"Created",
 									"Status",
 									"Actions",
@@ -282,19 +290,19 @@ export default function ManageAdmins() {
 						<tbody>
 							{isLoading || isDeleting ? (
 								<tr>
-									<td colSpan={7} className="text-center py-6">
+									<td colSpan={8} className="text-center py-6">
 										Loading...
 									</td>
 								</tr>
 							) : isError ? (
 								<tr>
-									<td colSpan={7} className="text-center py-6 text-red-500">
+									<td colSpan={8} className="text-center py-6 text-red-500">
 										Failed to load admins.
 									</td>
 								</tr>
 							) : filteredAdmins.length === 0 ? (
 								<tr>
-									<td colSpan={7} className="text-center py-6 text-gray-500">
+									<td colSpan={8} className="text-center py-6 text-gray-500">
 										No matching admins found.
 									</td>
 								</tr>
@@ -308,18 +316,18 @@ export default function ManageAdmins() {
 											className="hover:bg-gray-100 transition-all"
 										>
 											{/* Standard cell styling for basic text content */}
-											<td className="px-4 py-3 border-b border-black">
+											<td className="px-1 text-center py-3 border-b border-black">
 												{admin.name}
 											</td>
-											<td className="px-4 py-3 border-b border-black">
+											<td className="px-1 text-center py-3 border-b border-black">
 												{admin.email}
 											</td>
-											<td className="px-4 py-3 border-b border-black">
+											<td className="px-1 text-center py-3 border-b border-black">
 												{admin.planName}
 											</td>
-											<td className="px-4 py-3 border-b border-black">
+											<td className="px-1 text-center py-3 border-b border-black">
 												<span
-													className={`px-2 py-1 rounded-full text-xs font-medium uppercase ${
+													className={`px-1 py-1 rounded-full text-xs font-medium uppercase ${
 														admin.role === "SUPERADMIN"
 															? "bg-black text-white"
 															: "bg-white border border-black text-black"
@@ -327,6 +335,16 @@ export default function ManageAdmins() {
 												>
 													{admin.role}
 												</span>
+											</td>
+											<td className="px-4 py-3 border-b border-black">
+												{admin.role === "DSA" && admin.rmId ? (
+													<div className="flex flex-col">
+														<span className="text-sm font-medium">{admin.rmId.name}</span>
+														<span className="text-xs text-gray-500">{admin.rmId.email}</span>
+													</div>
+												) : (
+													<span className="text-xs text-gray-500">N/A</span>
+												)}
 											</td>
 											<td className="px-4 py-3 border-b border-black">
 												{new Date(admin.createdAt).toLocaleDateString()}

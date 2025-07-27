@@ -9,6 +9,9 @@ declare module "next-auth" {
       role?: string;
       id?: string;
       token?: string;
+      rmId?: string | null;
+      planName?: string | null;
+      planId?: string | null;
     };
   }
 } 

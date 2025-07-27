@@ -21,15 +21,19 @@ export const authOptions: NextAuthOptions = {
           });
 
           if (!res.ok) return null;
-
           const data = await res.json();
           // data: { token, user }
           if (
             data &&
             data.user &&
-            (data.user.role === "admin" || data.user.role === "superadmin")
+            (data.user.role === "DSA" || data.user.role === "SUPERADMIN" || data.user.role === "RM")
           ) {
-            return { ...data.user, token: data.token };
+            return { 
+              ...data.user, 
+              token: data.token, 
+              id: data.user._id, 
+              rmId: data.user.rmId || null 
+            };
           }
           return null;
         } catch (error) {
@@ -42,7 +46,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   pages: {
-    signIn: "/superadmin/(DashboardLayout)/sample-form",
+    signIn: "/login",
   },
   callbacks: {
     async session({ session, token }) {

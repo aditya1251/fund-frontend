@@ -19,13 +19,17 @@ import {
   ViewAllButton,
 } from "@/components/ui/data-table";
 import Link from "next/link";
-import { useGetLoansQuery } from "@/redux/services/loanApi";
+import { useGetLoansByDsaIdQuery } from "@/redux/services/loanApi";
 import { RequireFeature } from "@/components/RequireFeature";
 import { useGetLoanTemplatesByTypeQuery } from "@/redux/services/loanTemplateApi";
 import { Building, Car, House, LandPlot, User } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export default function Page() {
-  const { data: loansData = [] } = useGetLoansQuery({ loanType: "government" });
+  const session = useSession();
+    const dsaId = session.data?.user?.id || "";
+    const { data } = useGetLoansByDsaIdQuery(dsaId);
+    const loansData= data?.filter((loan: any) => loan.loanType === "government") || [];
   const { data: loansTemplates = [] } =
     useGetLoanTemplatesByTypeQuery("government");
 
@@ -94,10 +98,10 @@ export default function Page() {
                         lead._id,
                         lead.loanSubType,
                         lead.mode ? lead.mode : "Online",
-                        lead.values.Name,
+                        lead.values[0].fields[0].value,
                         <EmailCell email={lead.subscriber} />,
-                        <EmailCell email={lead.values.Email} />,
-                        lead.values.Phone,
+                        <EmailCell email={lead.values[0].fields[1].value} />,
+                        lead.values[0].fields[2].value,
                         lead.rejectionMessage,
                         <StatusBadge
                           status={
