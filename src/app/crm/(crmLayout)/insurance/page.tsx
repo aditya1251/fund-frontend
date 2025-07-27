@@ -19,13 +19,17 @@ import {
   ViewAllButton,
 } from "@/components/ui/data-table";
 import Link from "next/link";
-import { useGetLoansQuery } from "@/redux/services/loanApi";
+import { useGetLoansByDsaIdQuery } from "@/redux/services/loanApi";
 import { RequireFeature } from "@/components/RequireFeature";
 import { useGetLoanTemplatesByTypeQuery } from "@/redux/services/loanTemplateApi";
 import { Building, Car, House, LandPlot, User } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export default function Page() {
-  const { data: loansData = [] } = useGetLoansQuery({ loanType: "insurance" });
+  const session = useSession();
+  const dsaId = session.data?.user?.id || "";
+  const { data } = useGetLoansByDsaIdQuery(dsaId);
+  const loansData= data?.filter((loan: any) => loan.loanType === "insurance") || [];
   const { data: loansTemplates = [] } =
     useGetLoanTemplatesByTypeQuery("insurance");
 

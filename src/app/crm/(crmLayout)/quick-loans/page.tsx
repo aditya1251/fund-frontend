@@ -20,12 +20,16 @@ import {
 } from "@/components/ui/data-table";
 import { House, User, Car, Building, LandPlot, History } from "lucide-react";
 import Link from "next/link";
-import { useGetLoansQuery } from "@/redux/services/loanApi";
+import { useGetLoansByDsaIdQuery } from "@/redux/services/loanApi";
 import { RequireFeature } from "@/components/RequireFeature";
 import { useGetLoanTemplatesByTypeQuery } from "@/redux/services/loanTemplateApi";
+import { useSession } from "next-auth/react";
 
 export default function Page() {
-  const { data: loansData = [] } = useGetLoansQuery({ loanType: "quick" });
+  const session = useSession();
+  const dsaId = session.data?.user?.id || "";
+  const { data } = useGetLoansByDsaIdQuery(dsaId);
+  const loansData= data?.filter((loan: any) => loan.loanType === "quick") || [];
   const { data: loansTemplates = [] } = useGetLoanTemplatesByTypeQuery("quick");
   return (
     <RequireFeature feature="Loans">

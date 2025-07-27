@@ -10,11 +10,12 @@ import {
   StatusBadge,
   ViewAllButton,
 } from "@/components/ui/data-table";
-import { useGetLoansQuery } from "@/redux/services/loanApi";
+import { useGetLoansByDsaIdQuery, useGetLoansQuery } from "@/redux/services/loanApi";
 import { useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { RequireFeature } from "@/components/RequireFeature";
+import { useSession } from "next-auth/react";
 
 type Tab = "Loans" | "Govt Loans" | "Insurance";
 
@@ -123,8 +124,10 @@ const getDataByTab = (tab: Tab, loansData: any[] = []): StatusCardData[] => {
 };
 
 const LeadActivityStatus: React.FC = () => {
+  const session = useSession();
+  const dsaId = session.data?.user?.id || "";
   const [activeTab, setActiveTab] = useState<Tab>("Loans");
-  const { data: loansData = [] } = useGetLoansQuery({ loanType: "" });
+  const { data: loansData = [] } = useGetLoansByDsaIdQuery(dsaId);
   const data = getDataByTab(activeTab, loansData);
 
   // New state for search/filter/sort

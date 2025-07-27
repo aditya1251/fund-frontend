@@ -14,6 +14,9 @@ export const loanApi = createApi({
     getLoansByRmId: builder.query<any, string>({
       query: (rmId) => `loan-forms/rm/${rmId}`,
     }),
+    getLoansByDsaId: builder.query<any, string>({
+      query: (dsaId) => `loan-forms/dsa/${dsaId}`,
+    }),
     createLoan: builder.mutation<any, any>({
       query: (body) => ({
         url: "loan-forms",
@@ -37,6 +40,7 @@ export const loanApi = createApi({
 export const {
   useGetLoansQuery,
   useCreateLoanMutation,
+  useGetLoansByDsaIdQuery,
   useGetLoansByRmIdQuery,
   useUpdateLoanMutation,
 } = loanApi;

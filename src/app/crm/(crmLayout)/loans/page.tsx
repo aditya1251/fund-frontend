@@ -22,75 +22,79 @@ import {
 } from "@/components/ui/data-table";
 import { House, User, Car, Building, LandPlot, History } from "lucide-react";
 import Link from "next/link";
-import { useGetLoansQuery } from "@/redux/services/loanApi";
+import { useGetLoansByDsaIdQuery } from "@/redux/services/loanApi";
 import { RequireFeature } from "@/components/RequireFeature";
 import { useGetLoanTemplatesByTypeQuery } from "@/redux/services/loanTemplateApi";
 import { useMemo, useState } from "react";
+import { useSession } from "next-auth/react";
 
 export default function Page() {
-  const { data: loansData = [] } = useGetLoansQuery({ loanType: "private" });
+  const session = useSession();
+  const dsaId = session.data?.user?.id || "";
+  const { data } = useGetLoansByDsaIdQuery(dsaId);
+  const loansData= data?.filter((loan: any) => loan.loanType === "private") || [];
   const { data: loansTemplates = [] } =
     useGetLoanTemplatesByTypeQuery("private");
 
-	// New state for search/filter/sort
-	  const [search, setSearch] = useState("");
-	  const [statusFilter, setStatusFilter] = useState("");
-	  const [sortBy, setSortBy] = useState("date-desc"); // default to latest
-	
-	  // Filtered and sorted data
-	  const filteredLeads = useMemo(() => {
-		let leads = loansData;
-		// Search
-		if (search) {
-		  leads = leads.filter(
-			(lead: any) =>
-			  (lead.values[0]?.fields[0].value || "")
-				.toLowerCase()
-				.includes(search.toLowerCase()) ||
-			  (lead.values[0]?.fields[1].value || "")
-				.toLowerCase()
-				.includes(search.toLowerCase())
-		  );
-		}
-		// Status filter (case-insensitive)
-		if (statusFilter) {
-		  leads = leads.filter(
-			(lead: any) =>
-			  (lead.status || "").toLowerCase() === statusFilter.toLowerCase()
-		  );
-		}
-		// Sort
-		leads = leads.slice().sort((a: any, b: any) => {
-		  if (sortBy === "date-desc") {
-			const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-			const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-			if (dateA === dateB) {
-			  return (b._id || "").localeCompare(a._id || "");
-			}
-			return dateB - dateA; // latest first
-		  }
-		  if (sortBy === "date-asc") {
-			const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-			const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-			if (dateA === dateB) {
-			  return (a._id || "").localeCompare(b._id || "");
-			}
-			return dateA - dateB; // oldest first
-		  }
-		  if (sortBy === "name-asc") {
-			const nameA = (a.values?.Name || "").toLowerCase();
-			const nameB = (b.values?.Name || "").toLowerCase();
-			return nameA.localeCompare(nameB);
-		  }
-		  if (sortBy === "name-desc") {
-			const nameA = (a.values?.Name || "").toLowerCase();
-			const nameB = (b.values?.Name || "").toLowerCase();
-			return nameB.localeCompare(nameA);
-		  }
-		  return 0;
-		});
-		return leads;
-	  }, [loansData, search, statusFilter, sortBy]);
+  // New state for search/filter/sort
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [sortBy, setSortBy] = useState("date-desc"); // default to latest
+
+  // Filtered and sorted data
+  const filteredLeads = useMemo(() => {
+    let leads = loansData;
+    // Search
+    if (search) {
+      leads = leads.filter(
+        (lead: any) =>
+          (lead.values[0]?.fields[0].value || "")
+            .toLowerCase()
+            .includes(search.toLowerCase()) ||
+          (lead.values[0]?.fields[1].value || "")
+            .toLowerCase()
+            .includes(search.toLowerCase())
+      );
+    }
+    // Status filter (case-insensitive)
+    if (statusFilter) {
+      leads = leads.filter(
+        (lead: any) =>
+          (lead.status || "").toLowerCase() === statusFilter.toLowerCase()
+      );
+    }
+    // Sort
+    leads = leads.slice().sort((a: any, b: any) => {
+      if (sortBy === "date-desc") {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (dateA === dateB) {
+          return (b._id || "").localeCompare(a._id || "");
+        }
+        return dateB - dateA; // latest first
+      }
+      if (sortBy === "date-asc") {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (dateA === dateB) {
+          return (a._id || "").localeCompare(b._id || "");
+        }
+        return dateA - dateB; // oldest first
+      }
+      if (sortBy === "name-asc") {
+        const nameA = (a.values?.Name || "").toLowerCase();
+        const nameB = (b.values?.Name || "").toLowerCase();
+        return nameA.localeCompare(nameB);
+      }
+      if (sortBy === "name-desc") {
+        const nameA = (a.values?.Name || "").toLowerCase();
+        const nameB = (b.values?.Name || "").toLowerCase();
+        return nameB.localeCompare(nameA);
+      }
+      return 0;
+    });
+    return leads;
+  }, [loansData, search, statusFilter, sortBy]);
   return (
     <RequireFeature feature="Loans">
       <div>
@@ -109,14 +113,21 @@ export default function Page() {
             {loansTemplates.map((template: any) => (
               <Link key={template.id} href={`/crm/loan-form?id=${template.id}`}>
                 <TabsTrigger value={template.id}>
-				  <TabsIcon>
-					{template.icon === "user" ? <User /> :
-					 template.icon === "home" ? <House /> :
-					 template.icon === "car" ? <Car /> :
-					 template.icon === "building" ? <Building /> :
-					 template.icon === "landplot" ? <LandPlot /> :
-					 <User />}
-				  </TabsIcon>
+                  <TabsIcon>
+                    {template.icon === "user" ? (
+                      <User />
+                    ) : template.icon === "home" ? (
+                      <House />
+                    ) : template.icon === "car" ? (
+                      <Car />
+                    ) : template.icon === "building" ? (
+                      <Building />
+                    ) : template.icon === "landplot" ? (
+                      <LandPlot />
+                    ) : (
+                      <User />
+                    )}
+                  </TabsIcon>
                   <TabsLabel>
                     {template.name}
                     <TabsDescription>
