@@ -18,47 +18,67 @@ import {
 	StatusBadge,
 	ViewAllButton,
 } from "@/components/ui/data-table";
-import leads from "@/app/crm/sample-data";
-
-import { Package } from "lucide-react";
-import { RequireFeature } from '@/components/RequireFeature';
+import Link from "next/link";
+import { BriefcaseBusiness, FileText, History } from "lucide-react";
+import { RequireFeature } from "@/components/RequireFeature";
+import { useGetLoansQuery } from "@/redux/services/loanApi";
+import { useGetLoanTemplatesByTypeQuery } from "@/redux/services/loanTemplateApi";
 
 export default function Page() {
+	const { data: taxData = [] } = useGetLoansQuery({ loanType: "taxation" });
+	const { data: taxTemplates = [] } =
+		useGetLoanTemplatesByTypeQuery("taxation");
+
 	return (
 		<RequireFeature feature="Taxation">
 			<div>
-				<h4 className="font-semibold mb-6 text-black">
-					Providing Taxation Services At Affordable Prices
-				</h4>
+				<div className="flex justify-between items-center mb-6">
+					<h4 className="font-semibold mb-6 text-black">
+						Providing Taxation Services At Affordable Prices
+					</h4>
+					<Link href="/crm/drafts">
+						<button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm">
+							<History className="w-4 h-4" />
+							Saved Drafts
+						</button>
+					</Link>
+				</div>
 
-				<Tabs defaultValue="order">
+				<Tabs defaultValue="6885fc055d73e6b0d50b5b24">
 					<TabsList>
-						<TabsTrigger value="order">
-							<TabsIcon>
-								<Package />
-							</TabsIcon>
-							<TabsLabel>
-								Place A Order
-								<TabsDescription>
-									Ensure your family's financial safety with life coverage plans.
-								</TabsDescription>
-							</TabsLabel>
-						</TabsTrigger>
+						{taxTemplates.map((template: any) => (
+							<Link key={template.id} href={`/crm/loan-form?id=${template.id}`}>
+								<TabsTrigger value={template.id}>
+									<TabsIcon>
+										{template.icon === "service" ? (
+											<BriefcaseBusiness />
+										) : (
+											<FileText />
+										)}
+									</TabsIcon>
+									<TabsLabel>
+										{template.name}
+										<TabsDescription>
+											{template.description || "No description available"}
+										</TabsDescription>
+									</TabsLabel>
+								</TabsTrigger>
+							</Link>
+						))}
 					</TabsList>
 				</Tabs>
 
-				{/* Orders Table */}
+				{/* Requests Table */}
 				<div className="mt-6">
 					<div className="py-4">
-						<TableHeader>Taxation Orders</TableHeader>
+						<TableHeader>Taxation Requests</TableHeader>
 
 						<TableWrapper>
 							<table className="w-full bg-white overflow-hidden text-sm">
 								<TableHeadings
 									columns={[
 										"File No.",
-										"Loan",
-										"Loan Mode",
+										"Service",
 										"Applicant name",
 										"Subscriber",
 										"Email",
@@ -68,29 +88,37 @@ export default function Page() {
 									]}
 								/>
 								<tbody>
-									{leads.map((lead, index) => (
-										<TableRow
-											key={index}
-											row={[
-												lead.fileNo,
-												lead.loan,
-												lead.mode,
-												lead.applicant,
-												lead.subscriber,
-												<EmailCell email={lead.email} />,
-												lead.phone,
-												lead.review,
-												<StatusBadge
-													status={
-														lead.status.toLowerCase() as
-															| "approved"
-															| "pending"
-															| "rejected"
-													}
-												/>,
-											]}
-										/>
-									))}
+									{taxData.map((lead: any, index: number) => {
+										const fields = lead.values[0]?.fields || [];
+
+										// Extract values by label
+										const getFieldValue = (label: string) => {
+											const field = fields.find((f: any) => f.label === label);
+											return field?.value || "-";
+										};
+										return (
+											<TableRow
+												key={index}
+												row={[
+													lead._id,
+													getFieldValue("Services"),
+													getFieldValue("Name"),
+													<EmailCell email={lead.subscriber} />,
+													<EmailCell email={getFieldValue("Email")} />,
+													getFieldValue("Phone"),
+													lead.rejectionMessage,
+													<StatusBadge
+														status={
+															lead.status.toLowerCase() as
+																| "approved"
+																| "pending"
+																| "rejected"
+														}
+													/>,
+												]}
+											/>
+										);
+									})}
 								</tbody>
 							</table>
 						</TableWrapper>

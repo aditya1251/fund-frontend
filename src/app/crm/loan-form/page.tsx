@@ -337,8 +337,8 @@ export default function LoanForm() {
         templateId: templateData._id,
       }).unwrap();
       await notifySuperAdmin({
-        title: `New Loan Form Submission - ${templateData.name}`,
-        message: `A new loan form has been submitted for ${templateData.name} by ${session?.user?.name || subscriber}${rmId ? ' (managed by RM)' : ''}.`
+        title: `New Form Submission - ${templateData.name}`,
+        message: `A new form has been submitted for ${templateData.name} by ${subscriber}.`
       }).unwrap();
 
       setFormSubmitted(true);

@@ -63,7 +63,7 @@ const Menuitems: MenuitemsType[] = [
 			{
 				id: uniqueId(),
 				title: "Applications",
-				chip: "",
+				chip: "0",
 				chipColor: "primary",
 				href: "/superadmin/loans/applications",
 			},
@@ -115,7 +115,7 @@ const Menuitems: MenuitemsType[] = [
 	{
 		id: uniqueId(),
 		title: "Contacts",
-		chip: "",
+		chip: "0",
 		chipColor: "primary",
 		icon: "book-line-duotone",
 		href: "/superadmin/contacts",
@@ -155,9 +155,23 @@ const Menuitems: MenuitemsType[] = [
 		id: uniqueId(),
 		title: "Quick Applications",
 		icon: "bolt-line-duotone",
-		chip: "",
+		chip: "0",
 		chipColor: "primary",
 		href: "/superadmin/loans/quick-applications",
+	},
+	{
+		id: uniqueId(),
+		title: "Taxation",
+		icon: "calculator-line-duotone",
+		href: "/superadmin/taxation",
+	},
+	{
+		id: uniqueId(),
+		title: "Tax Applications",
+		icon: "clipboard-list-line-duotone",
+		chip: "0",
+		chipColor: "primary",
+		href: "/superadmin/tax-applications",
 	},
 
 	{
