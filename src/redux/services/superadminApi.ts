@@ -13,6 +13,12 @@ export const superadminApi = createApi({
         url: `superadmin/${id}`,
       }),
     }),
+    getUsersByRole: builder.query<any[], string>({
+      query: (role) => `superadmin/role/${role}`,
+    }),
+    getDsasByRmId: builder.query<any[], string>({
+      query: (rmId) => `superadmin/dsa/${rmId}`,
+    }),
     createAdmin: builder.mutation<any, any>({
       query: (body) => ({
         url: "superadmin",
@@ -55,6 +61,8 @@ export const superadminApi = createApi({
 
 export const {
   useGetAdminsQuery,
+  useGetUsersByRoleQuery,
+  useGetDsasByRmIdQuery,
   useUpdateAdminMutation,
   useGetAdminByIdQuery,
   useCreateAdminMutation,

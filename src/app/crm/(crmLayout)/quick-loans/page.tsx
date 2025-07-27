@@ -26,8 +26,7 @@ import { useGetLoanTemplatesByTypeQuery } from "@/redux/services/loanTemplateApi
 
 export default function Page() {
   const { data: loansData = [] } = useGetLoansQuery({ loanType: "quick" });
-  const { data: loansTemplates = [] } =
-    useGetLoanTemplatesByTypeQuery("quick");
+  const { data: loansTemplates = [] } = useGetLoanTemplatesByTypeQuery("quick");
   return (
     <RequireFeature feature="Loans">
       <div>
@@ -46,14 +45,21 @@ export default function Page() {
             {loansTemplates.map((template: any) => (
               <Link key={template.id} href={`/crm/loan-form?id=${template.id}`}>
                 <TabsTrigger value={template.id}>
-				  <TabsIcon>
-					{template.icon === "user" ? <User /> :
-					 template.icon === "home" ? <House /> :
-					 template.icon === "car" ? <Car /> :
-					 template.icon === "building" ? <Building /> :
-					 template.icon === "landplot" ? <LandPlot /> :
-					 <User />}
-				  </TabsIcon>
+                  <TabsIcon>
+                    {template.icon === "user" ? (
+                      <User />
+                    ) : template.icon === "home" ? (
+                      <House />
+                    ) : template.icon === "car" ? (
+                      <Car />
+                    ) : template.icon === "building" ? (
+                      <Building />
+                    ) : template.icon === "landplot" ? (
+                      <LandPlot />
+                    ) : (
+                      <User />
+                    )}
+                  </TabsIcon>
                   <TabsLabel>
                     {template.name}
                     <TabsDescription>
@@ -94,10 +100,10 @@ export default function Page() {
                         lead._id,
                         lead.loanSubType,
                         lead.mode ? lead.mode : "Online",
-                        lead.values.Name,
+                        lead.values[0].fields[0].value,
                         <EmailCell email={lead.subscriber} />,
-                        <EmailCell email={lead.values.Email} />,
-                        lead.values.Phone,
+                        <EmailCell email={lead.values[0].fields[1].value} />,
+                        lead.values[0].fields[2].value,
                         lead.rejectionMessage,
                         <StatusBadge
                           status={

@@ -29,7 +29,7 @@ import {
 import { uploadFile } from "@/utils/fileUploadService";
 import { useCreateLoanMutation } from "@/redux/services/loanApi";
 import { useGetLoanTemplateByIdQuery } from "@/redux/services/loanTemplateApi";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, redirect } from "next/navigation";
 import { RequireFeature } from "@/components/RequireFeature";
 import { useNotifySuperAdminMutation } from "@/redux/services/notificationApi"
 import {
@@ -322,19 +322,23 @@ export default function LoanForm() {
     }
 
     const subscriber = session?.user?.email;
+    const dsaId = session?.user?.id;
+    const rmId = session?.user?.rmId;
 
     try {
-      // Form submission with uploaded document filenames
+      // Form submission with uploaded document filenames and user info
       await createLoanFormSubmission({
         formData: formValues,
         subscriber,
+        dsaId,
+        rmId,
         loanSubType: templateData.name,
         loanType: templateData.loanType,
         templateId: templateData._id,
       }).unwrap();
       await notifySuperAdmin({
         title: `New Loan Form Submission - ${templateData.name}`,
-        message: `A new loan form has been submitted for ${templateData.name} by ${subscriber}.`
+        message: `A new loan form has been submitted for ${templateData.name} by ${session?.user?.name || subscriber}${rmId ? ' (managed by RM)' : ''}.`
       }).unwrap();
 
       setFormSubmitted(true);
@@ -362,9 +366,8 @@ export default function LoanForm() {
 
       // Reset form after submission
       setTimeout(() => {
-        setFormValues({});
-        setCurrentPage(0);
-      }, 3000);
+        redirect(`/crm/loans`);
+      }, 500);
     } catch (err) {
       setMessage("Error submitting form");
     }
