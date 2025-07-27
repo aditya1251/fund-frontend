@@ -102,7 +102,7 @@ export default function DraftsPage() {
           <div>
             <h1 className="text-2xl font-semibold">Saved Application Drafts</h1>
             <p className="text-gray-600 mt-1">
-              Continue your previously saved loan applications
+              Continue your previously saved applications
             </p>
           </div>
           {drafts.length > 0 && (
@@ -129,7 +129,7 @@ export default function DraftsPage() {
                 No Saved Drafts Found
               </h2>
               <p className="text-gray-500 text-center mb-6">
-                When you start filling out loan applications, they will be
+                When you start filling out applications, they will be
                 automatically saved here
               </p>
               <Button onClick={() => router.push("/crm/loans")}>
@@ -142,7 +142,7 @@ export default function DraftsPage() {
             {Object.entries(groupedDrafts).map(([loanType, typeDrafts]) => (
               <div key={loanType}>
                 <h2 className="text-lg font-semibold mb-3 flex items-center">
-                  <FileText className="mr-2 h-5 w-5" /> {loanType} Applications
+                  <FileText className="mr-2 h-5 w-5" /> {loanType.charAt(0).toUpperCase() + loanType.slice(1)} Applications
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {typeDrafts.map((draft) => (

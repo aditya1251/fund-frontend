@@ -41,7 +41,7 @@ export default function Page() {
           </Link>
         </div>
 
-        <Tabs defaultValue="personal">
+        <Tabs defaultValue="6885355c8298919446610fbb">
           <TabsList>
             {loansTemplates.map((template: any) => (
               <Link key={template.id} href={`/crm/loan-form?id=${template.id}`}>
