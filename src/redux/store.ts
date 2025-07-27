@@ -6,6 +6,7 @@ import { applicationApi } from "./services/applicationApi";
 import { loanApi } from "./services/loanApi";
 import { loanTemplateApi } from "./services/loanTemplateApi";
 import { DsaApi } from "./services/dsaApi";
+import { usersApi } from "./services/usersApi";
 
 export const store = configureStore({
 	reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
 		[loanApi.reducerPath]: loanApi.reducer,
 		[loanTemplateApi.reducerPath]: loanTemplateApi.reducer,
 		[DsaApi.reducerPath]: DsaApi.reducer,
+		[usersApi.reducerPath]: usersApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware().concat(
@@ -25,7 +27,8 @@ export const store = configureStore({
 			applicationApi.middleware,
 			loanApi.middleware,
 			loanTemplateApi.middleware,
-			DsaApi.middleware
+			DsaApi.middleware,
+			usersApi.middleware
 		),
 });
 

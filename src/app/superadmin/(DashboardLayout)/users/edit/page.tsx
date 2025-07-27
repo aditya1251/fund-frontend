@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useGetPlansQuery } from '@/redux/services/plansApi';
-import { useUpdateAdminMutation, useGetAdminByIdQuery } from '@/redux/services/superadminApi';
+import { useUpdateAdminMutation, useGetAdminByIdQuery, useGetUsersByRoleQuery } from '@/redux/services/superadminApi';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 const EditUserPage = () => {
@@ -11,6 +11,7 @@ const EditUserPage = () => {
 
   const { data: plans = [], isLoading: plansLoading, error: plansError } = useGetPlansQuery();
   const { data: user, isLoading: userLoading, error: userError } = useGetAdminByIdQuery(userId!, { skip: !userId });
+  const { data: rmUsers = [], isLoading: rmLoading } = useGetUsersByRoleQuery("RM");
 
   const [updateAdmin, { isLoading: isUpdating }] = useUpdateAdminMutation();
 
@@ -20,7 +21,7 @@ const EditUserPage = () => {
     severity: "success",
   });
 
-  const [form, setForm] = useState({ name: "", email: "", role: "", planId: "" });
+  const [form, setForm] = useState({ name: "", email: "", role: "", planId: "", rmId: "" });
 
   useEffect(() => {
     if (user) {
@@ -29,6 +30,7 @@ const EditUserPage = () => {
         email: user.email,
         role: user.role,
         planId: user.planId,
+        rmId: user.rmId?._id || "",
       });
     }
   }, [user]);
@@ -46,6 +48,11 @@ const EditUserPage = () => {
       setSnackbar({ open: true, message: "Please select a plan", severity: "error" });
       return;
     }
+    
+    if (form.role === "DSA" && !form.rmId) {
+      setSnackbar({ open: true, message: "Please select a RM for the DSA", severity: "error" });
+      return;
+    }
 
     try {
       const update: any = { id: userId, type: "adminUpdation" };
@@ -53,6 +60,15 @@ const EditUserPage = () => {
       if (form.email !== user.email) update.email = form.email;
       if (form.role !== user.role) update.role = form.role;
       if (form.planId !== user.planId) update.planId = form.planId;
+      
+      // Only include rmId if role is DSA
+      if (form.role === "DSA") {
+        const currentRmId = user.rmId?._id || "";
+        if (form.rmId !== currentRmId) update.rmId = form.rmId;
+      } else {
+        // If role is not DSA, set rmId to null/empty
+        if (user.rmId) update.rmId = "";
+      }
 
       await updateAdmin({ id: userId, body: update }).unwrap();
       setSnackbar({ open: true, message: "Admin updated successfully!", severity: "success" });
@@ -111,6 +127,7 @@ const EditUserPage = () => {
             >
               <option value="">Select a role</option>
               <option value="SUPERADMIN">SUPERADMIN</option>
+              <option value="RM">RM</option>
               <option value="DSA">DSA</option>
             </select>
           </div>
@@ -148,6 +165,39 @@ const EditUserPage = () => {
               )}
             </select>
           </div>
+
+          {/* RM Selection for DSA role */}
+          {form.role === "DSA" && (
+            <div>
+              <label className="block mb-1 text-sm font-medium">
+                Select RM{" "}
+                {user && user.rmId && (
+                  <span className="text-sm text-gray-500">(Current: {user.rmId.name})</span>
+                )}
+              </label>
+              <select
+                name="rmId"
+                value={form.rmId}
+                onChange={handleChange}
+                required={form.role === "DSA"}
+                disabled={rmLoading}
+                className="w-full px-4 py-2 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black bg-white"
+              >
+                {rmLoading ? (
+                  <option value="">Loading RMs...</option>
+                ) : (
+                  <>
+                    <option value="">Select a RM</option>
+                    {rmUsers.map((rm: any) => (
+                      <option value={rm._id} key={rm._id}>
+                        {rm.name} ({rm.email})
+                      </option>
+                    ))}
+                  </>
+                )}
+              </select>
+            </div>
+          )}
 
           <div className="flex justify-end">
             <button
