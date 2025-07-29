@@ -126,21 +126,23 @@ export default function Page() {
                 <TabsTrigger value={template.id}>
                   <TabsIcon>
                     {template.icon === "user" ? (
-                      <User />
+                      <User className="text-black" />
                     ) : template.icon === "home" ? (
-                      <House />
+                      <House className="text-black" />
                     ) : template.icon === "car" ? (
-                      <Car />
+                      <Car className="text-black" />
                     ) : template.icon === "building" ? (
-                      <Building />
+                      <Building className="text-black" />
                     ) : template.icon === "landplot" ? (
-                      <LandPlot />
+                      <LandPlot className="text-black" />
                     ) : (
-                      <User />
+                      <User className="text-black" />
                     )}
                   </TabsIcon>
                   <TabsLabel>
-                    {template.name}
+                    <div className="text-black">
+                      {template.name}
+                      </div>
                     <TabsDescription>
                       {template.description || "No description available"}
                     </TabsDescription>
@@ -167,7 +169,7 @@ export default function Page() {
                   placeholder="Search by name or email"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="border bg-white px-2 py-1 rounded w-full sm:w-auto" // w-full on mobile, w-auto on sm+
+                  className="bg-white px-2 py-1 rounded w-full sm:w-auto" // w-full on mobile, w-auto on sm+
                 />
                 <Select
                   value={statusFilter}
