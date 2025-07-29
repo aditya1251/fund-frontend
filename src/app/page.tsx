@@ -15,7 +15,7 @@ import EmiCalculator from "@/components/EmiCalculator";
 import TrustedPartners from "@/components/Partner";
 export default function Home() {
   return (
-    <div className="mt-10">
+    <>
       <NavigationHeader />
       <Hero />
       <StatsSection />
@@ -30,6 +30,6 @@ export default function Home() {
       <Journey />
       <ContactForm />
       <Footer />
-    </div>
+   </>
   );
 }
