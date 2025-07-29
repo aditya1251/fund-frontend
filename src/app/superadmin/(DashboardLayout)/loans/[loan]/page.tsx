@@ -70,6 +70,7 @@ export default function LoanTemplateBuilder() {
     {}
   );
   const [showPreview, setShowPreview] = useState(false);
+  const [previewCurrentPage, setPreviewCurrentPage] = useState(0);
   const router = useRouter();
 
   const { data: selectedTemplateData, refetch: refetchTemplates } = useGetLoanTemplateByIdQuery(
@@ -612,7 +613,10 @@ export default function LoanTemplateBuilder() {
             {/* Save/Delete */}
             <div className="flex items-center gap-4 pt-6 border-t">
               <Button
-                onClick={() => setShowPreview(true)}
+                onClick={() => {
+                  setPreviewCurrentPage(0); // Reset to first page when opening preview
+                  setShowPreview(true);
+                }}
                 className="flex items-center gap-2 bg-black text-white px-6 py-2 shadow hover:bg-gray-800 cursor-pointer">
                 <Eye className="w-4 h-4" />
                 Preview Template
@@ -667,10 +671,17 @@ export default function LoanTemplateBuilder() {
           <div className="fixed inset-0 z-50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4">
             <div className="bg-white rounded-xl shadow-[8px_8px_0_0_#000] border-2 border-black w-full md:max-w-2xl 2xl:max-w-3xl max-h-[90vh] overflow-hidden">
               {/* Preview Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between p-6">
                 <div>
-                  <h2 className="text-2xl font-bold text-black">Template Preview</h2>
-                  <p className="text-gray-600 mt-1">{template.name}</p>
+
+                              <h2 className="text-lg font-semibold text-[#2d2c2c]">
+                                {template.name || "Loan Application"}
+                              </h2>
+                              {template.description && (
+                                <p className="text-sm text-gray-600">
+                                  {template.description}
+                                </p>
+                              )}
                 </div>
                 <button
                   onClick={() => setShowPreview(false)}
@@ -682,68 +693,106 @@ export default function LoanTemplateBuilder() {
 
               {/* Preview Content */}
               <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
-                <div className="space-y-8">
-                  {template.pages.map((page, pageIndex) => (
-                    <div key={pageIndex} className="bg-gray-50 rounded-lg p-6">
-                      <div className="mb-6">
-                        <h3 className="text-xl font-semibold text-black mb-2">
-                          {page.title}
-                        </h3>
-                        {page.description && (
-                          <p className="text-gray-600 text-sm">{page.description}</p>
-                        )}
+                {template.pages.length > 0 ? (
+                  <div className="space-y-6">
+                    {/* Step indicator with circles */}
+                    <div className="mb-6">
+                      <div className="text-sm font-medium mb-2">
+                        Step {previewCurrentPage + 1} / {template.pages.length}
                       </div>
+                      <div className="flex items-center justify-center w-full">
+                        {Array.from({ length: template.pages.length }, (_, index) => (
+                          <div key={index} className="flex items-center">
+                            {/* Step circle */}
+                            <div
+                              className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
+                                index <= previewCurrentPage
+                                  ? "bg-yellow-400 text-black"
+                                  : "bg-gray-200 text-gray-600"
+                              }`}
+                            >
+                              {index + 1}
+                            </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {page.fields.map((field, fieldIndex) => (
-                          <div key={fieldIndex} className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-700">
-                              {field.label}
-                              {field.required && (
-                                <span className="text-red-500 ml-1">*</span>
-                              )}
-                            </label>
-                            {renderFieldPreview(field)}
+                            {/* Connector line between circles */}
+                            {index < template.pages.length - 1 && (
+                              <div
+                                className={`h-1 w-16 mx-1 ${
+                                  index < previewCurrentPage
+                                    ? "bg-yellow-400"
+                                    : "bg-gray-200"
+                                }`}
+                              ></div>
+                            )}
                           </div>
                         ))}
                       </div>
+                    </div>
 
-                      {pageIndex < template.pages.length - 1 && (
-                        <div className="flex justify-between items-center mt-8 pt-4 border-t border-gray-300">
-                          <div className="text-sm text-gray-500">
-                            Page {page.pageNumber} of {template.pages.length}
-                          </div>
-                          <div className="flex gap-2">
-                            <button className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100" disabled>
-                              Previous
-                            </button>
-                            <button className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800" disabled>
-                              Next
-                            </button>
-                          </div>
-                        </div>
-                      )}
-
-                      {pageIndex === template.pages.length - 1 && (
-                        <div className="flex justify-between items-center mt-8 pt-4 border-t border-gray-300">
-                          <div className="text-sm text-gray-500">
-                            Final Page ({template.pages.length} of {template.pages.length})
-                          </div>
-                          <button className="px-6 py-2 bg-yellow-500 text-white cursor-not-allowed rounded hover:bg-yellow-600" disabled>
-                            Submit Application
-                          </button>
-                        </div>
+                    {/* Current page heading */}
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold">
+                        {template.pages[previewCurrentPage]?.title}
+                      </h3>
+                      {template.pages[previewCurrentPage]?.description && (
+                        <p className="text-sm text-gray-600 mt-1">
+                          {template.pages[previewCurrentPage]?.description}
+                        </p>
                       )}
                     </div>
-                  ))}
-                  
-                  {template.pages.length === 0 && (
-                    <div className="text-center py-10 text-gray-500">
-                      No pages added to this template yet.
+
+                    {/* Current page fields */}
+                    <div className="space-y-4">
+                      {template.pages[previewCurrentPage]?.fields.map((field: Field, idx: number) => (
+                        <div key={idx} className="space-y-2">
+                          <label className="block text-sm font-medium text-gray-700">
+                            {field.label}
+                            {field.required && <span className="text-red-500 ml-1">*</span>}
+                          </label>
+                          {renderFieldPreview(field)}
+                        </div>
+                      ))}
                     </div>
-                  )}
-                </div>
+
+                    {/* Navigation buttons */}
+                    <div className="flex justify-between py-6">
+                      <div className="flex gap-2">
+                        <Button
+                          type="button"
+                          onClick={() => setPreviewCurrentPage(Math.max(0, previewCurrentPage - 1))}
+                          className="bg-gray-200 hover:bg-gray-300 text-black font-medium px-6 py-2 flex items-center gap-2 cursor-pointer"
+                          disabled={previewCurrentPage === 0}
+                        >
+                          <ArrowUp className="h-4 w-4 rotate-[-90deg]" /> Previous
+                        </Button>
+                      </div>
+
+                      {previewCurrentPage < template.pages.length - 1 ? (
+                        <Button
+                          type="button"
+                          onClick={() => setPreviewCurrentPage(Math.min(template.pages.length - 1, previewCurrentPage + 1))}
+                          className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-6 py-2 flex items-center gap-2 cursor-pointer"
+                        >
+                          Next <ArrowDown className="h-4 w-4 rotate-[-90deg]" />
+                        </Button>
+                      ) : (
+                        <Button
+                          type="button"
+                          className="bg-yellow-400 text-black font-medium px-8 py-2 flex items-center gap-2 cursor-not-allowed"
+                          disabled
+                        >
+                          Submit Application <Eye className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-10 text-gray-500">
+                    No pages added to this template yet.
+                  </div>
+                )}
               </div>
+
             </div>
           </div>
         )}

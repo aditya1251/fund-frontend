@@ -185,7 +185,7 @@ export default function DSAApplications({
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 						placeholder="Search by name or email"
-						className="px-4 py-2 border border-gray-300 rounded w-full md:w-1/2"
+						className="px-4 py-2 border border-gray-300 rounded w-full md:w-1/2 hover:ring-1 ring-black focus:outline-none focus:ring-1"
 					/>
 					<div className="flex gap-2">
 						{["all", "pending", "approved", "rejected"].map((tab) => (
