@@ -5,6 +5,8 @@ import { Box, IconButton, Menu, MenuItem } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DashboardCard from "@/app/rm/(DashboardLayout)/components/shared/DashboardCard";
+import { useSession } from "next-auth/react";
+import { useGetLoansByRmIdQuery } from "@/redux/services/loanApi";
 
 // Dynamically import ApexCharts (client-side only)
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -20,10 +22,13 @@ const LoanCategoryChart = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  // Import the hook at the component level
-  const { useGetLoansQuery } = require('@/redux/services/loanApi');
-  const { data: loansData = [], isLoading } = useGetLoansQuery({});
+  const session = useSession();
+    const rmId = session.data?.user?.id;
+  
+    // Fetch all loan data
+    const { data: loansData = [], isLoading } = useGetLoansByRmIdQuery(
+      rmId || ""
+    );
   
   // State for chart data
   const [chartData, setChartData] = React.useState({

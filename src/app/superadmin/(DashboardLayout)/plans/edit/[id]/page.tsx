@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { planSchema, PlanFormData } from "@/lib/validation/planSchema";
 import { useGetPlanByIdQuery, useUpdatePlansMutation } from "@/redux/services/plansApi";
 import { features } from "../../page";
+import Loading from "@/components/Loading";
 
 const EditPlanPage = () => {
   const router = useRouter();
@@ -119,9 +120,7 @@ const EditPlanPage = () => {
 
   if (planLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#ffd439]"></div>
-      </div>
+      <Loading/>
     );
   }
 
@@ -142,96 +141,79 @@ const EditPlanPage = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
-          EDIT <span className="text-[#ffd439]">PLAN</span>
+    <div className="min-h-screen py-10 px-4 bg-white">
+      <div className="max-w-3xl mx-auto bg-white border-2 border-black shadow-[6px_6px_0_0_#000] rounded-xl p-6">
+        <h1 className="text-3xl md:text-4xl font-bold text-black text-center mb-2">
+          Edit <span className="text-[#FFD439]">Plan</span>
         </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Update your subscription plan details
-        </p>
-      </div>
+        <p className="text-center text-gray-600 mb-6">Update your subscription plan</p>
 
-      {error && (
-        <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-          {error}
-        </div>
-      )}
-
-      <div className="flex flex-col items-start gap-6 w-full p-6 rounded-[16px] border-3 border-black bg-[#FFD439] transition-all duration-300 shadow-[10px_10px_0_0_#000]">
-        <form onSubmit={handleSubmit} className="space-y-8 w-full">
+        {error && (
+          <div className="mb-6 p-4 bg-red-100 border border-red-300 text-red-700 rounded-xl">
+            {error}
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-black mb-2">
-              Plan Name *
-            </label>
+            <label className="block text-sm font-medium text-black mb-1">Plan Name *</label>
             <input
-              type="text"
-              id="name"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 border-2 border-black rounded-lg focus:ring-2 focus:ring-[#ffd439] focus:border-black bg-white"
-              placeholder="Enter plan name"
               required
+              className="w-full px-4 py-2 border-2 border-black rounded-lg bg-white focus:ring-2 focus:ring-black"
+              placeholder="Enter plan name"
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="amount" className="block text-sm font-medium text-black mb-2">
-                Amount (₹) *
-              </label>
+              <label className="block text-sm font-medium text-black mb-1">Amount (₹) *</label>
               <input
-                type="number"
-                id="amount"
                 name="amount"
+                type="number"
+                min="1"
                 value={formData.amount}
                 onChange={handleInputChange}
-                min="1"
-                className="w-full px-4 py-3 border-2 border-black rounded-lg bg-white"
-                placeholder="Enter amount"
                 required
+                className="w-full px-4 py-2 border-2 border-black rounded-lg bg-white"
               />
             </div>
 
             <div>
-              <label htmlFor="duration" className="block text-sm font-medium text-black mb-2">
-                Duration (months) * (0 = lifetime)
-              </label>
+              <label className="block text-sm font-medium text-black mb-1">Duration (months) *</label>
               <input
-                type="number"
-                id="duration"
                 name="duration"
+                type="number"
+                min="0"
                 value={formData.duration}
                 onChange={handleInputChange}
-                min="0"
-                className="w-full px-4 py-3 border-2 border-black rounded-lg bg-white"
-                placeholder="Enter duration"
                 required
+                className="w-full px-4 py-2 border-2 border-black rounded-lg bg-white"
               />
             </div>
           </div>
 
-          <div ref={dropdownRef} className="relative">
-            <label className="block text-sm font-medium text-black mb-2">
-              Features * (Search and select)
+          <div ref={dropdownRef}>
+            <label className="block text-sm font-medium text-black mb-1">
+              Features * (search to select)
             </label>
             <input
               type="text"
               value={searchTerm}
               onChange={handleSearchChange}
               onFocus={() => setShowDropdown(true)}
-              className="w-full px-4 py-3 border-2 border-black rounded-lg bg-white"
+              className="w-full px-4 py-2 border-2 border-black rounded-lg bg-white"
               placeholder="Search features..."
             />
 
             {showDropdown && (
-              <div className="absolute z-10 w-full mt-1 bg-white border-2 border-black rounded-lg shadow-[6px_6px_0_0_#000] max-h-60 overflow-y-auto">
-                <div className="flex justify-end px-4 pt-2">
+              <div className="mt-2 border-2 border-black rounded-xl bg-white shadow-[6px_6px_0_0_#000] max-h-60 overflow-y-auto">
+                <div className="flex justify-end px-4 py-2 border-b border-black">
                   <button
                     type="button"
                     onClick={() => setShowDropdown(false)}
-                    className="text-sm text-black hover:text-gray-700"
+                    className="text-sm text-black hover:text-gray-600"
                   >
                     ✕ Close
                   </button>
@@ -239,20 +221,18 @@ const EditPlanPage = () => {
                 {filteredFeatures.map((feature) => (
                   <div
                     key={feature}
-                    className={`flex items-center px-4 py-2 cursor-pointer hover:bg-[#ffd439] ${
-                      formData.features.includes(feature) ? "bg-[#ffd439]" : ""
-                    }`}
                     onClick={() => handleFeatureToggle(feature)}
+                    className={`flex items-center px-4 py-2 cursor-pointer hover:bg-[#FFD439] ${
+                      formData.features.includes(feature) ? "bg-[#FFD439]" : ""
+                    }`}
                   >
                     <input
                       type="checkbox"
                       checked={formData.features.includes(feature)}
                       readOnly
-                      className="w-5 h-5 border-2 border-black rounded"
+                      className="w-4 h-4 border-2 border-black rounded"
                     />
-                    <span className="ml-3 text-sm text-black">
-                      {feature.replace(/([A-Z])/g, " $1").trim()}
-                    </span>
+                    <span className="ml-3 text-sm">{feature.replace(/([A-Z])/g, " $1").trim()}</span>
                   </div>
                 ))}
               </div>
@@ -262,13 +242,13 @@ const EditPlanPage = () => {
               {formData.features.map((feature) => (
                 <span
                   key={feature}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-black text-white"
+                  className="flex items-center bg-black text-white text-sm px-3 py-1 rounded-full"
                 >
                   {feature.replace(/([A-Z])/g, " $1").trim()}
                   <button
                     type="button"
                     onClick={() => handleFeatureToggle(feature)}
-                    className="ml-2 text-white hover:text-[#ffd439]"
+                    className="ml-2 hover:text-[#FFD439]"
                   >
                     ×
                   </button>
@@ -277,33 +257,32 @@ const EditPlanPage = () => {
             </div>
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center mt-2">
             <input
               type="checkbox"
-              id="isActive"
               name="isActive"
+              id="isActive"
               checked={formData.isActive}
               onChange={handleCheckboxChange}
-              className="w-5 h-5 border-2 border-black rounded"
+              className="w-4 h-4 border-2 border-black rounded"
             />
-            <label htmlFor="isActive" className="ml-3 text-sm font-medium text-black">
+            <label htmlFor="isActive" className="ml-3 text-sm text-black">
               Active Plan
             </label>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t-2 border-black">
+          <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t-2 border-black">
             <button
               type="submit"
               disabled={loading}
-              className="bg-black hover:bg-gray-800 disabled:bg-gray-600 text-white px-10 py-4 rounded-lg font-medium flex items-center justify-center border-2 border-black transition-all duration-300"
+              className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-lg border-2 border-black font-medium"
             >
               {loading ? "Updating..." : "Update Plan"}
             </button>
             <button
               type="button"
               onClick={handleCancel}
-              disabled={loading}
-              className="bg-white hover:bg-gray-100 disabled:bg-gray-50 text-black px-10 py-4 rounded-lg font-medium border-2 border-black transition-all duration-300"
+              className="bg-white text-black hover:bg-gray-100 px-8 py-3 rounded-lg border-2 border-black font-medium"
             >
               Cancel
             </button>

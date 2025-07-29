@@ -19,6 +19,7 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { RequireFeature } from "@/components/RequireFeature";
+import Loading from "@/components/Loading";
 
 interface Draft {
   id: string;
@@ -32,6 +33,7 @@ interface Draft {
 
 export default function DraftsPage() {
   const [drafts, setDrafts] = useState<Draft[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   // Load all drafts
@@ -49,8 +51,10 @@ export default function DraftsPage() {
             )
           );
         }
+        setIsLoading(false);
       } catch (error) {
         console.error("Error loading drafts:", error);
+        setIsLoading(false);
       }
     };
 
@@ -97,6 +101,9 @@ export default function DraftsPage() {
 
   return (
     <RequireFeature feature="Loans">
+      {isLoading ? (
+        <Loading />
+      ) : (
       <div className="container mx-auto py-6 text-gray-800">
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -201,6 +208,7 @@ export default function DraftsPage() {
           </div>
         )}
       </div>
+      )}
     </RequireFeature>
   );
 }

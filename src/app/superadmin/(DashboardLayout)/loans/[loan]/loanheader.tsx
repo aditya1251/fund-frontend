@@ -7,6 +7,7 @@ import {
   useCreateLoanTemplateMutation,
 } from "@/redux/services/loanTemplateApi";
 import { useSession } from "next-auth/react";
+import Loading from "@/components/Loading";
 
 const iconMap: Record<string, JSX.Element> = {
   personal: <User className="w-5 h-5" />,
@@ -78,7 +79,7 @@ const LoanHeader = ({
     }
   };
 
-  if (isLoading) return <div className="text-center py-10">Loading...</div>;
+  if (isLoading) return <Loading/>;
   if (error)
     return (
       <div className="text-red-500 text-center py-10">

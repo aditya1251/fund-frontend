@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Trash2, Save, Plus, ArrowUp, ArrowDown } from "lucide-react";
 import { toast } from "sonner";
+import Loading from "@/components/Loading";
 
 interface TemplateField {
 	label: string;
@@ -170,7 +171,7 @@ export default function TemplateBuilder({
 		setTemplate({ ...template, pages });
 	};
 
-	if (!template) return <p>Loading...</p>;
+	if (!template) return <Loading/>;
 
 	return (
 		<div className="max-w-5xl mx-auto py-8 px-2 space-y-6">

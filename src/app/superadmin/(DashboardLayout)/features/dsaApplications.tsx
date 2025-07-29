@@ -9,6 +9,7 @@ import { useGetAdminsQuery } from "@/redux/services/superadminApi";
 import { useCreateNotificationMutation } from "@/redux/services/notificationApi";
 import { CheckCircle, X, XCircle } from "lucide-react";
 import { getFileUrl } from "@/utils/fileUploadService";
+import Loading from "@/components/Loading";
 
 export default function DSAApplications({
 	applicationType,
@@ -205,9 +206,7 @@ export default function DSAApplications({
 
 				<div className="space-y-6">
 					{isLoading ? (
-						<div className="text-center text-gray-600">
-							Loading loan applications...
-						</div>
+						<Loading/>
 					) : error ? (
 						<div className="text-center text-red-500">
 							Failed to load applications.
@@ -226,7 +225,7 @@ export default function DSAApplications({
 							return (
 								<div
 									key={loan._id}
-									className="bg-white border relative border-black shadow-[6px_6px_0_0_#000] rounded-lg p-6"
+									className="bg-white border relative transition-all ease-in-out duration-500 hover:shadow-[1px_1px_0_0_#000] border-black shadow-[6px_6px_0_0_#000] rounded-lg p-6"
 								>
 									<div className="grid md:grid-cols-2 gap-4">
 										<div>
