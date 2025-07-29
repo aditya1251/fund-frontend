@@ -194,7 +194,7 @@ const MobileDots = ({
             {currentSlide.paragraph}
           </p>
           <Link href={currentButtonLink} passHref>
-            <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black font-semibold px-8 py-5 md:px-10 md:py-7 text-lg md:text-xl rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
+            <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black font-semibold px-8 py-5 md:px-10 md:py-7 text-lg md:text-xl rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow cursor-pointer">
               APPLY NOW
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
