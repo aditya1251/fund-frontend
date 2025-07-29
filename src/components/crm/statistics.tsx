@@ -44,7 +44,11 @@ const StatsCard: React.FC<StatsItem> = ({
   </div>
 );
 
-const Statistics: React.FC = ({data}) => {
+interface StatisticsProps {
+  data: any;
+}
+
+const Statistics: React.FC<StatisticsProps> = ({ data }) => {
   const [stats, setStats] = useState([
   {
     label: "Approved",

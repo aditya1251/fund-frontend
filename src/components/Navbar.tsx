@@ -326,7 +326,7 @@ export default function NavigationHeader() {
           <>
             {session.user?.role === "DSA" && (
               <Link href="/crm" onClick={toggle}>
-                <Button className="w-full mt-4 bg-[#f7c430] text-black font-medium">
+                <Button className="w-full mt-4 bg-[#f7c430] text-black font-medium cursor-pointer">
                   CRM Panel
                 </Button>
               </Link>
@@ -393,14 +393,14 @@ export default function NavigationHeader() {
                 {status === "authenticated" &&
                   session?.user?.role === "SUPERADMIN" && (
                     <Link href="/superadmin">
-                      <Button className="bg-[#f7c430] text-black font-medium px-4 py-2 rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
+                      <Button className="bg-[#f7c430] text-black font-medium px-4 py-2 rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow cursor-pointer">
                         Super Admin
                       </Button>
                     </Link>
                   )}
                 {status === "authenticated" ? (
                   <Button
-                    className="bg-[#f7c430] text-black font-medium px-4 py-2 rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow"
+                    className="bg-[#f7c430] text-black font-medium px-4 py-2 rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow cursor-pointer"
                     onClick={() => signOut()}
                   >
                     Logout

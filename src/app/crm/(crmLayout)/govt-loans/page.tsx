@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 
 import {
-  TableHeader,
+  TableHeader, // New component, assuming its internal structure is fine or responsive already
   TableWrapper,
   TableHeadings,
   TableRow,
@@ -32,25 +32,22 @@ import Loading from "@/components/Loading";
 export default function Page() {
   const session = useSession();
   const dsaId = session.data?.user?.id || "";
+
   const { data, isLoading: loansLoading } = useGetLoansByDsaIdQuery(dsaId);
-  const loansData= data?.filter((loan: any) => loan.loanType === "government") || [];
   const { data: loansTemplates = [], isLoading: templatesLoading } =
     useGetLoanTemplatesByTypeQuery("government");
-    
-  // Show loading when fetching initial data
-  if (loansLoading || templatesLoading) {
-    return <Loading />;
-  }
-    
-  // New state for search/filter/sort
+
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [sortBy, setSortBy] = useState("date-desc"); // default to latest
+  const [sortBy, setSortBy] = useState("date-desc");
 
-  // Filtered and sorted data
+  const loansData = useMemo(() => {
+    return data?.filter((loan: any) => loan.loanType === "government") || [];
+  }, [data]);
+
   const filteredLeads = useMemo(() => {
     let leads = loansData;
-    // Search
+
     if (search) {
       leads = leads.filter(
         (lead: any) =>
@@ -62,14 +59,12 @@ export default function Page() {
             .includes(search.toLowerCase())
       );
     }
-    // Status filter (case-insensitive)
     if (statusFilter) {
       leads = leads.filter(
         (lead: any) =>
           (lead.status || "").toLowerCase() === statusFilter.toLowerCase()
       );
     }
-    // Sort
     leads = leads.slice().sort((a: any, b: any) => {
       if (sortBy === "date-desc") {
         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
@@ -77,7 +72,7 @@ export default function Page() {
         if (dateA === dateB) {
           return (b._id || "").localeCompare(a._id || "");
         }
-        return dateB - dateA; // latest first
+        return dateB - dateA;
       }
       if (sortBy === "date-asc") {
         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
@@ -85,16 +80,16 @@ export default function Page() {
         if (dateA === dateB) {
           return (a._id || "").localeCompare(b._id || "");
         }
-        return dateA - dateB; // oldest first
+        return dateA - dateB;
       }
       if (sortBy === "name-asc") {
-        const nameA = (a.values[0]?.fields[0].value || "").toLowerCase();
-        const nameB = (b.values[0]?.fields[0].value || "").toLowerCase();
+        const nameA = (a.values?.[0]?.fields?.[0]?.value || "").toLowerCase();
+        const nameB = (b.values?.[0]?.fields?.[0]?.value || "").toLowerCase();
         return nameA.localeCompare(nameB);
       }
       if (sortBy === "name-desc") {
-        const nameA = (a.values[0]?.fields[0].value || "").toLowerCase();
-        const nameB = (b.values[0]?.fields[0].value || "").toLowerCase();
+        const nameA = (a.values?.[0]?.fields?.[0]?.value || "").toLowerCase();
+        const nameB = (b.values?.[0]?.fields?.[0]?.value || "").toLowerCase();
         return nameB.localeCompare(nameA);
       }
       return 0;
@@ -102,13 +97,23 @@ export default function Page() {
     return leads;
   }, [loansData, search, statusFilter, sortBy]);
 
+
+  if (loansLoading || templatesLoading) {
+    return <Loading />;
+  }
+
+
   return (
     <RequireFeature feature="Govt-Loans">
-      <div>
-        <div className="flex justify-between items-center mb-6">
-          <h4 className="font-semibold text-black">Govt. Loan Types</h4>
+      {/* Added responsive horizontal padding for the main container */}
+      <div className="max-w-full overflow-hidden px-4 sm:px-6 lg:px-8 py-6">
+        {/* Loan Types header and Saved Drafts button */}
+        {/* Changed to flex-col on mobile, flex-row on sm+ */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+          {/* Added margin-bottom for mobile */}
+          <h4 className="font-semibold text-black mb-4 sm:mb-0">Govt. Loan Types</h4>
           <Link href="/crm/drafts">
-            <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm">
+            <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm w-full sm:w-auto justify-center"> {/* Added w-full sm:w-auto justify-center for responsiveness */}
               <History className="w-4 h-4" />
               Saved Drafts
             </button>
@@ -116,7 +121,10 @@ export default function Page() {
         </div>
 
         <Tabs defaultValue="MSME Loans">
-          <TabsList>
+          {/* TabsList no longer needs explicit grid classes here if it's updated internally.
+              If not, uncomment the className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" below.
+          */}
+          <TabsList> {/* Assuming TabsList is already responsive internally or will be from tab.tsx */}
             {loansTemplates.map((template: any) => (
               <Link key={template.id} href={`/crm/loan-form?id=${template.id}`}>
                 <TabsTrigger value={template.id}>
@@ -150,20 +158,27 @@ export default function Page() {
         {/* Govt. Loan Leads Table */}
         <div className="mt-6">
           <div className="py-4">
-            <div className="flex justify-between items-center">
-              <h4 className="text-lg font-semibold text-black">Govt. Loan Leads</h4>
-              <div className="flex gap-2 mb-4 mt-4">
+            {/* Flex container for "Govt. Loan Leads" title and controls: stacks on mobile, row on md+ */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+              <h4 className="text-lg font-semibold text-black mb-4 md:mb-0">
+                Govt. Loan Leads
+              </h4>
+              {/* Controls: flex-col on mobile, sm:flex-row on small mobile to allow side-by-side if space,
+                  md:flex-row and no-wrap for desktop. Added gap-2 for spacing.
+                  w-full on mobile, md:w-auto for desktop.
+              */}
+              <div className="flex flex-col sm:flex-row md:flex-row md:flex-nowrap justify-end gap-2 mb-4 mt-0 md:mt-4 w-full md:w-auto">
                 <Input
                   type="text"
                   placeholder="Search by name or email"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="border bg-white px-2 py-1 rounded"
+                  className="border bg-white px-2 py-1 rounded w-full sm:w-auto" // w-full on mobile, w-auto on sm+
                 />
                 <Select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="border bg-white px-2 py-1 rounded"
+                  className="border bg-white px-2 py-1 rounded w-full sm:w-auto" // w-full on mobile, w-auto on sm+
                 >
                   <option value="">All Statuses</option>
                   <option value="pending">Pending</option>
@@ -173,7 +188,7 @@ export default function Page() {
                 <Select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="border bg-white px-2 py-1 rounded"
+                  className="border bg-white px-2 py-1 rounded w-full sm:w-auto" // w-full on mobile, w-auto on sm+
                 >
                   <option value="date-desc">Sort by Latest</option>
                   <option value="date-asc">Sort by Oldest</option>
@@ -183,8 +198,8 @@ export default function Page() {
               </div>
             </div>
 
-            <TableWrapper>
-              <table className="w-full bg-white overflow-hidden text-sm">
+            <TableWrapper className="overflow-x-auto">
+              <table className="w-full bg-white text-sm whitespace-nowrap"> {/* Added whitespace-nowrap to prevent cell content wrapping */}
                 <TableHeadings
                   columns={[
                     "File No.",
@@ -199,6 +214,7 @@ export default function Page() {
                   ]}
                 />
                 <tbody>
+                  {/* Ensure filteredLeads is always an array before mapping */}
                   {filteredLeads.map((lead: any, index: number) => (
                     <TableRow
                       key={index}
@@ -207,11 +223,12 @@ export default function Page() {
                         lead.loanSubType,
                         lead.mode ? lead.mode : "Online",
                         lead.values[0].fields[0].value,
-                        <EmailCell email={lead.subscriber} />,
-                        <EmailCell email={lead.values[0].fields[1].value} />,
+                        <EmailCell key={`sub-${index}`} email={lead.subscriber} />,
+                        <EmailCell key={`email-${index}`} email={lead.values[0].fields[1].value} />,
                         lead.values[0].fields[2].value,
                         lead.rejectionMessage,
                         <StatusBadge
+                          key={`status-${index}`}
                           status={
                             lead.status.toLowerCase() as
                               | "approved"

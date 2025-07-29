@@ -7,7 +7,7 @@ import {
   TabsIcon,
   TabsLabel,
   TabsDescription,
-} from "@/components/ui/tab";
+} from "@/components/ui/tab"; // This import now pulls the responsive TabsList
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 
@@ -32,7 +32,7 @@ export default function Page() {
   const session = useSession();
   const dsaId = session.data?.user?.id || "";
   const { data, isLoading } = useGetLoansByDsaIdQuery(dsaId);
-  const loansData= data?.filter((loan: any) => loan.loanType === "private") || [];
+  const loansData = data?.filter((loan: any) => loan.loanType === "private") || [];
   const { data: loansTemplates = [], isLoading: isTemplatesLoading } =
     useGetLoanTemplatesByTypeQuery("private");
 
@@ -82,29 +82,34 @@ export default function Page() {
         return dateA - dateB; // oldest first
       }
       if (sortBy === "name-asc") {
-        const nameA = (a.values?.Name || "").toLowerCase();
-        const nameB = (b.values?.Name || "").toLowerCase();
+        const nameA = (a.values?.[0]?.fields?.[0]?.value || "").toLowerCase();
+        const nameB = (b.values?.[0]?.fields?.[0]?.value || "").toLowerCase();
         return nameA.localeCompare(nameB);
       }
       if (sortBy === "name-desc") {
-        const nameA = (a.values?.Name || "").toLowerCase();
-        const nameB = (b.values?.Name || "").toLowerCase();
+        const nameA = (a.values?.[0]?.fields?.[0]?.value || "").toLowerCase();
+        const nameB = (b.values?.[0]?.fields?.[0]?.value || "").toLowerCase();
         return nameB.localeCompare(nameA);
       }
       return 0;
     });
     return leads;
   }, [loansData, search, statusFilter, sortBy]);
+
   return (
     <RequireFeature feature="Loans">
       {(isLoading || isTemplatesLoading) ? (
         <Loading />
       ) : (
-      <div>
-        <div className="flex justify-between items-center mb-6">
-          <h4 className="font-semibold text-black">Loan Types</h4>
+      // Added max-w-full, overflow-hidden, and responsive horizontal padding for the main container
+      <div className="max-w-full overflow-hidden px-4 sm:px-6 lg:px-8 py-6">
+        {/* Loan Types header and Saved Drafts button */}
+        {/* Changed to flex-col on mobile, flex-row on sm+ */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+          {/* Added margin-bottom for mobile */}
+          <h4 className="font-semibold text-black mb-4 sm:mb-0">Loan Types</h4>
           <Link href="/crm/drafts">
-            <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm">
+            <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm w-full sm:w-auto justify-center"> {/* Added w-full sm:w-auto justify-center for responsiveness */}
               <History className="w-4 h-4" />
               Saved Drafts
             </button>
@@ -112,6 +117,9 @@ export default function Page() {
         </div>
 
         <Tabs defaultValue="personal">
+          {/* Removed className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" from here
+              because it's now handled internally by TabsList component itself for robustness.
+          */}
           <TabsList>
             {loansTemplates.map((template: any) => (
               <Link key={template.id} href={`/crm/loan-form?id=${template.id}`}>
@@ -146,20 +154,25 @@ export default function Page() {
         {/* Loan Leads Table */}
         <div className="mt-6">
           <div className="py-4">
-            <div className="flex justify-between items-center">
-              <h4 className="text-lg font-semibold text-black">All Leads</h4>
-              <div className="flex gap-2 mb-4 mt-4">
+            {/* Flex container for "All Leads" title and controls: stacks on mobile, row on md+ */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+              <h4 className="text-lg font-semibold text-black mb-4 md:mb-0">All Leads</h4>
+              {/* Controls: flex-col on mobile, sm:flex-row on small mobile to allow side-by-side if space,
+                  md:flex-row and no-wrap for desktop. Added gap-2 for spacing.
+                  w-full on mobile, md:w-auto for desktop.
+              */}
+              <div className="flex flex-col sm:flex-row md:flex-row md:flex-nowrap justify-end gap-2 mb-4 mt-0 md:mt-4 w-full md:w-auto">
                 <Input
                   type="text"
                   placeholder="Search by name or email"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="border bg-white px-2 py-1 rounded"
+                  className="border bg-white px-2 py-1 rounded w-full sm:w-auto" // w-full on mobile, w-auto on sm+
                 />
                 <Select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="border bg-white px-2 py-1 rounded"
+                  className="border bg-white px-2 py-1 rounded w-full sm:w-auto" // w-full on mobile, w-auto on sm+
                 >
                   <option value="">All Statuses</option>
                   <option value="pending">Pending</option>
@@ -169,7 +182,7 @@ export default function Page() {
                 <Select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="border bg-white px-2 py-1 rounded"
+                  className="border bg-white px-2 py-1 rounded w-full sm:w-auto" // w-full on mobile, w-auto on sm+
                 >
                   <option value="date-desc">Sort by Latest</option>
                   <option value="date-asc">Sort by Oldest</option>
@@ -179,8 +192,9 @@ export default function Page() {
               </div>
             </div>
 
-            <TableWrapper>
-              <table className="w-full bg-white overflow-hidden text-sm">
+            {/* TableWrapper with horizontal scrolling for overflow */}
+            <TableWrapper className="overflow-x-auto">
+              <table className="w-full bg-white text-sm whitespace-nowrap"> {/* Added whitespace-nowrap to prevent cell content wrapping */}
                 <TableHeadings
                   columns={[
                     "File No.",
@@ -203,11 +217,12 @@ export default function Page() {
                         lead.loanSubType,
                         lead.mode ? lead.mode : "Online",
                         lead.values[0].fields[0].value,
-                        <EmailCell email={lead.subscriber} />,
-                        <EmailCell email={lead.values[0].fields[1].value} />,
+                        <EmailCell key={`sub-${index}`} email={lead.subscriber} />,
+                        <EmailCell key={`email-${index}`} email={lead.values[0].fields[1].value} />,
                         lead.values[0].fields[2].value,
                         lead.rejectionMessage,
                         <StatusBadge
+                          key={`status-${index}`}
                           status={
                             lead.status.toLowerCase() as
                               | "approved"

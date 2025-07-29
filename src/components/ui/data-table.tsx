@@ -1,9 +1,9 @@
 import React from "react";
 import { Search, Filter, SlidersHorizontal } from "lucide-react";
 
-export const TableWrapper = ({ children }: { children: React.ReactNode }) => (
+export const TableWrapper = ({ children, className }: { children: React.ReactNode, className?: string }) => (
 	<div className="py-4">
-		<div className="overflow-x-auto shadow-md rounded-lg bg-white">
+		<div className={`overflow-x-auto shadow-md rounded-lg bg-white ${className || ''}`}>
 			{children}
 		</div>
 	</div>

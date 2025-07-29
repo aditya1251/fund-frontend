@@ -31,7 +31,7 @@ export function MetricCard({
 	className,
 }: MetricCardProps) {
 	const baseStyles =
-		"col-span-2 rounded py-5 px-6 flex items-center justify-between text-md font-medium";
+		"col-span-2 rounded py-5 px-2 flex items-center justify-between text-md font-medium";
 	const variantStyles = {
 		primary: `${baseStyles} bg-[#f5d949] text-black`,
 		secondary: ` ${baseStyles} bg-[#2d2c2c] text-white`,
