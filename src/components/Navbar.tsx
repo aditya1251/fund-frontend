@@ -407,7 +407,7 @@ export default function NavigationHeader() {
                   </Button>
                 ) : (
                   <Link href="/login">
-                    <Button className="bg-[#f7c430] text-black font-medium px-4 py-2 rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
+                    <Button className="bg-[#f7c430] text-black font-medium px-4 py-2 rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow cursor-pointer">
                       Sign In
                     </Button>
                   </Link>

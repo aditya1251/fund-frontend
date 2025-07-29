@@ -146,7 +146,7 @@ export default function GovernmentSchemes() {
         {/* Get Started Button */}
         <div className="text-center">
           <Link href="/contact">
-            <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black px-10 py-6 text-xl rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
+            <Button className="bg-[#f7c430] hover:bg-[#f7c430]/90 text-black px-10 py-6 text-xl rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow cursor-pointer">
               Get Started
             </Button>
           </Link>
