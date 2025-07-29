@@ -114,15 +114,15 @@ export default function LoanDashboardPage() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10 max-w-3xl mx-auto">
           {/* Add New Buttons */}
-          <Button className="flex items-center gap-2 bg-black text-white hover:bg-gray-900 shadow-md justify-center w-full">
+          <Button onClick={() => router.push("/superadmin/loans/private")} className="flex items-center gap-2 bg-black text-white hover:bg-neutral-700 shadow-md justify-center w-full cursor-pointer">
             <HandCoins className="w-5 h-5" />
             Add New Private Loan
           </Button>
-          <Button className="flex items-center gap-2 bg-black text-white hover:bg-gray-900 shadow-md justify-center w-full">
+          <Button onClick={() => router.push("/superadmin/loans/government")} className="flex items-center gap-2 bg-black text-white hover:bg-neutral-700 shadow-md justify-center w-full cursor-pointer">
             <Building className="w-5 h-5" />
             Add New Government Loan
           </Button>
-          <Button className="flex items-center gap-2 bg-black text-white hover:bg-gray-900 shadow-md justify-center w-full">
+          <Button onClick={() => router.push("/superadmin/loans/insurance")} className="flex items-center gap-2 bg-black text-white hover:bg-neutral-700 shadow-md justify-center w-full cursor-pointer">
             <ShieldCheck className="w-5 h-5" />
             Add New Insurance Plan
           </Button>
@@ -192,7 +192,7 @@ export default function LoanDashboardPage() {
             </h2>
             <button 
               onClick={() => router.push("/superadmin/loans/applications")}
-              className="text-sm font-medium text-[#ffd439] hover:underline hover:text-black transition">
+              className="text-sm font-medium text-[#ffb700] hover:underline hover:text-black transition cursor-pointer">
               View All Requests →
             </button>
           </div>

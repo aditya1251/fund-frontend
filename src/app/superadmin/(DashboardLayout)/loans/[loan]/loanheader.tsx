@@ -42,7 +42,7 @@ const LoanHeader = ({
   useEffect(() => {
     console.log(data);
   }, [data]);
-  const [createLoanTemplate] = useCreateLoanTemplateMutation();
+  const [createLoanTemplate, { isLoading: isCreating }] = useCreateLoanTemplateMutation();
 
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -96,7 +96,7 @@ const LoanHeader = ({
         </h2>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 text-sm bg-black text-white rounded-full border-2 border-black hover:bg-gray-900 transition-all">
+          className="flex items-center gap-2 px-4 py-2 text-sm bg-black text-white rounded-full border-2 border-black hover:bg-neutral-700 transition-all cursor-pointer">
           <Plus className="w-4 h-4" />
           Add Loan Template
         </button>
@@ -132,7 +132,7 @@ const LoanHeader = ({
           <div className="bg-white w-full max-w-lg p-6 rounded-xl border-2 border-black shadow-[8px_8px_0_0_#000] relative">
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-3 right-3 text-black hover:text-gray-600">
+              className="absolute top-3 right-3 p-2 text-black hover:bg-gray-200 rounded-full cursor-pointer">
               <X className="w-5 h-5" />
             </button>
             <h3 className="text-2xl font-bold mb-6 text-black">
@@ -188,8 +188,20 @@ const LoanHeader = ({
               <div className="text-right pt-4">
                 <button
                   onClick={handleCreate}
-                  className="bg-black text-white px-6 py-2 rounded-full border-2 border-black hover:bg-gray-900 transition-all">
-                  Create Loan
+                  disabled={isCreating}
+                  className={`px-6 py-2 rounded-full border-2 border-black transition-all flex items-center gap-2 ml-auto ${
+                    isCreating
+                      ? "bg-gray-400 cursor-not-allowed text-white"
+                      : "bg-black text-white hover:bg-neutral-700 cursor-pointer"
+                  }`}>
+                  {isCreating ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Creating...
+                    </>
+                  ) : (
+                    "Create Loan"
+                  )}
                 </button>
               </div>
             </div>

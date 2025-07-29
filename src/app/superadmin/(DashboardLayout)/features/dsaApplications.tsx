@@ -185,14 +185,14 @@ export default function DSAApplications({
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 						placeholder="Search by name or email"
-						className="px-4 py-2 border border-gray-300 rounded w-full md:w-1/2"
+						className="px-4 py-2 border border-gray-300 rounded w-full md:w-1/2 hover:ring-1 ring-black focus:outline-none focus:ring-1"
 					/>
 					<div className="flex gap-2">
 						{["all", "pending", "approved", "rejected"].map((tab) => (
 							<button
 								key={tab}
 								onClick={() => setFilter(tab as any)}
-								className={`capitalize px-4 py-2 font-semibold rounded-full ${
+								className={`capitalize px-4 py-2 font-semibold rounded-full cursor-pointer ${
 									filter === tab
 										? "bg-[#FFD439] text-black shadow-[4px_4px_0_0_#000]"
 										: "text-gray-600 hover:text-black"
@@ -253,14 +253,14 @@ export default function DSAApplications({
 											<button
 												onClick={() => handleStatusChange(loan._id, "approved")}
 												disabled={updatingId === loan._id}
-												className="bg-green-100 text-green-800 px-4 py-2 rounded hover:bg-green-200 text-sm font-medium"
+												className="bg-green-100 text-green-800 px-4 py-2 rounded hover:bg-green-200 text-sm font-medium cursor-pointer"
 											>
 												Approve
 											</button>
 											<button
 												onClick={() => handleStatusChange(loan._id, "rejected")}
 												disabled={updatingId === loan._id}
-												className="bg-red-100 text-red-700 px-4 py-2 rounded hover:bg-red-200 text-sm font-medium"
+												className="bg-red-100 text-red-700 px-4 py-2 rounded hover:bg-red-200 text-sm font-medium cursor-pointer"
 											>
 												Reject
 											</button>
@@ -288,7 +288,7 @@ export default function DSAApplications({
 
 									<button
 										onClick={() => openModal(loan)}
-										className="bg-blue-100 text-blue-800 px-4 py-2 absolute right-10 bottom-8 rounded hover:bg-blue-200 text-sm font-medium mt-4"
+										className="bg-blue-100 text-blue-800 px-4 py-2 absolute right-10 bottom-8 rounded hover:bg-blue-200 text-sm font-medium mt-4 cursor-pointer"
 									>
 										View Details
 									</button>
@@ -301,10 +301,10 @@ export default function DSAApplications({
 
 			{showModal && selectedLoan && (
 				<div className="fixed inset-0 z-50 bg-opacity-40 backdrop-blur-sm flex justify-center items-center">
-					<div className="bg-white w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 rounded-xl border-2 border-black shadow-[8px_8px_0_0_#000] relative">
+					<div className="bg-white w-full md:max-w-2xl 2xl:max-w-3xl max-h-[90vh] overflow-y-auto p-6 rounded-xl border-2 border-black shadow-[8px_8px_0_0_#000] relative">
 						<button
 							onClick={closeModal}
-							className="absolute top-3 right-3 text-black hover:text-gray-600"
+							className="absolute top-3 right-3 text-black p-2 rounded-full hover:bg-gray-200 cursor-pointer"
 						>
 							<X className="w-5 h-5" />
 						</button>
@@ -366,7 +366,7 @@ export const FileViewer = ({ fileKey }: { fileKey: string }) => {
 	return (
 		<button
 			onClick={handleViewFile}
-			className="text-blue-600 underline text-sm break-all"
+			className="text-blue-600 hover:underline text-sm break-all cursor-pointer"
 			disabled={loading}
 		>
 			{loading ? "Loading..." : "View Document"}
