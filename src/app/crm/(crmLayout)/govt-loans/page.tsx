@@ -8,6 +8,8 @@ import {
   TabsDescription,
   TabsIcon,
 } from "@/components/ui/tab";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 
 import {
   TableHeader,
@@ -22,23 +24,98 @@ import Link from "next/link";
 import { useGetLoansByDsaIdQuery } from "@/redux/services/loanApi";
 import { RequireFeature } from "@/components/RequireFeature";
 import { useGetLoanTemplatesByTypeQuery } from "@/redux/services/loanTemplateApi";
-import { Building, Car, House, LandPlot, User } from "lucide-react";
+import { Building, Car, House, LandPlot, User, History } from "lucide-react";
+import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
+import Loading from "@/components/Loading";
 
 export default function Page() {
   const session = useSession();
-    const dsaId = session.data?.user?.id || "";
-    const { data } = useGetLoansByDsaIdQuery(dsaId);
-    const loansData= data?.filter((loan: any) => loan.loanType === "government") || [];
-  const { data: loansTemplates = [] } =
+  const dsaId = session.data?.user?.id || "";
+  const { data, isLoading: loansLoading } = useGetLoansByDsaIdQuery(dsaId);
+  const loansData= data?.filter((loan: any) => loan.loanType === "government") || [];
+  const { data: loansTemplates = [], isLoading: templatesLoading } =
     useGetLoanTemplatesByTypeQuery("government");
+    
+  // Show loading when fetching initial data
+  if (loansLoading || templatesLoading) {
+    return <Loading />;
+  }
+    
+  // New state for search/filter/sort
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [sortBy, setSortBy] = useState("date-desc"); // default to latest
+
+  // Filtered and sorted data
+  const filteredLeads = useMemo(() => {
+    let leads = loansData;
+    // Search
+    if (search) {
+      leads = leads.filter(
+        (lead: any) =>
+          (lead.values[0]?.fields[0].value || "")
+            .toLowerCase()
+            .includes(search.toLowerCase()) ||
+          (lead.values[0]?.fields[1].value || "")
+            .toLowerCase()
+            .includes(search.toLowerCase())
+      );
+    }
+    // Status filter (case-insensitive)
+    if (statusFilter) {
+      leads = leads.filter(
+        (lead: any) =>
+          (lead.status || "").toLowerCase() === statusFilter.toLowerCase()
+      );
+    }
+    // Sort
+    leads = leads.slice().sort((a: any, b: any) => {
+      if (sortBy === "date-desc") {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (dateA === dateB) {
+          return (b._id || "").localeCompare(a._id || "");
+        }
+        return dateB - dateA; // latest first
+      }
+      if (sortBy === "date-asc") {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (dateA === dateB) {
+          return (a._id || "").localeCompare(b._id || "");
+        }
+        return dateA - dateB; // oldest first
+      }
+      if (sortBy === "name-asc") {
+        const nameA = (a.values[0]?.fields[0].value || "").toLowerCase();
+        const nameB = (b.values[0]?.fields[0].value || "").toLowerCase();
+        return nameA.localeCompare(nameB);
+      }
+      if (sortBy === "name-desc") {
+        const nameA = (a.values[0]?.fields[0].value || "").toLowerCase();
+        const nameB = (b.values[0]?.fields[0].value || "").toLowerCase();
+        return nameB.localeCompare(nameA);
+      }
+      return 0;
+    });
+    return leads;
+  }, [loansData, search, statusFilter, sortBy]);
 
   return (
     <RequireFeature feature="Govt-Loans">
       <div>
-        <h4 className="font-semibold mb-6 text-black">Govt. Loan Types</h4>
+        <div className="flex justify-between items-center mb-6">
+          <h4 className="font-semibold text-black">Govt. Loan Types</h4>
+          <Link href="/crm/drafts">
+            <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm">
+              <History className="w-4 h-4" />
+              Saved Drafts
+            </button>
+          </Link>
+        </div>
 
-        <Tabs defaultValue="msme">
+        <Tabs defaultValue="MSME Loans">
           <TabsList>
             {loansTemplates.map((template: any) => (
               <Link key={template.id} href={`/crm/loan-form?id=${template.id}`}>
@@ -73,7 +150,38 @@ export default function Page() {
         {/* Govt. Loan Leads Table */}
         <div className="mt-6">
           <div className="py-4">
-            <TableHeader>Govt. Loan Leads</TableHeader>
+            <div className="flex justify-between items-center">
+              <h4 className="text-lg font-semibold text-black">Govt. Loan Leads</h4>
+              <div className="flex gap-2 mb-4 mt-4">
+                <Input
+                  type="text"
+                  placeholder="Search by name or email"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="border bg-white px-2 py-1 rounded"
+                />
+                <Select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="border bg-white px-2 py-1 rounded"
+                >
+                  <option value="">All Statuses</option>
+                  <option value="pending">Pending</option>
+                  <option value="approved">Approved</option>
+                  <option value="rejected">Rejected</option>
+                </Select>
+                <Select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="border bg-white px-2 py-1 rounded"
+                >
+                  <option value="date-desc">Sort by Latest</option>
+                  <option value="date-asc">Sort by Oldest</option>
+                  <option value="name-asc">Sort by Name (A-Z)</option>
+                  <option value="name-desc">Sort by Name (Z-A)</option>
+                </Select>
+              </div>
+            </div>
 
             <TableWrapper>
               <table className="w-full bg-white overflow-hidden text-sm">
@@ -91,7 +199,7 @@ export default function Page() {
                   ]}
                 />
                 <tbody>
-                  {loansData.map((lead: any, index: number) => (
+                  {filteredLeads.map((lead: any, index: number) => (
                     <TableRow
                       key={index}
                       row={[

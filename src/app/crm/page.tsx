@@ -5,17 +5,29 @@ import Statistics from "@/components/crm/statistics";
 import Banks from "@/components/crm/banks";
 import Testimonials from "@/components/crm/testimonials";
 import Footer from "@/components/crm/footer";
-import { useGetLoansQuery } from "@/redux/services/loanApi";
+import {
+  useGetLoansByDsaIdQuery,
+} from "@/redux/services/loanApi";
+import { useSession } from "next-auth/react";
+import Loading from "@/components/Loading";
 export default function Page() {
-	const { data } = useGetLoansQuery({ loanType: "" });
-	return (
-		<>
-			<Banner />
-			<LeadOverview data={data} />
-			<Statistics data={data} />
-			<Banks />
-			<Testimonials />
-			<Footer />
-		</>
-	);
+  const session = useSession();
+  const dsaId = session.data?.user?.id || "";
+  const { data, isLoading } = useGetLoansByDsaIdQuery(dsaId);
+  return (
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <Banner />
+          <LeadOverview data={data} />
+          <Statistics data={data} />
+          <Banks />
+          <Testimonials />
+          <Footer />
+        </>
+      )}
+    </>
+  );
 }

@@ -126,7 +126,7 @@ const AddPlanPage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black mb-1">Duration (months) *</label>
+              <label className="block text-sm font-medium text-black mb-1"> Duration (months) * (0 = lifetime) </label>
               <input
                 name="duration"
                 type="number"

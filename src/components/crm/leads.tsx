@@ -1,7 +1,7 @@
 "use client";
-import Image from "next/image";
 import { Eye, Plus, ArrowUpRight } from "lucide-react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 
@@ -22,6 +22,7 @@ export default function LeadOverview({data}) {
     buttonLabel: "Add Leads",
     buttonIcon: <Plus className="h-4 w-4" />,
     bgImage: "/all-leads.svg",
+    link:"/crm/loans",
   },
   {
     titleName: "Active Leads",
@@ -30,6 +31,7 @@ export default function LeadOverview({data}) {
     buttonLabel: "View Leads",
     buttonIcon: <Eye className="h-4 w-4" />,
     bgImage: "/active-leads.svg",
+    link:"/crm/leads",
   },
 ])
   useEffect(() => {
@@ -80,17 +82,17 @@ export default function LeadOverview({data}) {
               </h5>
               <div className="bg-gradient-to-br from-[#121212] to-[#353535] px-3 py-2 md:px-4 md:py-3 rounded-b-lg flex items-end justify-between">
                 <div className="flex flex-col">
-                  <span className="text-white text-[10px] md:text-xs">
+                  {/* <span className="text-white text-[10px] md:text-xs">
                     Renewal On {card.renewal}
-                  </span>
+                  </span> */}
                   <span className="text-white text-xs md:text-sm">{card.user}</span>
                 </div>
-                <button className="bg-[#f5d949] text-black text-[10px] md:text-xs px-2 py-1 md:px-2.5 md:py-1 rounded-md flex items-center gap-1 shadow-md">
+                <Link href="/#plans" className="bg-[#f5d949] text-black text-[10px] md:text-xs px-2 py-1 md:px-2.5 md:py-1 rounded-md flex items-center gap-1 shadow-md">
                   <span>UPGRADE</span>
                   <div className="bg-black rounded p-0.5">
                     <ArrowUpRight className="w-3 h-3 text-white" />
                   </div>
-                </button>
+                </Link>
               </div>
             </div>
           );
@@ -109,10 +111,10 @@ export default function LeadOverview({data}) {
               <span className="text-xl md:text-2xl font-bold text-black drop-shadow">
                 {card.count}
               </span>
-              <button className="text-xs md:text-sm bg-black text-white px-3 py-1 md:px-4 md:py-1 rounded-md flex items-center gap-1 shadow-sm">
+              <Link href={card.link} className="text-xs md:text-sm bg-black text-white px-3 py-1 md:px-4 md:py-1 rounded-md flex items-center gap-1 shadow-sm">
                 <span>{card.buttonLabel}</span>
                 {card.buttonIcon}
-              </button>
+              </Link>
             </div>
           </div>
         );

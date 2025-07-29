@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import LabeledSliderInput from "@/components/crm/labeledSlider";
+import Loading from "@/components/Loading";
 
 const EmiCalculator = () => {
 	const [loanAmount, setLoanAmount] = useState(10000000);

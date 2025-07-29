@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 
 import {
-  TableHeader,
   TableWrapper,
   TableHeadings,
   TableRow,
@@ -27,13 +26,14 @@ import { RequireFeature } from "@/components/RequireFeature";
 import { useGetLoanTemplatesByTypeQuery } from "@/redux/services/loanTemplateApi";
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
+import Loading from "@/components/Loading";
 
 export default function Page() {
   const session = useSession();
   const dsaId = session.data?.user?.id || "";
-  const { data } = useGetLoansByDsaIdQuery(dsaId);
+  const { data, isLoading } = useGetLoansByDsaIdQuery(dsaId);
   const loansData= data?.filter((loan: any) => loan.loanType === "private") || [];
-  const { data: loansTemplates = [] } =
+  const { data: loansTemplates = [], isLoading: isTemplatesLoading } =
     useGetLoanTemplatesByTypeQuery("private");
 
   // New state for search/filter/sort
@@ -97,6 +97,9 @@ export default function Page() {
   }, [loansData, search, statusFilter, sortBy]);
   return (
     <RequireFeature feature="Loans">
+      {(isLoading || isTemplatesLoading) ? (
+        <Loading />
+      ) : (
       <div>
         <div className="flex justify-between items-center mb-6">
           <h4 className="font-semibold text-black">Loan Types</h4>
@@ -223,6 +226,7 @@ export default function Page() {
           </div>
         </div>
       </div>
+      )}
     </RequireFeature>
   );
 }

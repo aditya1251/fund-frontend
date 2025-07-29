@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDeletePlanMutation, useGetPlansQuery, useUpdateActiveStatusMutation } from "@/redux/services/plansApi";
+import Loading from "@/components/Loading";
 
 export const features = [
   "Leads",
@@ -73,9 +74,7 @@ const PlansPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#ffd439]"></div>
-      </div>
+      <Loading/>
     );
   }
 
@@ -148,7 +147,7 @@ const PlansPage = () => {
           .map((plan:any) => (
             <div
               key={plan.id}
-              className={`flex flex-col bg-white rounded-[16px] p-6 border-3 border-black transition-all duration-300 ease-in-out ${
+              className={`flex flex-col hover:shadow-[2px_2px_0_0_#000] bg-white rounded-[16px] p-6 border-3 border-black transition-all duration-500 ease-in-out ${
                 plan.isActive
                   ? "bg-[#FFD439] shadow-[10px_10px_0_0_#000]"
                   : "bg-gray-100 shadow-[6px_6px_0_0_#000]"

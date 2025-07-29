@@ -10,12 +10,13 @@ import {
   StatusBadge,
   ViewAllButton,
 } from "@/components/ui/data-table";
-import { useGetLoansByDsaIdQuery, useGetLoansQuery } from "@/redux/services/loanApi";
+import { useGetLoansByDsaIdQuery } from "@/redux/services/loanApi";
 import { useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { RequireFeature } from "@/components/RequireFeature";
 import { useSession } from "next-auth/react";
+import Loading from "@/components/Loading";
 
 type Tab = "Loans" | "Govt Loans" | "Insurance";
 
@@ -127,7 +128,7 @@ const LeadActivityStatus: React.FC = () => {
   const session = useSession();
   const dsaId = session.data?.user?.id || "";
   const [activeTab, setActiveTab] = useState<Tab>("Loans");
-  const { data: loansData = [] } = useGetLoansByDsaIdQuery(dsaId);
+  const { data: loansData = [], isLoading } = useGetLoansByDsaIdQuery(dsaId);
   const data = getDataByTab(activeTab, loansData);
 
   // New state for search/filter/sort
@@ -192,6 +193,9 @@ const LeadActivityStatus: React.FC = () => {
 
   return (
     <RequireFeature feature="Leads">
+      {isLoading ? (
+        <Loading />
+      ) : (
       <div>
         <h4 className="font-semibold mb-6 text-black">Lead Activity Status</h4>
 
@@ -311,6 +315,7 @@ const LeadActivityStatus: React.FC = () => {
           </div>
         </div>
       </div>
+      )}
     </RequireFeature>
   );
 };
