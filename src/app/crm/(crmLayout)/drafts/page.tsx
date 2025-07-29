@@ -80,6 +80,8 @@ export default function DraftsPage() {
   // Format date for display
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
+    // India locale for date formatting, but "en-US" for standard formatting.
+    // Assuming "en-US" is desired for consistency unless specified otherwise.
     return new Intl.DateTimeFormat("en-US", {
       year: "numeric",
       month: "short",
@@ -104,10 +106,11 @@ export default function DraftsPage() {
       {isLoading ? (
         <Loading />
       ) : (
-      <div className="container mx-auto py-6 text-gray-800">
-        <div className="flex items-center justify-between mb-6">
+      // Main container with responsive padding
+      <div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8 text-gray-800">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-semibold">Saved Application Drafts</h1>
+            <h1 className="text-2xl font-semibold mb-2 sm:mb-0">Saved Application Drafts</h1> {/* Added responsive margin-bottom */}
             <p className="text-gray-600 mt-1">
               Continue your previously saved applications
             </p>
@@ -115,7 +118,7 @@ export default function DraftsPage() {
           {drafts.length > 0 && (
             <Button
               variant="outline"
-              className="border-red-200 text-red-600 hover:bg-red-50"
+              className="border-red-200 text-red-600 hover:bg-red-50 w-full sm:w-auto mt-4 sm:mt-0" // Added w-full sm:w-auto and mt-4 sm:mt-0
               onClick={() => {
                 if (confirm("Are you sure you want to delete all drafts?")) {
                   localStorage.removeItem("loanFormDrafts");
@@ -130,16 +133,16 @@ export default function DraftsPage() {
 
         {drafts.length === 0 ? (
           <Card>
-            <CardContent className="flex flex-col items-center justify-center py-12">
+            <CardContent className="flex flex-col items-center justify-center py-12 px-4 text-center"> {/* Added px-4 and text-center for small screens */}
               <History className="h-16 w-16 text-gray-400 mb-4" />
               <h2 className="text-xl font-semibold text-gray-600 mb-2">
                 No Saved Drafts Found
               </h2>
-              <p className="text-gray-500 text-center mb-6">
+              <p className="text-gray-500 mb-6">
                 When you start filling out applications, they will be
                 automatically saved here
               </p>
-              <Button onClick={() => router.push("/crm/loans")}>
+              <Button onClick={() => router.push("/crm/loans")} className="w-full sm:w-auto"> {/* Added w-full sm:w-auto */}
                 Start a New Application
               </Button>
             </CardContent>
@@ -151,6 +154,7 @@ export default function DraftsPage() {
                 <h2 className="text-lg font-semibold mb-3 flex items-center">
                   <FileText className="mr-2 h-5 w-5" /> {loanType.charAt(0).toUpperCase() + loanType.slice(1)} Applications
                 </h2>
+                {/* The grid here is already responsive: grid-cols-1 md:grid-cols-2 lg:grid-cols-3 */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {typeDrafts.map((draft) => (
                     <Card key={draft.id} className="overflow-hidden hover:shadow-md transition-shadow">
@@ -180,11 +184,12 @@ export default function DraftsPage() {
                             />
                           </div>
                         </div>
-                        <div className="flex gap-2 justify-between">
+                        {/* Button group within card: flex-wrap to stack on very small widths if needed */}
+                        <div className="flex flex-wrap gap-2 justify-between"> {/* Added flex-wrap */}
                           <Button
                             variant="outline" 
                             size="sm"
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 flex-grow sm:flex-grow-0" // Added flex-grow
                             onClick={() => deleteDraft(draft.id)}
                           >
                             <Trash2 className="h-4 w-4 mr-1" />
@@ -192,7 +197,7 @@ export default function DraftsPage() {
                           </Button>
                           <Button
                             size="sm"
-                            className="bg-yellow-400 text-black hover:bg-yellow-500"
+                            className="bg-yellow-400 text-black hover:bg-yellow-500 flex-grow sm:flex-grow-0" // Added flex-grow
                             onClick={() => continueDraft(draft)}
                           >
                             <ClipboardEdit className="h-4 w-4 mr-1" />

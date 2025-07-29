@@ -1,44 +1,58 @@
 "use client";
+
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { 
+  Trash2, 
+  FileText, 
+  Clock, 
+  ChevronRight, 
+  History,
+  ClipboardEdit,
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Upload,
+  AlertCircle,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle 
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input"; // Assuming Input is correctly imported from ui
+import { Label } from "@/components/ui/label"; // Assuming Label is correctly imported from ui
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
-import { DatePicker } from "@/components/ui/date-picker";
+} from "@/components/ui/select"; // Assuming Select components are correctly imported from ui
+import { Checkbox } from "@/components/ui/checkbox"; // Assuming Checkbox is correctly imported from ui
+import { Textarea } from "@/components/ui/textarea"; // Assuming Textarea is correctly imported from ui
+import { DatePicker } from "@/components/ui/date-picker"; // Assuming DatePicker is correctly imported from ui
+
+
 import { useSession } from "next-auth/react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  History,
-  Trash2,
-  Upload,
-  FileText,
-  AlertCircle,
-  Loader2,
-} from "lucide-react";
 import { uploadFile } from "@/utils/fileUploadService";
 import { useCreateLoanMutation } from "@/redux/services/loanApi";
 import { useGetLoanTemplateByIdQuery } from "@/redux/services/loanTemplateApi";
-import { useSearchParams, useRouter, redirect } from "next/navigation";
+import { useSearchParams, useRouter as useNextRouter, redirect } from "next/navigation"; // Renamed useRouter to avoid conflict
 import { RequireFeature } from "@/components/RequireFeature";
 import { useNotifySuperAdminMutation } from "@/redux/services/notificationApi"
 import {
   Dialog,
   DialogContent,
   DialogTitle,
-  DialogContentText as DialogDescription,
-  DialogActions as DialogHeader,
+  DialogContentText as DialogDescription, // Renamed to avoid conflict
+  DialogActions as DialogHeader, // Renamed to avoid conflict
 } from "@mui/material";
+
 
 export default function LoanForm() {
   const [formValues, setFormValues] = useState<Record<string, any>>({});
@@ -51,7 +65,7 @@ export default function LoanForm() {
   const [uploadErrors, setUploadErrors] = useState<Record<string, string>>({});
   const { data: session } = useSession();
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const router = useNextRouter(); // Use aliased useRouter
   const id = searchParams.get("id") || "";
   const draftId = searchParams.get("draft") || "";
 
@@ -214,7 +228,7 @@ export default function LoanForm() {
       
       // Generate draft ID - either use existing one or create new
       const draftId = urlDraftId || 
-                      (existingDraftIndex >= 0 ? drafts[existingDraftIndex].id : `draft_${Date.now()}`);
+                        (existingDraftIndex >= 0 ? drafts[existingDraftIndex].id : `draft_${Date.now()}`);
       
 
       const newDraft = {
@@ -366,7 +380,7 @@ export default function LoanForm() {
 
       // Reset form after submission
       setTimeout(() => {
-        redirect(`/crm/loans`);
+        router.push(`/crm/loans`); // Use router.push for navigation
       }, 500);
     } catch (err) {
       setMessage("Error submitting form");
@@ -374,8 +388,8 @@ export default function LoanForm() {
   };
 
   // Function to handle loading a draft
-  const loadDraft = (draftId: string) => {
-      router.push(`/crm/loan-form?id=${id}&draft=${draftId}`);
+  const loadDraft = (draftIdToLoad: string) => { // Renamed parameter to avoid conflict with outer scope draftId
+      router.push(`/crm/loan-form?id=${id}&draft=${draftIdToLoad}`);
       setShowDraftModal(false);
     };
     
@@ -394,15 +408,15 @@ export default function LoanForm() {
       // Convert back to array
       return Object.values(uniqueDrafts);
     };
-  
+   
     // Function to delete a draft
-    const deleteDraft = (draftId: string) => {
+    const deleteDraft = (draftIdToDelete: string) => { // Renamed parameter to avoid conflict
     try {
       const storedDrafts = localStorage.getItem("loanFormDrafts");
       if (storedDrafts) {
         const parsedDrafts = JSON.parse(storedDrafts);
         const updatedDrafts = parsedDrafts.filter(
-          (draft: any) => draft.id !== draftId
+          (draft: any) => draft.id !== draftIdToDelete
         );
         localStorage.setItem("loanFormDrafts", JSON.stringify(updatedDrafts));
         setSavedDrafts(updatedDrafts);
@@ -415,64 +429,67 @@ export default function LoanForm() {
   // Format date for display
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
+    return new Intl.DateTimeFormat("en-IN", { // Changed to en-IN for Indian locale
       year: "numeric",
       month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
+      hour12: true // Ensure 12-hour format with AM/PM for India locale if preferred
     }).format(date);
   };
 
   return (
     <RequireFeature feature="Loans">
-      <div className="min-h-screen bg-[#f3f3f3] p-4">
+      <div className="min-h-screen bg-[#f3f3f3] p-4 sm:p-6 lg:p-8"> {/* Responsive padding */}
         <Card className="shadow-sm max-w-4xl mx-auto border-0 bg-white text-black">
           {/* Drafts Modal */}
           <Dialog
             open={showDraftModal}
             onClose={() => setShowDraftModal(false)}
+            maxWidth="md" // Set max-width for Dialog
+            fullWidth={true} // Allow it to take full width up to maxWidth
           >
-            <DialogContent className="max-w-3xl">
+            <DialogContent className="p-4 sm:p-6"> {/* Responsive padding */}
               <DialogHeader>
-                <DialogTitle>Saved Draft Applications</DialogTitle>
-                <DialogDescription>
+                <DialogTitle className="text-lg sm:text-xl font-semibold mb-2">Saved Draft Applications</DialogTitle> {/* Responsive font size */}
+                <DialogDescription className="text-sm text-gray-600 mb-4"> {/* Responsive font size */}
                   Your unsubmitted applications are automatically saved. Click
                   on any draft to continue working on it.
                 </DialogDescription>
               </DialogHeader>
 
               {savedDrafts.length === 0 ? (
-                <div className="py-8 text-center text-gray-500">
-                  No saved drafts found
+                <div className="py-8 text-center text-gray-500 text-sm"> {/* Responsive font size */}
+                  No saved drafts found for this template.
                 </div>
               ) : (
                 <div className="overflow-y-auto max-h-[60vh]">
                   <table className="w-full border-collapse">
                     <thead>
                       <tr className="border-b">
-                        <th className="py-2 px-3 text-left">Loan Type</th>
-                        <th className="py-2 px-3 text-left">Date</th>
-                        <th className="py-2 px-3 text-left">Progress</th>
-                        <th className="py-2 px-3 text-center">Actions</th>
+                        <th className="py-2 px-3 text-left text-xs sm:text-sm">Loan Type</th> {/* Responsive font size */}
+                        <th className="py-2 px-3 text-left text-xs sm:text-sm">Date</th>
+                        <th className="py-2 px-3 text-left text-xs sm:text-sm">Progress</th>
+                        <th className="py-2 px-3 text-center text-xs sm:text-sm">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {savedDrafts
-                        .filter((draft) => draft.templateId === id)
+                        .filter((draft) => draft.templateId === id) // Only show drafts for current template
                         .map((draft) => (
                           <tr
                             key={draft.id}
                             className="border-b hover:bg-gray-50"
                           >
-                            <td className="py-3 px-3">{draft.templateName}</td>
-                            <td className="py-3 px-3">
+                            <td className="py-3 px-3 text-xs sm:text-sm">{draft.templateName}</td>
+                            <td className="py-3 px-3 text-xs sm:text-sm">
                               {formatDate(draft.timestamp)}
                             </td>
-                            <td className="py-3 px-3">
+                            <td className="py-3 px-3 text-xs sm:text-sm">
                               <div className="flex items-center gap-2">
                                 <span>Page {draft.currentPage + 1}</span>
-                                <div className="w-24 h-2 bg-gray-200 rounded-full">
+                                <div className="w-20 h-2 bg-gray-200 rounded-full sm:w-24"> {/* Responsive width */}
                                   <div
                                     className="h-2 bg-yellow-400 rounded-full"
                                     style={{
@@ -487,11 +504,11 @@ export default function LoanForm() {
                               </div>
                             </td>
                             <td className="py-3 px-3 text-center">
-                              <div className="flex justify-center gap-2">
+                              <div className="flex flex-col sm:flex-row justify-center gap-2"> {/* Stack buttons on mobile */}
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  className="h-8 px-2 text-xs"
+                                  className="h-7 px-2 text-xs w-full sm:w-auto" // Adjusted height and width for responsiveness
                                   onClick={() => loadDraft(draft.id)}
                                 >
                                   Continue
@@ -499,7 +516,7 @@ export default function LoanForm() {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                  className="h-7 w-full sm:w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50" // Adjusted height and width for responsiveness
                                   onClick={() => deleteDraft(draft.id)}
                                 >
                                   <Trash2 size={14} />
@@ -514,10 +531,10 @@ export default function LoanForm() {
               )}
             </DialogContent>
           </Dialog>
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <div>
-                <h2 className="text-lg font-semibold text-[#2d2c2c]">
+          <CardHeader className="p-4 sm:p-6"> {/* Responsive padding */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center"> {/* Stack on mobile */}
+              <div className="mb-4 sm:mb-0"> {/* Margin for title/description on mobile */}
+                <h2 className="text-lg sm:text-xl font-semibold text-[#2d2c2c]"> {/* Responsive font size */}
                   {templateData?.name || "Loan Application"}
                 </h2>
                 {templateData?.description && (
@@ -529,7 +546,7 @@ export default function LoanForm() {
               <Button
                 type="button"
                 variant="outline"
-                className="flex items-center gap-1 text-sm"
+                className="flex items-center gap-1 text-sm w-full sm:w-auto justify-center mt-2 sm:mt-0" // Responsive width and margin
                 onClick={() => {
                   // Refresh drafts list before showing modal
                   try {
@@ -555,15 +572,15 @@ export default function LoanForm() {
               </Button>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 sm:p-6"> {/* Responsive padding */}
             {isLoading ? (
-              <div className="text-gray-500">Loading template...</div>
+              <div className="text-gray-500 text-center py-10">Loading template...</div>
             ) : !templateData ? (
-              <div className="text-gray-500">
+              <div className="text-gray-500 text-center py-10">
                 No template found for this loan type.
               </div>
             ) : totalPages === 0 ? (
-              <div className="text-gray-500">
+              <div className="text-gray-500 text-center py-10">
                 No pages defined in this template.
               </div>
             ) : formSubmitted ? (
@@ -586,9 +603,9 @@ export default function LoanForm() {
                   <div className="text-sm font-medium mb-2">
                     Step {currentPage + 1} / {totalPages}
                   </div>
-                  <div className="flex items-center justify-center w-full">
+                  <div className="flex items-center justify-center w-full overflow-x-auto pb-2 custom-scrollbar"> {/* Added overflow-x-auto and custom-scrollbar */}
                     {Array.from({ length: totalPages }, (_, index) => (
-                      <div key={index} className="flex items-center">
+                      <div key={index} className="flex items-center flex-shrink-0"> {/* flex-shrink-0 to prevent shrinking circles */}
                         {/* Step circle */}
                         <div
                           className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
@@ -603,11 +620,7 @@ export default function LoanForm() {
                         {/* Connector line between circles */}
                         {index < totalPages - 1 && (
                           <div
-                            className={`h-1 w-16 mx-1 ${
-                              index < currentPage
-                                ? "bg-yellow-400"
-                                : "bg-gray-200"
-                            }`}
+                            className={`h-1 flex-grow mx-1 ${index < currentPage ? "bg-yellow-400" : "bg-gray-200"} min-w-[20px] sm:min-w-[40px]`} // Flex-grow and min-width for responsiveness
                           ></div>
                         )}
                       </div>
@@ -654,6 +667,8 @@ export default function LoanForm() {
                                   e.target.value
                                 )
                               }
+                              // This ensures the value cannot be negative or zero for age fields
+                              min={field.label.toLowerCase().includes("age") ? "1" : undefined}
                             />
                           </div>
                         );
@@ -676,7 +691,7 @@ export default function LoanForm() {
                                   date ? date.toISOString().split("T")[0] : ""
                                 )
                               }
-                              className="cursor-pointer"
+                              className="cursor-pointer w-full" // Added w-full
                             />
                           </div>
                         );
@@ -767,7 +782,7 @@ export default function LoanForm() {
                               {!formValues[field.label] ? (
                                 <div>
                                   <div
-                                    className="relative border-2 border-dashed border-gray-300 rounded-lg p-6 hover:bg-gray-50 transition-colors"
+                                    className="relative border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 hover:bg-gray-50 transition-colors" // Responsive padding
                                     onDragOver={(e) => {
                                       e.preventDefault();
                                       e.stopPropagation();
@@ -855,11 +870,11 @@ export default function LoanForm() {
                                   )}
                                 </div>
                               ) : (
-                                <div className="flex items-start gap-3 p-3 border rounded-lg bg-gray-50">
-                                  <div className="bg-blue-100 p-2 rounded">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 border rounded-lg bg-gray-50"> {/* Stack on mobile */}
+                                  <div className="bg-blue-100 p-2 rounded flex-shrink-0">
                                     <FileText className="h-5 w-5 text-blue-600" />
                                   </div>
-                                  <div className="flex-grow min-w-0">
+                                  <div className="flex-grow min-w-0 mb-2 sm:mb-0"> {/* Margin for text on mobile */}
                                     <div className="font-medium text-sm truncate">
                                       {formValues[field.label].originalName ||
                                         formValues[field.label].filename}
@@ -872,7 +887,7 @@ export default function LoanForm() {
                                     type="button"
                                     size="sm"
                                     variant="outline"
-                                    className="flex-shrink-0 h-8 px-2 text-xs border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                    className="flex-shrink-0 h-8 px-2 text-xs border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 w-full sm:w-auto" // Responsive width
                                     onClick={() => {
                                       // Remove the file from form values
                                       const newFormValues = { ...formValues };
@@ -902,12 +917,12 @@ export default function LoanForm() {
                 </div>
 
                 {/* Navigation buttons */}
-                <div className="flex justify-between pt-6">
-                  <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row justify-between pt-6 gap-4"> {/* Stack on mobile, add gap */}
+                  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto"> {/* Stack internal buttons on mobile */}
                     <Button
                       type="button"
                       onClick={prevPage}
-                      className="bg-gray-200 text-black font-medium px-6 py-2 flex items-center gap-2"
+                      className="bg-gray-200 text-black font-medium px-6 py-2 flex items-center gap-2 w-full sm:w-auto" // Responsive width
                       disabled={currentPage === 0}
                     >
                       <ArrowLeft className="h-4 w-4" /> Previous
@@ -921,7 +936,7 @@ export default function LoanForm() {
                         setTimeout(() => setMessage(""), 3000);
                       }}
                       variant="outline"
-                      className="border-gray-300 text-gray-700 font-medium"
+                      className="border-gray-300 text-gray-700 font-medium w-full sm:w-auto" // Responsive width
                     >
                       Save Progress
                     </Button>
@@ -931,7 +946,7 @@ export default function LoanForm() {
                     <Button
                       type="button"
                       onClick={nextPage}
-                      className="bg-yellow-400 text-black font-medium px-6 py-2 flex items-center gap-2"
+                      className="bg-yellow-400 text-black font-medium px-6 py-2 flex items-center gap-2 w-full sm:w-auto" // Responsive width
                     >
                       Next <ArrowRight className="h-4 w-4" />
                     </Button>
@@ -939,7 +954,7 @@ export default function LoanForm() {
                     <Button
                       type="button"
                       onClick={submitForm}
-                      className="bg-yellow-400 text-black font-medium px-8 py-2 flex items-center gap-2"
+                      className="bg-yellow-400 text-black font-medium px-8 py-2 flex items-center gap-2 w-full sm:w-auto" // Responsive width
                     >
                       Submit Application <Check className="h-4 w-4" />
                     </Button>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useMemo } from "react";
 
 interface TabsContextType {
     value: string;
@@ -24,9 +24,11 @@ interface TabsProps {
 export function Tabs({ defaultValue = "", children, className }: TabsProps) {
     const [value, setValue] = useState(defaultValue);
 
+    const contextValue = useMemo(() => ({ value, setValue }), [value]);
+
     return (
-        <TabsContext.Provider value={{ value, setValue }}>
-            <div className={`w-full ${className}`}>{children}</div>
+        <TabsContext.Provider value={contextValue}>
+            <div className={`w-full ${className || ''}`}>{children}</div>
         </TabsContext.Provider>
     );
 }
@@ -39,11 +41,8 @@ interface TabsListProps {
 export function TabsList({ children, className }: TabsListProps) {
     return (
         <div
-            // *** IMPORTANT CHANGE FOR RESPONSIVENESS ***
-            // Changed hardcoded grid-cols-4 to responsive grid classes.
-            // This ensures 1 column on smallest screens, 2 on small, and 4 on large.
             className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-white p-6 rounded-lg shadow-sm
-                ${className}`}
+                ${className || ''}`}
         >
             {children}
         </div>
@@ -63,10 +62,12 @@ export function TabsTrigger({ value, children, className }: TabsTriggerProps) {
     return (
         <button
             onClick={() => setValue(value)}
-            // min-h-[50px] is retained as per your update for consistent height
-            className={`w-full flex items-center gap-4 text-left px-4 py-3 rounded-md border border-neutral-600 text-sm transition-all hover:shadow-md min-h-[50px]
-                ${isActive ? "bg-[#f5d949] border-yellow-300 font-semibold" : "bg-white"},
-                ${className}`}
+            // Adjusted horizontal padding for responsiveness (px-3 py-2 sm:px-4 sm:py-3)
+            // min-h-[70px] for consistent height, ensuring content fits.
+            className={`w-full flex items-center gap-4 text-left rounded-md border text-sm transition-all hover:shadow-md
+                px-3 py-2 sm:px-4 sm:py-3 min-h-[70px]
+                ${isActive ? "bg-[#f5d949] border-yellow-300 font-semibold text-black" : "bg-white border-neutral-600 text-gray-800"},
+                ${className || ''}`}
         >
             {children}
         </button>
@@ -79,7 +80,7 @@ interface TabsIconProps {
 }
 
 export function TabsIcon({ children, className }: TabsIconProps) {
-    return <div className={`text-black w-5 h-5 ${className}`}>{children}</div>;
+    return <div className={`w-5 h-5 flex-shrink-0 ${className || ''}`}>{children}</div>;
 }
 
 interface TabsLabelProps {
@@ -89,7 +90,8 @@ interface TabsLabelProps {
 
 export function TabsLabel({ children, className }: TabsLabelProps) {
     return (
-        <div className={`font-medium text-xs text-gray-800 px-2 ${className}`}>
+        // Changed to flex-col to stack name and description vertically
+        <div className={`flex flex-col flex-grow ${className || ''}`}>
             {children}
         </div>
     );
@@ -102,8 +104,8 @@ interface TabsDescriptionProps {
 
 export function TabsDescription({ children, className }: TabsDescriptionProps) {
     return (
-        // h-6 overflow-hidden is retained as per your update for consistent height
-        <div className={`text-[0.5rem] text-gray-600 mt-1 h-6 overflow-hidden ${className}`}>
+        // h-6 with overflow-hidden for consistent height of description
+        <div className={`text-[0.5rem] text-gray-600 mt-1 h-6 overflow-hidden text-ellipsis ${className || ''}`}>
             {children}
         </div>
     );
