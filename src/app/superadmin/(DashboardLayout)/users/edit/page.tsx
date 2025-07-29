@@ -203,7 +203,7 @@ const EditUserPage = () => {
             <button
               type="submit"
               disabled={isUpdating}
-              className={`px-6 py-2 rounded-xl font-semibold border-2 border-black transition-all duration-300 ${
+              className={`px-6 py-2 rounded-xl font-semibold border-2 border-black transition-all duration-300 cursor-pointer ${
                 isUpdating ? "bg-gray-300 cursor-not-allowed text-black" : "bg-black text-white hover:bg-gray-800"
               }`}
             >

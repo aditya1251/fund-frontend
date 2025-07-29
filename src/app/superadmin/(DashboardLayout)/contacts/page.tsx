@@ -1,11 +1,11 @@
 "use client";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   useGetApplicationsQuery,
   useUpdateApplicationStatusMutation,
 } from "@/redux/services/applicationApi";
-import { CheckCircle, XCircle, RefreshCw } from "lucide-react";
+import { CheckCircle, XCircle, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Application {
   _id: string;
@@ -29,6 +29,9 @@ export default function SuperAdminApplications() {
   const token = session?.user?.token;
 
   const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -58,9 +61,42 @@ export default function SuperAdminApplications() {
     setTimeout(() => setNotification(null), 4000);
   };
 
-  const filteredApps = applications.filter((app: Application) =>
-    filter === "all" ? true : app.status === filter
-  );
+  // Filter applications based on search and status
+  const filteredApps = useMemo(() => {
+    return applications.filter((app: Application) => {
+      // Filter by status
+      const statusMatch = filter === "all" ? true : app.status === filter;
+      
+      // Filter by search term (name or email)
+      const searchMatch = searchTerm.trim() === "" ? true : 
+        app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        app.email.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      return statusMatch && searchMatch;
+    });
+  }, [applications, filter, searchTerm]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredApps.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedApps = filteredApps.slice(startIndex, endIndex);
+
+  // Reset to first page when filters change
+  const handleFilterChange = (newFilter: "all" | "pending" | "approved" | "rejected") => {
+    setFilter(newFilter);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+  };
+
+  const handleItemsPerPageChange = (value: number) => {
+    setItemsPerPage(value);
+    setCurrentPage(1);
+  };
 
   return (
     <div className="min-h-screen py-8 px-4">
@@ -89,13 +125,26 @@ export default function SuperAdminApplications() {
           </p>
         </div>
 
-        {/* Status Filter */}
-         <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-300 pb-4">
+        {/* Search and Filter Controls */}
+        <div className="space-y-4">
+          {/* Search Input */}
+          <div className="flex justify-center">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder="Search by name or email..."
+              className="px-4 py-2 border border-gray-300 rounded-lg w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-[#FFD439] focus:border-[#FFD439]"
+            />
+          </div>
+
+          {/* Status Filter */}
+          <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-300 pb-4">
           <nav className="flex gap-4">
             {["all", "pending", "approved", "rejected"].map((tab) => (
               <button
                 key={tab}
-                onClick={() => setFilter(tab as any)} // ✅ FIXED this line
+                onClick={() => handleFilterChange(tab as any)}
                 className={`capitalize cursor-pointer px-4 py-2 font-semibold ${
                   filter === tab
                     ? "text-black bg-[#ffd439] rounded-full shadow-[4px_4px_0_0_#000]"
@@ -114,10 +163,11 @@ export default function SuperAdminApplications() {
 
           <button
             onClick={() => refetch()}
-            className="mt-4 md:mt-0 flex items-center gap-2 bg-black text-white px-4 py-2 rounded shadow-md hover:bg-gray-800"
+            className="mt-4 md:mt-0 flex items-center gap-2 cursor-pointer bg-black text-white px-4 py-2 rounded shadow-md hover:bg-gray-800"
           >
             <RefreshCw size={16} /> Refresh
           </button>
+        </div>
         </div>
 
         {/* Table */}
@@ -145,14 +195,14 @@ export default function SuperAdminApplications() {
                     Failed to load applications
                   </td>
                 </tr>
-              ) : filteredApps.length === 0 ? (
+              ) : paginatedApps.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="text-center py-10 text-gray-500">
                     No {filter} applications found
                   </td>
                 </tr>
               ) : (
-                filteredApps.map((app: Application) => (
+                paginatedApps.map((app: Application) => (
                   <tr key={app._id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 border-b border-black">{app.name}</td>
                     <td className="px-4 py-3 border-b border-black">{app.email}</td>
@@ -199,6 +249,82 @@ export default function SuperAdminApplications() {
               )}
             </tbody>
           </table>
+
+        {/* Pagination Controls and Items Per Page */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-gray-50 p-4">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600">Show:</span>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+              className="px-3 py-1 cursor-pointer border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#FFD439]"
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+            </select>
+            <span className="text-sm text-gray-600">per page</span>
+          </div>
+
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <span>
+              Showing {filteredApps.length === 0 ? 0 : startIndex + 1} to{" "}
+              {Math.min(endIndex, filteredApps.length)} of {filteredApps.length} applications
+            </span>
+          </div>
+
+          {totalPages > 1 && (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                className="flex items-center gap-1 px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft size={16} />
+                Previous
+              </button>
+
+              <div className="flex items-center gap-1">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`px-3 py-1 border rounded ${
+                        currentPage === pageNum
+                          ? "bg-[#FFD439] border-black text-black font-semibold"
+                          : "border-gray-300 hover:bg-gray-100"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+                className="flex items-center gap-1 px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Next
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          )}
+          </div>
         </div>
       </div>
     </div>

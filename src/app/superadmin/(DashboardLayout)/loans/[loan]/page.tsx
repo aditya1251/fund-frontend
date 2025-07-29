@@ -10,7 +10,7 @@ import {
 } from "@/redux/services/loanTemplateApi";
 import LoanHeader from "./loanheader";
 import { Button } from "@/components/ui/button";
-import { Trash2, Save, Plus, ArrowUp, ArrowDown } from "lucide-react";
+import { Trash2, Save, Plus, ArrowUp, ArrowDown, ChevronDown, ChevronRight, Eye, X } from "lucide-react";
 import { toast } from "sonner";
 
 interface Field {
@@ -66,15 +66,19 @@ export default function LoanTemplateBuilder() {
   const [fieldDrafts, setFieldDrafts] = useState<Record<number, FieldDraft>>(
     {}
   );
+  const [collapsedPages, setCollapsedPages] = useState<Record<number, boolean>>(
+    {}
+  );
+  const [showPreview, setShowPreview] = useState(false);
   const router = useRouter();
 
   const { data: selectedTemplateData, refetch: refetchTemplates } = useGetLoanTemplateByIdQuery(
     selected!,
     { skip: !selected }
   );
-  const [createLoanTemplate] = useCreateLoanTemplateMutation();
-  const [updateLoanTemplate] = useUpdateLoanTemplateMutation();
-  const [deleteLoanTemplate] = useDeleteLoanTemplateMutation();
+  const [createLoanTemplate, { isLoading: isCreating }] = useCreateLoanTemplateMutation();
+  const [updateLoanTemplate, { isLoading: isUpdating }] = useUpdateLoanTemplateMutation();
+  const [deleteLoanTemplate, { isLoading: isDeleting }] = useDeleteLoanTemplateMutation();
 
   useEffect(() => {
     if (selected && selectedTemplateData) {
@@ -108,6 +112,101 @@ export default function LoanTemplateBuilder() {
     };
     const updatedDraft = { ...currentDraft, [key]: value };
     setFieldDrafts({ ...fieldDrafts, [pi]: updatedDraft });
+  };
+
+  const togglePageCollapse = (pageIndex: number) => {
+    setCollapsedPages(prev => ({
+      ...prev,
+      [pageIndex]: !prev[pageIndex]
+    }));
+  };
+
+  const renderFieldPreview = (field: Field) => {
+    switch (field.type) {
+      case "text":
+      case "email":
+        return (
+          <input
+            type={field.type}
+            placeholder={field.placeholder || field.label}
+            defaultValue={field.defaultValue}
+            className="w-full border border-gray-300 px-3 py-2 rounded bg-gray-50"
+            disabled
+          />
+        );
+      case "number":
+        return (
+          <input
+            type="number"
+            placeholder={field.placeholder || field.label}
+            defaultValue={field.defaultValue}
+            className="w-full border border-gray-300 px-3 py-2 rounded bg-gray-50"
+            disabled
+          />
+        );
+      case "textarea":
+        return (
+          <textarea
+            placeholder={field.placeholder || field.label}
+            defaultValue={field.defaultValue}
+            className="w-full border border-gray-300 px-3 py-2 rounded bg-gray-50 h-20"
+            disabled
+          />
+        );
+      case "select":
+        return (
+          <select className="w-full border border-gray-300 px-3 py-2 rounded bg-gray-50" disabled>
+            <option>{field.placeholder || "Select an option"}</option>
+            {field.options?.map((option, idx) => (
+              <option key={idx} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        );
+      case "date":
+        return (
+          <input
+            type="date"
+            defaultValue={field.defaultValue}
+            className="w-full border border-gray-300 px-3 py-2 rounded bg-gray-50"
+            disabled
+          />
+        );
+      case "checkbox":
+        return (
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              defaultChecked={field.defaultValue === "true"}
+              className="rounded"
+              disabled
+            />
+            <span className="text-sm text-gray-600">
+              {field.placeholder || field.label}
+            </span>
+          </div>
+        );
+      case "document":
+        return (
+          <div className="w-full border border-gray-300 px-3 py-2 rounded bg-gray-50 flex items-center gap-2">
+            <span className="text-gray-500">Choose file...</span>
+            <button className="px-3 py-1 bg-gray-200 rounded text-sm" disabled>
+              Browse
+            </button>
+          </div>
+        );
+      default:
+        return (
+          <input
+            type="text"
+            placeholder={field.placeholder || field.label}
+            defaultValue={field.defaultValue}
+            className="w-full border border-gray-300 px-3 py-2 rounded bg-gray-50"
+            disabled
+          />
+        );
+    }
   };
 
   
@@ -234,7 +333,6 @@ export default function LoanTemplateBuilder() {
         setSelected(null);
         refetchTemplates();
         window.location.reload();
-
       }
     } catch (error: any) {
       toast.error(
@@ -276,7 +374,7 @@ export default function LoanTemplateBuilder() {
               <h3 className="text-lg font-semibold">Add New Page</h3>
               <div className="flex flex-wrap gap-2">
                 <input
-                  className="flex-1 border border-gray-300 px-3 py-2 rounded"
+                  className="flex-1 border border-gray-300 px-3 py-2 rounded hover:ring-1 ring-black focus:outline-none focus:ring-1"
                   placeholder="Title"
                   value={pageDraft.title || ""}
                   onChange={(e) =>
@@ -284,7 +382,7 @@ export default function LoanTemplateBuilder() {
                   }
                 />
                 <input
-                  className="flex-1 border border-gray-300 px-3 py-2 rounded"
+                  className="flex-1 border border-gray-300 px-3 py-2 rounded hover:ring-1 ring-black focus:outline-none focus:ring-1"
                   placeholder="Description"
                   value={pageDraft.description || ""}
                   onChange={(e) =>
@@ -304,9 +402,24 @@ export default function LoanTemplateBuilder() {
               {template.pages.map((page, pi) => (
                 <div key={pi} className="bg-[#f9f9f9] rounded p-4 shadow-sm">
                   <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-semibold">
-                      Page {page.pageNumber}: {page.title}
-                    </h4>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => togglePageCollapse(pi)}
+                        className="p-1 hover:bg-gray-200 rounded transition-colors cursor-pointer"
+                      >
+                        {collapsedPages[pi] ? (
+                          <ChevronRight className="w-4 h-4" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4" />
+                        )}
+                      </button>
+                      <h4 className="font-semibold">
+                        Page {page.pageNumber}: {page.title}
+                      </h4>
+                      <span className="text-sm text-gray-500">
+                        ({page.fields.length} field{page.fields.length !== 1 ? 's' : ''})
+                      </span>
+                    </div>
                     {!page.fixed && (
                       <div className="flex items-center gap-3">
                         <Button
@@ -331,11 +444,13 @@ export default function LoanTemplateBuilder() {
                     )}
                   </div>
 
-                  {/* Field Inputs */}
-                  <div className="flex flex-col gap-2 mb-2">
+                  {!collapsedPages[pi] && (
+                    <>
+                      {/* Field Inputs */}
+                      <div className="flex flex-col gap-2 mb-2">
                     <div className="flex flex-wrap gap-2">
                       <input
-                        className="border border-gray-300 px-2 py-1 rounded flex-1"
+                        className="border border-gray-300 px-2 py-1 rounded flex-1 hover:ring-1 ring-black focus:outline-none focus:ring-1"
                         placeholder="Field Label"
                         value={fieldDrafts[pi]?.label || ""}
                         onChange={(e) =>
@@ -343,7 +458,7 @@ export default function LoanTemplateBuilder() {
                         }
                       />
                       <select
-                        className="border border-gray-300 px-2 py-1 rounded w-32"
+                        className="border border-gray-300 px-2 py-1 rounded w-32 cursor-pointer hover:ring-1 ring-black focus:outline-none focus:ring-1"
                         value={fieldDrafts[pi]?.type || "text"}
                         onChange={(e) =>
                           updateFieldDraft(pi, "type", e.target.value)
@@ -364,6 +479,7 @@ export default function LoanTemplateBuilder() {
                       </select>
                       <label className="flex items-center gap-1">
                         <input
+                          className="cursor-pointer"
                           type="checkbox"
                           checked={fieldDrafts[pi]?.required || false}
                           onChange={(e) =>
@@ -375,7 +491,7 @@ export default function LoanTemplateBuilder() {
                     </div>
                     <div className="flex flex-wrap gap-2">
                       <input
-                        className="border border-gray-300 px-2 py-1 rounded flex-1"
+                        className="border border-gray-300 px-2 py-1 rounded flex-1 hover:ring-1 ring-black focus:outline-none focus:ring-1"
                         placeholder="Placeholder"
                         value={fieldDrafts[pi]?.placeholder || ""}
                         onChange={(e) =>
@@ -383,7 +499,7 @@ export default function LoanTemplateBuilder() {
                         }
                       />
                       <input
-                        className="border border-gray-300 px-2 py-1 rounded flex-1"
+                        className="border border-gray-300 px-2 py-1 rounded flex-1 hover:ring-1 ring-black focus:outline-none focus:ring-1"
                         placeholder="Default Value"
                         value={fieldDrafts[pi]?.defaultValue || ""}
                         onChange={(e) =>
@@ -395,7 +511,7 @@ export default function LoanTemplateBuilder() {
                       <>
                         <div className="flex flex-wrap gap-2">
                           <input
-                            className="border border-gray-300 px-2 py-1 rounded flex-1"
+                            className="border border-gray-300 px-2 py-1 rounded flex-1 hover:ring-1 ring-black focus:outline-none focus:ring-1"
                             placeholder="Type options separated by commas"
                             onKeyDown={(e) => {
                               if (e.key === "Enter" || e.key === ",") {
@@ -487,6 +603,8 @@ export default function LoanTemplateBuilder() {
                       )}
                     </div>
                   ))}
+                    </>
+                  )}
                 </div>
               ))}
             </div>
@@ -494,19 +612,138 @@ export default function LoanTemplateBuilder() {
             {/* Save/Delete */}
             <div className="flex items-center gap-4 pt-6 border-t">
               <Button
+                onClick={() => setShowPreview(true)}
+                className="flex items-center gap-2 bg-black text-white px-6 py-2 shadow hover:bg-gray-800 cursor-pointer">
+                <Eye className="w-4 h-4" />
+                Preview Template
+              </Button>
+              <Button
                 onClick={saveTemplate}
-                className="flex items-center gap-2 bg-[#ffd439] text-black px-6 py-2 shadow hover:bg-yellow-300 cursor-pointer">
-                <Save className="w-4 h-4" />
-                {template._id ? "Update Template" : "Save Template"}
+                disabled={isCreating || isUpdating}
+                className={`flex items-center gap-2 px-6 py-2 shadow ${
+                  isCreating || isUpdating
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-[#ffd439] hover:bg-yellow-300 cursor-pointer"
+                } text-black`}>
+                {isCreating || isUpdating ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                    {template._id ? "Updating..." : "Creating..."}
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4" />
+                    {template._id ? "Update Template" : "Save Template"}
+                  </>
+                )}
               </Button>
               {template._id && (
                 <Button
                   onClick={handleDeleteTemplate}
-                  className="flex items-center gap-2 bg-red-600 text-white px-6 py-2 shadow hover:bg-red-700 cursor-pointer">
-                  <Trash2 className="w-4 h-4" /> Delete Template
+                  disabled={isDeleting}
+                  className={`flex items-center gap-2 px-6 py-2 shadow ${
+                    isDeleting
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-red-600 hover:bg-red-700 cursor-pointer"
+                  } text-white`}>
+                  {isDeleting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="w-4 h-4" /> Delete Template
+                    </>
+                  )}
                 </Button>
               )}
-              
+            </div>
+          </div>
+        )}
+
+        {/* Preview Modal */}
+        {showPreview && (
+          <div className="fixed inset-0 z-50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-[8px_8px_0_0_#000] border-2 border-black w-full md:max-w-2xl 2xl:max-w-3xl max-h-[90vh] overflow-hidden">
+              {/* Preview Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <div>
+                  <h2 className="text-2xl font-bold text-black">Template Preview</h2>
+                  <p className="text-gray-600 mt-1">{template.name}</p>
+                </div>
+                <button
+                  onClick={() => setShowPreview(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Preview Content */}
+              <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                <div className="space-y-8">
+                  {template.pages.map((page, pageIndex) => (
+                    <div key={pageIndex} className="bg-gray-50 rounded-lg p-6">
+                      <div className="mb-6">
+                        <h3 className="text-xl font-semibold text-black mb-2">
+                          {page.title}
+                        </h3>
+                        {page.description && (
+                          <p className="text-gray-600 text-sm">{page.description}</p>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {page.fields.map((field, fieldIndex) => (
+                          <div key={fieldIndex} className="space-y-2">
+                            <label className="block text-sm font-medium text-gray-700">
+                              {field.label}
+                              {field.required && (
+                                <span className="text-red-500 ml-1">*</span>
+                              )}
+                            </label>
+                            {renderFieldPreview(field)}
+                          </div>
+                        ))}
+                      </div>
+
+                      {pageIndex < template.pages.length - 1 && (
+                        <div className="flex justify-between items-center mt-8 pt-4 border-t border-gray-300">
+                          <div className="text-sm text-gray-500">
+                            Page {page.pageNumber} of {template.pages.length}
+                          </div>
+                          <div className="flex gap-2">
+                            <button className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100" disabled>
+                              Previous
+                            </button>
+                            <button className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800" disabled>
+                              Next
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {pageIndex === template.pages.length - 1 && (
+                        <div className="flex justify-between items-center mt-8 pt-4 border-t border-gray-300">
+                          <div className="text-sm text-gray-500">
+                            Final Page ({template.pages.length} of {template.pages.length})
+                          </div>
+                          <button className="px-6 py-2 bg-yellow-500 text-white cursor-not-allowed rounded hover:bg-yellow-600" disabled>
+                            Submit Application
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  
+                  {template.pages.length === 0 && (
+                    <div className="text-center py-10 text-gray-500">
+                      No pages added to this template yet.
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         )}
