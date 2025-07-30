@@ -122,41 +122,41 @@ export default function LoanDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen py-10 px-4">
+    <div className="min-h-screen py-6 sm:py-10 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Page Header */}
-        <h1 className="text-4xl md:text-5xl font-bold text-black mb-10 text-center">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6 sm:mb-10 text-center">
           LOAN DASHBOARD
         </h1>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10 max-w-3xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-8 sm:mb-10 max-w-3xl mx-auto">
           {/* Add New Buttons */}
-          <Button className="flex items-center gap-2 bg-black text-white hover:bg-gray-900 shadow-md justify-center w-full">
-            <HandCoins className="w-5 h-5" />
-            Add New Private Loan
+          <Button className="flex items-center gap-2 bg-black text-white hover:bg-gray-900 shadow-md justify-center w-full py-4 sm:py-3">
+            <HandCoins className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-xs sm:text-sm">Add New Private Loan</span>
           </Button>
-          <Button className="flex items-center gap-2 bg-black text-white hover:bg-gray-900 shadow-md justify-center w-full">
-            <Building className="w-5 h-5" />
-            Add New Government Loan
+          <Button className="flex items-center gap-2 bg-black text-white hover:bg-gray-900 shadow-md justify-center w-full py-4 sm:py-3">
+            <Building className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-xs sm:text-sm">Add New Government Loan</span>
           </Button>
-          <Button className="flex items-center gap-2 bg-black text-white hover:bg-gray-900 shadow-md justify-center w-full">
-            <ShieldCheck className="w-5 h-5" />
-            Add New Insurance Plan
+          <Button className="flex items-center gap-2 bg-black text-white hover:bg-gray-900 shadow-md justify-center w-full py-4 sm:py-3">
+            <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-xs sm:text-sm">Add New Insurance Plan</span>
           </Button>
 
           {/* View Applications */}
           <Button
             onClick={() => router.push("/superadmin/loans/applications")}
-            className="flex items-center hover:cursor-pointer gap-2 bg-[#ffd439] text-black font-semibold shadow-md hover:brightness-110 justify-center w-full"
+            className="flex items-center hover:cursor-pointer gap-2 bg-[#ffd439] text-black font-semibold shadow-md hover:brightness-110 justify-center w-full py-4 sm:py-3"
           >
-            <FileText className="w-5 h-5" />
-            View All Applications
+            <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-xs sm:text-sm">View All Applications</span>
           </Button>
         </div>
 
         {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
           {isLoading
             ? // Show loading state for statistics
               Array(3)
@@ -164,16 +164,16 @@ export default function LoanDashboardPage() {
                 .map((_, i) => (
                   <div
                     key={i}
-                    className="bg-white rounded-xl shadow-[6px_6px_0_0_#000] p-6 animate-pulse"
+                    className="bg-white rounded-xl shadow-[4px_4px_0_0_#000] sm:shadow-[6px_6px_0_0_#000] p-4 sm:p-6 animate-pulse"
                   >
-                    <div className="h-6 bg-gray-200 rounded w-2/3 mb-4"></div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="h-5 sm:h-6 bg-gray-200 rounded w-2/3 mb-3 sm:mb-4"></div>
+                    <div className="grid grid-cols-2 gap-2 sm:gap-4">
                       {Array(4)
                         .fill(0)
                         .map((_, j) => (
                           <div
                             key={j}
-                            className="h-20 bg-gray-200 rounded"
+                            className="h-16 sm:h-20 bg-gray-200 rounded"
                           ></div>
                         ))}
                     </div>
@@ -182,12 +182,12 @@ export default function LoanDashboardPage() {
             : Object.entries(loanStats).map(([category, stats]) => (
                 <div
                   key={category}
-                  className="bg-white rounded-xl shadow-[6px_6px_0_0_#000] p-6"
+                  className="bg-white rounded-xl shadow-[4px_4px_0_0_#000] sm:shadow-[6px_6px_0_0_#000] p-4 sm:p-6"
                 >
-                  <h4 className="text-xl font-semibold text-black mb-4">
+                  <h4 className="text-lg sm:text-xl font-semibold text-black mb-3 sm:mb-4">
                     {category}
                   </h4>
-                  <div className="grid grid-cols-2 gap-4 text-center">
+                  <div className="grid grid-cols-2 gap-2 sm:gap-4 text-center">
                     <StatCard label="Total" value={stats.total} />
                     <StatCard
                       label="Approved"
@@ -210,20 +210,21 @@ export default function LoanDashboardPage() {
         </div>
 
         {/* Chart */}
-        <div className=" space-y-4 mb-8">
+        <div className="mb-6 sm:mb-8">
           <LoanCategoryChart />
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-xl shadow-[6px_6px_0_0_#000] p-6">
+        <div className="bg-white rounded-xl shadow-[4px_4px_0_0_#000] sm:shadow-[6px_6px_0_0_#000] p-4 sm:p-6">
           {/* Header with View All */}
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl flex justify-center gap-2 items-center font-semibold text-black">
-              <FileText className="w-8 h-8" /> Recent Loan Requests
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <h2 className="text-lg sm:text-xl flex justify-center gap-2 items-center font-semibold text-black">
+              <FileText className="w-6 h-6 sm:w-8 sm:h-8" /> 
+              <span>Recent Loan Requests</span>
             </h2>
             <button
               onClick={() => router.push("/superadmin/loans/applications")}
-              className="text-sm font-medium text-[#ffd439] hover:underline hover:text-black transition"
+              className="text-xs sm:text-sm font-medium text-[#ffd439] hover:underline hover:text-black transition"
             >
               View All Requests →
             </button>
@@ -231,15 +232,15 @@ export default function LoanDashboardPage() {
 
           {/* Table */}
           <div className="overflow-x-auto rounded-lg border border-gray-200">
-            <table className="w-full text-sm text-left">
+            <table className="w-full text-xs sm:text-sm text-left">
               <thead className="bg-black text-white">
                 <tr>
-                  <th className="py-3 px-4">ID</th>
-                  <th className="py-3 px-4">Name</th>
-                  <th className="py-3 px-4">Category</th>
-                  <th className="py-3 px-4">Amount</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4">Date</th>
+                  <th className="py-2 px-2 sm:py-3 sm:px-4">ID</th>
+                  <th className="py-2 px-2 sm:py-3 sm:px-4">Name</th>
+                  <th className="py-2 px-2 sm:py-3 sm:px-4 hidden sm:table-cell">Category</th>
+                  <th className="py-2 px-2 sm:py-3 sm:px-4">Amount</th>
+                  <th className="py-2 px-2 sm:py-3 sm:px-4">Status</th>
+                  <th className="py-2 px-2 sm:py-3 sm:px-4">Date</th>
                 </tr>
               </thead>
               <tbody>
@@ -249,7 +250,7 @@ export default function LoanDashboardPage() {
                     .fill(0)
                     .map((_, i) => (
                       <tr key={i} className="border-b animate-pulse">
-                        <td colSpan={6} className="py-4">
+                        <td colSpan={6} className="py-3 sm:py-4">
                           <div className="h-4 bg-gray-200 rounded w-full"></div>
                         </td>
                       </tr>
@@ -260,17 +261,27 @@ export default function LoanDashboardPage() {
                       key={row.id}
                       className="border-b hover:bg-gray-50 transition"
                     >
-                      <td className="py-3 px-4">{row.id.substring(0, 6)}...</td>
-                      <td className="py-3 px-4">{row.name}</td>
-                      <td className="py-3 px-4">{row.category}</td>
-                      <td className="py-3 px-4">{row.amount}</td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-2">
+                      <td className="py-2 px-2 sm:py-3 sm:px-4">
+                        <span className="hidden sm:inline">{row.id.substring(0, 6)}...</span>
+                        <span className="sm:hidden">{row.id.substring(0, 4)}..</span>
+                      </td>
+                      <td className="py-2 px-2 sm:py-3 sm:px-4 truncate max-w-[80px] sm:max-w-none">
+                        {row.name}
+                      </td>
+                      <td className="py-2 px-2 sm:py-3 sm:px-4 hidden sm:table-cell">
+                        {row.category}
+                      </td>
+                      <td className="py-2 px-2 sm:py-3 sm:px-4">{row.amount}</td>
+                      <td className="py-2 px-2 sm:py-3 sm:px-4">
+                        <div className="flex items-center gap-1 sm:gap-2">
                           {renderStatusIcon(row.status)}
                           <span className="capitalize">{row.status}</span>
                         </div>
                       </td>
-                      <td className="py-3 px-4">{row.date}</td>
+                      <td className="py-2 px-2 sm:py-3 sm:px-4">
+                        <span className="hidden sm:inline">{row.date}</span>
+                        <span className="sm:hidden">{row.date.substring(5)}</span>
+                      </td>
                     </tr>
                   ))
                 ) : (
@@ -306,9 +317,9 @@ const StatCard = ({
     gray: "bg-gray-100 text-black",
   };
   return (
-    <div className={`rounded-xl p-4 ${colorMap[color]} shadow-md`}>
-      <div className="text-sm font-semibold">{label}</div>
-      <div className="text-xl font-bold">{value}</div>
+    <div className={`rounded-lg sm:rounded-xl p-2 sm:p-3 ${colorMap[color]} shadow`}>
+      <div className="text-xs sm:text-sm font-semibold">{label}</div>
+      <div className="text-base sm:text-xl font-bold">{value}</div>
     </div>
   );
 };
@@ -316,8 +327,8 @@ const StatCard = ({
 // Status Icon Renderer
 const renderStatusIcon = (status: string) => {
   if (status === "Approved")
-    return <CheckCircle className="text-green-600 w-5 h-5" />;
+    return <CheckCircle className="text-green-600 w-4 h-4 sm:w-5 sm:h-5" />;
   if (status === "Pending")
-    return <Hourglass className="text-yellow-500 w-5 h-5" />;
-  return <XCircle className="text-red-500 w-5 h-5" />;
+    return <Hourglass className="text-yellow-500 w-4 h-4 sm:w-5 sm:h-5" />;
+  return <XCircle className="text-red-500 w-4 h-4 sm:w-5 sm:h-5" />;
 };

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import dynamic from "next/dynamic";
-import { Box, IconButton, Menu, MenuItem } from "@mui/material";
+import { Box, IconButton, Menu, MenuItem, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DashboardCard from "@/app/rm/(DashboardLayout)/components/shared/DashboardCard";
@@ -22,13 +22,14 @@ const LoanCategoryChart = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const session = useSession();
-    const rmId = session.data?.user?.id;
   
-    // Fetch all loan data
-    const { data: loansData = [], isLoading } = useGetLoansByRmIdQuery(
-      rmId || ""
-    );
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const session = useSession();
+  const rmId = session.data?.user?.id;
+  
+  // Fetch all loan data
+  const { data: loansData = [], isLoading } = useGetLoansByRmIdQuery(rmId || "");
   
   // State for chart data
   const [chartData, setChartData] = React.useState({
@@ -73,8 +74,6 @@ const LoanCategoryChart = () => {
     }
   }, [loansData]);
 
-  const theme = useTheme();
-
   const primary = "#FFD439"; // your website's yellow
   const secondary = "#111111"; // black
   const tertiary = "#EF4444"; // red for rejection
@@ -82,14 +81,25 @@ const LoanCategoryChart = () => {
   const chartOptions: ApexCharts.ApexOptions = {
     chart: {
       type: "bar",
-      toolbar: { show: false },
+      toolbar: { 
+        show: true,
+        tools: {
+          download: true,
+          selection: false,
+          zoom: false,
+          zoomin: false,
+          zoomout: false,
+          pan: false,
+          reset: false
+        }
+      },
       foreColor: "#333",
       fontFamily: "'Plus Jakarta Sans', sans-serif",
     },
     plotOptions: {
       bar: {
         borderRadius: 8,
-        columnWidth: "45%",
+        columnWidth: isMobile ? "60%" : "45%",
         distributed: false,
       },
     },
@@ -105,25 +115,90 @@ const LoanCategoryChart = () => {
       categories: ["Private", "Government", "Insurance"],
       axisBorder: { show: false },
       labels: {
-        style: { fontWeight: 600 },
+        style: { 
+          fontWeight: 600,
+          fontSize: isMobile ? "10px" : "12px"
+        },
       },
     },
     yaxis: {
       labels: {
-        style: { fontWeight: 600 },
+        style: { 
+          fontWeight: 600,
+          fontSize: isMobile ? "10px" : "12px"
+        },
       },
     },
     legend: {
       show: true,
       position: "top",
+      horizontalAlign: "center",
       fontWeight: 500,
+      fontSize: isMobile ? "12px" : "14px",
       markers: {
-        size: 12,
+        size: isMobile ? 4 : 6,
       },
+      itemMargin: {
+        horizontal: isMobile ? 8 : 12,
+      }
     },
     tooltip: {
       theme: theme.palette.mode === "dark" ? "dark" : "light",
+      style: {
+        fontSize: isMobile ? "12px" : "14px"
+      }
     },
+    responsive: [
+      {
+        breakpoint: 600,
+        options: {
+          plotOptions: {
+            bar: {
+              horizontal: false,
+              columnWidth: "60%",
+            }
+          },
+          chart: {
+            height: 350
+          },
+          legend: {
+            position: "top",
+            horizontalAlign: "center",
+            fontSize: "12px",
+            offsetY: 0,
+            itemMargin: {
+              horizontal: 6,
+            }
+          }
+        }
+      },
+      {
+        breakpoint: 480,
+        options: {
+          plotOptions: {
+            bar: {
+              columnWidth: "70%",
+            }
+          },
+          chart: {
+            height: 300
+          },
+          legend: {
+            fontSize: "10px",
+            markers: {
+              size: 5
+            }
+          },
+          xaxis: {
+            labels: {
+              style: {
+                fontSize: "9px"
+              }
+            }
+          }
+        }
+      }
+    ]
   };
 
   const chartSeries = [
@@ -152,8 +227,9 @@ const LoanCategoryChart = () => {
             aria-controls={open ? "chart-menu" : undefined}
             aria-haspopup="true"
             onClick={handleClick}
+            size={isMobile ? "small" : "medium"}
           >
-            <MoreVertIcon />
+            <MoreVertIcon fontSize={isMobile ? "small" : "medium"} />
           </IconButton>
           <Menu
             id="chart-menu"
@@ -165,7 +241,7 @@ const LoanCategoryChart = () => {
             }}
           >
             {menuOptions.map((option) => (
-              <MenuItem key={option} onClick={handleClose}>
+              <MenuItem key={option} onClick={handleClose} dense={isMobile}>
                 {option}
               </MenuItem>
             ))}
@@ -178,7 +254,7 @@ const LoanCategoryChart = () => {
           options={chartOptions}
           series={chartSeries}
           type="bar"
-          height={350}
+          height={isMobile ? 300 : 350}
         />
       </Box>
     </DashboardCard>
