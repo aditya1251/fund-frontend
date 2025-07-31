@@ -10,7 +10,17 @@ import {
 } from "@/redux/services/loanTemplateApi";
 import LoanHeader from "./loanheader";
 import { Button } from "@/components/ui/button";
-import { Trash2, Save, Plus, ArrowUp, ArrowDown, ChevronDown, ChevronRight, Eye, X } from "lucide-react";
+import {
+  Trash2,
+  Save,
+  Plus,
+  ArrowUp,
+  ArrowDown,
+  ChevronDown,
+  ChevronRight,
+  Eye,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
 
 interface Field {
@@ -73,13 +83,14 @@ export default function LoanTemplateBuilder() {
   const [previewCurrentPage, setPreviewCurrentPage] = useState(0);
   const router = useRouter();
 
-  const { data: selectedTemplateData, refetch: refetchTemplates } = useGetLoanTemplateByIdQuery(
-    selected!,
-    { skip: !selected }
-  );
-  const [createLoanTemplate, { isLoading: isCreating }] = useCreateLoanTemplateMutation();
-  const [updateLoanTemplate, { isLoading: isUpdating }] = useUpdateLoanTemplateMutation();
-  const [deleteLoanTemplate, { isLoading: isDeleting }] = useDeleteLoanTemplateMutation();
+  const { data: selectedTemplateData, refetch: refetchTemplates } =
+    useGetLoanTemplateByIdQuery(selected!, { skip: !selected });
+  const [createLoanTemplate, { isLoading: isCreating }] =
+    useCreateLoanTemplateMutation();
+  const [updateLoanTemplate, { isLoading: isUpdating }] =
+    useUpdateLoanTemplateMutation();
+  const [deleteLoanTemplate, { isLoading: isDeleting }] =
+    useDeleteLoanTemplateMutation();
 
   useEffect(() => {
     if (selected && selectedTemplateData) {
@@ -116,9 +127,9 @@ export default function LoanTemplateBuilder() {
   };
 
   const togglePageCollapse = (pageIndex: number) => {
-    setCollapsedPages(prev => ({
+    setCollapsedPages((prev) => ({
       ...prev,
-      [pageIndex]: !prev[pageIndex]
+      [pageIndex]: !prev[pageIndex],
     }));
   };
 
@@ -156,7 +167,10 @@ export default function LoanTemplateBuilder() {
         );
       case "select":
         return (
-          <select className="w-full border border-gray-300 px-3 py-2 rounded bg-gray-50" disabled>
+          <select
+            className="w-full border border-gray-300 px-3 py-2 rounded bg-gray-50"
+            disabled
+          >
             <option>{field.placeholder || "Select an option"}</option>
             {field.options?.map((option, idx) => (
               <option key={idx} value={option}>
@@ -209,8 +223,6 @@ export default function LoanTemplateBuilder() {
         );
     }
   };
-
-  
 
   const addPage = () => {
     if (!pageDraft.title?.trim()) {
@@ -343,18 +355,20 @@ export default function LoanTemplateBuilder() {
   };
 
   return (
-    <div className="min-h-screen px-4 py-6">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <div className="min-h-screen px-2 py-4 md:px-4 md:py-6">
+      <div className="max-w-5xl mx-auto space-y-4 md:space-y-6">
         <LoanHeader loan={loan} selected={selected} setSelected={setSelected} />
 
         {selected && (
-          <div className="bg-white rounded-xl shadow-[6px_6px_0_0_#000] p-8 space-y-6">
+          <div className="bg-white rounded-xl shadow-[4px_4px_0_0_#000] md:shadow-[6px_6px_0_0_#000] p-4 md:p-6 space-y-4 md:space-y-6">
             {/* Basic Info */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block mb-2 font-medium">Loan Name</label>
+                <label className="block mb-1 md:mb-2 text-sm md:text-base font-medium">
+                  Loan Name
+                </label>
                 <input
-                  className="w-full border border-gray-300 px-3 py-2 rounded"
+                  className="w-full border border-gray-300 px-3 py-2 rounded text-sm md:text-base"
                   value={template.name}
                   onChange={(e) => handleInputChange(e, "name")}
                 />
@@ -362,20 +376,24 @@ export default function LoanTemplateBuilder() {
             </div>
 
             <div>
-              <label className="block mb-2 font-medium">Description</label>
+              <label className="block mb-1 md:mb-2 text-sm md:text-base font-medium">
+                Description
+              </label>
               <textarea
-                className="w-full border border-gray-300 px-3 py-2 rounded"
+                className="w-full border border-gray-300 px-3 py-2 rounded text-sm md:text-base"
                 value={template.description}
                 onChange={(e) => handleInputChange(e, "description")}
               />
             </div>
 
             {/* Add New Page */}
-            <div className="border-t pt-6 space-y-4">
-              <h3 className="text-lg font-semibold">Add New Page</h3>
-              <div className="flex flex-wrap gap-2">
+            <div className="border-t pt-4 md:pt-6 space-y-3 md:space-y-4">
+              <h3 className="text-base md:text-lg font-semibold">
+                Add New Page
+              </h3>
+              <div className="flex flex-col sm:flex-row flex-wrap gap-2">
                 <input
-                  className="flex-1 border border-gray-300 px-3 py-2 rounded hover:ring-1 ring-black focus:outline-none focus:ring-1"
+                  className="flex-1 border border-gray-300 px-3 py-2 rounded text-sm md:text-base"
                   placeholder="Title"
                   value={pageDraft.title || ""}
                   onChange={(e) =>
@@ -383,7 +401,7 @@ export default function LoanTemplateBuilder() {
                   }
                 />
                 <input
-                  className="flex-1 border border-gray-300 px-3 py-2 rounded hover:ring-1 ring-black focus:outline-none focus:ring-1"
+                  className="flex-1 border border-gray-300 px-3 py-2 rounded text-sm md:text-base"
                   placeholder="Description"
                   value={pageDraft.description || ""}
                   onChange={(e) =>
@@ -392,16 +410,20 @@ export default function LoanTemplateBuilder() {
                 />
                 <Button
                   onClick={addPage}
-                  className="flex items-center gap-2 bg-black text-white px-4 py-2 shadow hover:bg-gray-800 cursor-pointer">
+                  className="flex items-center gap-2 bg-black text-white px-3 py-1.5 md:px-4 md:py-2 text-sm shadow hover:bg-gray-800 cursor-pointer"
+                >
                   <Plus className="w-4 h-4" /> Add Page
                 </Button>
               </div>
             </div>
 
             {/* Pages & Fields */}
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {template.pages.map((page, pi) => (
-                <div key={pi} className="bg-[#f9f9f9] rounded p-4 shadow-sm">
+                <div
+                  key={pi}
+                  className="bg-[#f9f9f9] rounded p-3 md:p-4 shadow-sm"
+                >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <button
@@ -414,32 +436,36 @@ export default function LoanTemplateBuilder() {
                           <ChevronDown className="w-4 h-4" />
                         )}
                       </button>
-                      <h4 className="font-semibold">
+                      <h4 className="font-semibold text-sm md:text-base">
                         Page {page.pageNumber}: {page.title}
                       </h4>
-                      <span className="text-sm text-gray-500">
-                        ({page.fields.length} field{page.fields.length !== 1 ? 's' : ''})
+                      <span className="text-xs md:text-sm text-gray-500">
+                        ({page.fields.length} field
+                        {page.fields.length !== 1 ? "s" : ""})
                       </span>
                     </div>
                     {!page.fixed && (
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 md:gap-3">
                         <Button
                           onClick={() => movePage(pi, "up")}
                           variant="ghost"
-                          className="hover:bg-gray-100 cursor-pointer">
-                          <ArrowUp />
+                          className="hover:bg-gray-100 p-1.5 cursor-pointer"
+                        >
+                          <ArrowUp className="w-4 h-4" />
                         </Button>
                         <Button
                           onClick={() => movePage(pi, "down")}
                           variant="ghost"
-                          className="hover:bg-gray-100 cursor-pointer">
-                          <ArrowDown />
+                          className="hover:bg-gray-100 p-1.5 cursor-pointer"
+                        >
+                          <ArrowDown className="w-4 h-4" />
                         </Button>
                         <Button
                           onClick={() => removePage(pi)}
                           variant="ghost"
-                          className="text-red-600 hover:bg-gray-100 cursor-pointer">
-                          <Trash2 />
+                          className="text-red-600 hover:bg-gray-100 p-1.5 cursor-pointer"
+                        >
+                          <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
                     )}
@@ -449,161 +475,185 @@ export default function LoanTemplateBuilder() {
                     <>
                       {/* Field Inputs */}
                       <div className="flex flex-col gap-2 mb-2">
-                    <div className="flex flex-wrap gap-2">
-                      <input
-                        className="border border-gray-300 px-2 py-1 rounded flex-1 hover:ring-1 ring-black focus:outline-none focus:ring-1"
-                        placeholder="Field Label"
-                        value={fieldDrafts[pi]?.label || ""}
-                        onChange={(e) =>
-                          updateFieldDraft(pi, "label", e.target.value)
-                        }
-                      />
-                      <select
-                        className="border border-gray-300 px-2 py-1 rounded w-32 cursor-pointer hover:ring-1 ring-black focus:outline-none focus:ring-1"
-                        value={fieldDrafts[pi]?.type || "text"}
-                        onChange={(e) =>
-                          updateFieldDraft(pi, "type", e.target.value)
-                        }>
-                        {[
-                          "text",
-                          "number",
-                          "select",
-                          "date",
-                          "checkbox",
-                          "textarea",
-                          "document",
-                        ].map((t) => (
-                          <option key={t} value={t}>
-                            {t}
-                          </option>
-                        ))}
-                      </select>
-                      <label className="flex items-center gap-1">
-                        <input
-                          className="cursor-pointer"
-                          type="checkbox"
-                          checked={fieldDrafts[pi]?.required || false}
-                          onChange={(e) =>
-                            updateFieldDraft(pi, "required", e.target.checked)
-                          }
-                        />
-                        Required
-                      </label>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      <input
-                        className="border border-gray-300 px-2 py-1 rounded flex-1 hover:ring-1 ring-black focus:outline-none focus:ring-1"
-                        placeholder="Placeholder"
-                        value={fieldDrafts[pi]?.placeholder || ""}
-                        onChange={(e) =>
-                          updateFieldDraft(pi, "placeholder", e.target.value)
-                        }
-                      />
-                      <input
-                        className="border border-gray-300 px-2 py-1 rounded flex-1 hover:ring-1 ring-black focus:outline-none focus:ring-1"
-                        placeholder="Default Value"
-                        value={fieldDrafts[pi]?.defaultValue || ""}
-                        onChange={(e) =>
-                          updateFieldDraft(pi, "defaultValue", e.target.value)
-                        }
-                      />
-                    </div>
-                    {fieldDrafts[pi]?.type === "select" && (
-                      <>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-col sm:flex-row flex-wrap gap-2">
                           <input
-                            className="border border-gray-300 px-2 py-1 rounded flex-1 hover:ring-1 ring-black focus:outline-none focus:ring-1"
-                            placeholder="Type options separated by commas"
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" || e.key === ",") {
-                                e.preventDefault();
-                                const val = (
-                                  e.currentTarget.value || ""
-                                ).trim();
-                                if (val) {
-                                  const newOpts = val
-                                    .split(",")
-                                    .map((opt) => opt.trim())
-                                    .filter((opt) => opt !== "");
-                                  updateFieldDraft(pi, "options", [
-                                    ...(fieldDrafts[pi]?.options || []),
-                                    ...newOpts,
-                                  ]);
-                                  e.currentTarget.value = "";
-                                }
+                            className="border border-gray-300 px-2 py-1 rounded flex-1 text-sm hover:ring-1 ring-black focus:outline-none focus:ring-1"
+                            placeholder="Field Label"
+                            value={fieldDrafts[pi]?.label || ""}
+                            onChange={(e) =>
+                              updateFieldDraft(pi, "label", e.target.value)
+                            }
+                          />
+                          <select
+                            className="border border-gray-300 px-2 py-1 rounded w-full sm:w-32 text-sm cursor-pointer hover:ring-1 ring-black focus:outline-none focus:ring-1"
+                            value={fieldDrafts[pi]?.type || "text"}
+                            onChange={(e) =>
+                              updateFieldDraft(pi, "type", e.target.value)
+                            }
+                          >
+                            {[
+                              "text",
+                              "number",
+                              "select",
+                              "date",
+                              "checkbox",
+                              "textarea",
+                              "document",
+                            ].map((t) => (
+                              <option key={t} value={t}>
+                                {t}
+                              </option>
+                            ))}
+                          </select>
+                          <label className="flex items-center gap-1 text-sm">
+                            <input
+                              className="cursor-pointer"
+                              type="checkbox"
+                              checked={fieldDrafts[pi]?.required || false}
+                              onChange={(e) =>
+                                updateFieldDraft(
+                                  pi,
+                                  "required",
+                                  e.target.checked
+                                )
                               }
-                            }}
-                            onBlur={(e) => {
-                              const val = (e.currentTarget.value || "").trim();
-                              if (val) {
-                                const newOpts = val
-                                  .split(",")
-                                  .map((opt) => opt.trim())
-                                  .filter((opt) => opt !== "");
-                                updateFieldDraft(pi, "options", [
-                                  ...(fieldDrafts[pi]?.options || []),
-                                  ...newOpts,
-                                ]);
-                                e.currentTarget.value = "";
-                              }
-                            }}
+                            />
+                            Required
+                          </label>
+                        </div>
+                        <div className="flex flex-col sm:flex-row flex-wrap gap-2">
+                          <input
+                            className="border border-gray-300 px-2 py-1 rounded flex-1 text-sm hover:ring-1 ring-black focus:outline-none focus:ring-1"
+                            placeholder="Placeholder"
+                            value={fieldDrafts[pi]?.placeholder || ""}
+                            onChange={(e) =>
+                              updateFieldDraft(
+                                pi,
+                                "placeholder",
+                                e.target.value
+                              )
+                            }
+                          />
+                          <input
+                            className="border border-gray-300 px-2 py-1 rounded flex-1 text-sm hover:ring-1 ring-black focus:outline-none focus:ring-1"
+                            placeholder="Default Value"
+                            value={fieldDrafts[pi]?.defaultValue || ""}
+                            onChange={(e) =>
+                              updateFieldDraft(
+                                pi,
+                                "defaultValue",
+                                e.target.value
+                              )
+                            }
                           />
                         </div>
+                        {fieldDrafts[pi]?.type === "select" && (
+                          <>
+                            <div className="flex flex-col sm:flex-row flex-wrap gap-2">
+                              <input
+                                className="border border-gray-300 px-2 py-1 rounded flex-1 text-sm hover:ring-1 ring-black focus:outline-none focus:ring-1"
+                                placeholder="Type options separated by commas"
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" || e.key === ",") {
+                                    e.preventDefault();
+                                    const val = (
+                                      e.currentTarget.value || ""
+                                    ).trim();
+                                    if (val) {
+                                      const newOpts = val
+                                        .split(",")
+                                        .map((opt) => opt.trim())
+                                        .filter((opt) => opt !== "");
+                                      updateFieldDraft(pi, "options", [
+                                        ...(fieldDrafts[pi]?.options || []),
+                                        ...newOpts,
+                                      ]);
+                                      e.currentTarget.value = "";
+                                    }
+                                  }
+                                }}
+                                onBlur={(e) => {
+                                  const val = (
+                                    e.currentTarget.value || ""
+                                  ).trim();
+                                  if (val) {
+                                    const newOpts = val
+                                      .split(",")
+                                      .map((opt) => opt.trim())
+                                      .filter((opt) => opt !== "");
+                                    updateFieldDraft(pi, "options", [
+                                      ...(fieldDrafts[pi]?.options || []),
+                                      ...newOpts,
+                                    ]);
+                                    e.currentTarget.value = "";
+                                  }
+                                }}
+                              />
+                            </div>
 
-                        {fieldDrafts[pi]?.options?.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            {fieldDrafts[pi].options.map((option, idx) => (
-                              <div
-                                key={idx}
-                                className="flex items-center gap-2 bg-black text-white text-sm px-2 py-1 rounded-full shadow">
-                                {option}
-                                <button
-                                  onClick={() => {
-                                    const updated = fieldDrafts[
-                                      pi
-                                    ].options.filter((_, i) => i !== idx);
-                                    updateFieldDraft(pi, "options", updated);
-                                  }}
-                                  className="text-xs hover:text-red-400 cursor-pointer">
-                                  ✕
-                                </button>
+                            {fieldDrafts[pi]?.options?.length > 0 && (
+                              <div className="flex flex-wrap gap-1.5 mt-2">
+                                {fieldDrafts[pi].options.map((option, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="flex items-center gap-1 bg-black text-white text-xs px-2 py-0.5 rounded-full shadow"
+                                  >
+                                    {option}
+                                    <button
+                                      onClick={() => {
+                                        const updated = fieldDrafts[
+                                          pi
+                                        ].options.filter((_, i) => i !== idx);
+                                        updateFieldDraft(
+                                          pi,
+                                          "options",
+                                          updated
+                                        );
+                                      }}
+                                      className="text-xs hover:text-red-400 cursor-pointer"
+                                    >
+                                      ✕
+                                    </button>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
-                          </div>
+                            )}
+                          </>
                         )}
-                      </>
-                    )}
 
-                    <Button
-                      onClick={() => addFieldToPage(pi)}
-                      className="flex items-center gap-2 bg-black text-white px-3 py-1 shadow hover:bg-gray-800 cursor-pointer">
-                      <Plus className="w-4 h-4" /> Add Field
-                    </Button>
-                  </div>
-
-                  {/* Existing Fields */}
-                  {page.fields.map((field, fi) => (
-                    <div
-                      key={fi}
-                      className="flex justify-between items-center bg-white px-3 py-2 rounded shadow-sm mb-1">
-                      <span>
-                        {field.label} ({field.type})
-                        {field.required && (
-                          <span className="ml-2 text-sm text-red-600">
-                            *required
-                          </span>
-                        )}
-                      </span>
-                      {!field.fixed && (
                         <Button
-                          onClick={() => removeFieldFromPage(pi, fi)}
-                          variant="ghost"
-                          className="text-red-600 hover:bg-gray-100 cursor-pointer">
-                          <Trash2 />
+                          onClick={() => addFieldToPage(pi)}
+                          className="flex items-center gap-2 bg-black text-white px-3 py-1 text-sm shadow hover:bg-gray-800 cursor-pointer"
+                        >
+                          <Plus className="w-4 h-4" /> Add Field
                         </Button>
-                      )}
-                    </div>
-                  ))}
+                      </div>
+
+                      {/* Existing Fields */}
+                      {page.fields.map((field, fi) => (
+                        <div
+                          key={fi}
+                          className="flex justify-between items-center bg-white px-2 py-1.5 rounded shadow-sm mb-1 text-sm"
+                        >
+                          <span>
+                            {field.label} ({field.type})
+                            {field.required && (
+                              <span className="ml-2 text-xs text-red-600">
+                                *required
+                              </span>
+                            )}
+                          </span>
+                          {!field.fixed && (
+                            <Button
+                              onClick={() => removeFieldFromPage(pi, fi)}
+                              variant="ghost"
+                              className="text-red-600 hover:bg-gray-100 p-1 cursor-pointer"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </div>
+                      ))}
                     </>
                   )}
                 </div>
@@ -611,24 +661,26 @@ export default function LoanTemplateBuilder() {
             </div>
 
             {/* Save/Delete */}
-            <div className="flex items-center gap-4 pt-6 border-t">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-4 md:pt-6 border-t">
               <Button
                 onClick={() => {
-                  setPreviewCurrentPage(0); // Reset to first page when opening preview
+                  setPreviewCurrentPage(0);
                   setShowPreview(true);
                 }}
-                className="flex items-center gap-2 bg-black text-white px-6 py-2 shadow hover:bg-gray-800 cursor-pointer">
+                className="flex items-center gap-2 bg-black text-white px-4 py-2 text-sm shadow hover:bg-gray-800 cursor-pointer"
+              >
                 <Eye className="w-4 h-4" />
-                Preview Template
+                Preview
               </Button>
               <Button
                 onClick={saveTemplate}
                 disabled={isCreating || isUpdating}
-                className={`flex items-center gap-2 px-6 py-2 shadow ${
+                className={`flex items-center gap-2 px-4 py-2 text-sm shadow ${
                   isCreating || isUpdating
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-[#ffd439] hover:bg-yellow-300 cursor-pointer"
-                } text-black`}>
+                } text-black`}
+              >
                 {isCreating || isUpdating ? (
                   <>
                     <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
@@ -637,7 +689,7 @@ export default function LoanTemplateBuilder() {
                 ) : (
                   <>
                     <Save className="w-4 h-4" />
-                    {template._id ? "Update Template" : "Save Template"}
+                    {template._id ? "Update" : "Save"}
                   </>
                 )}
               </Button>
@@ -645,11 +697,12 @@ export default function LoanTemplateBuilder() {
                 <Button
                   onClick={handleDeleteTemplate}
                   disabled={isDeleting}
-                  className={`flex items-center gap-2 px-6 py-2 shadow ${
+                  className={`flex items-center gap-2 px-4 py-2 text-sm shadow ${
                     isDeleting
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-red-600 hover:bg-red-700 cursor-pointer"
-                  } text-white`}>
+                  } text-white`}
+                >
                   {isDeleting ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -657,7 +710,7 @@ export default function LoanTemplateBuilder() {
                     </>
                   ) : (
                     <>
-                      <Trash2 className="w-4 h-4" /> Delete Template
+                      <Trash2 className="w-4 h-4" /> Delete
                     </>
                   )}
                 </Button>
@@ -668,131 +721,145 @@ export default function LoanTemplateBuilder() {
 
         {/* Preview Modal */}
         {showPreview && (
-          <div className="fixed inset-0 z-50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-white rounded-xl shadow-[8px_8px_0_0_#000] border-2 border-black w-full md:max-w-2xl 2xl:max-w-3xl max-h-[90vh] overflow-hidden">
+          <div className="fixed inset-0 z-50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-2">
+            <div className="bg-white rounded-xl shadow-[6px_6px_0_0_#000] md:shadow-[8px_8px_0_0_#000] border-2 border-black w-full max-w-full md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-hidden">
               {/* Preview Header */}
-              <div className="flex items-center justify-between p-6">
+              <div className="flex items-center justify-between p-4 md:p-6">
                 <div>
-
-                              <h2 className="text-lg font-semibold text-[#2d2c2c]">
-                                {template.name || "Loan Application"}
-                              </h2>
-                              {template.description && (
-                                <p className="text-sm text-gray-600">
-                                  {template.description}
-                                </p>
-                              )}
+                  <h2 className="text-base md:text-lg font-semibold text-[#2d2c2c]">
+                    {template.name || "Loan Application"}
+                  </h2>
+                  {template.description && (
+                    <p className="text-xs md:text-sm text-gray-600">
+                      {template.description}
+                    </p>
+                  )}
                 </div>
                 <button
                   onClick={() => setShowPreview(false)}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+                  className="p-1.5 md:p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
               </div>
 
               {/* Preview Content */}
-              <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+              <div className="p-4 md:p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
                 {template.pages.length > 0 ? (
-                  <div className="space-y-6">
+                  <div className="space-y-4 md:space-y-6">
                     {/* Step indicator with circles */}
-                    <div className="mb-6">
-                      <div className="text-sm font-medium mb-2">
+                    <div className="mb-4 md:mb-6">
+                      <div className="text-xs md:text-sm font-medium mb-2">
                         Step {previewCurrentPage + 1} / {template.pages.length}
                       </div>
                       <div className="flex items-center justify-center w-full">
-                        {Array.from({ length: template.pages.length }, (_, index) => (
-                          <div key={index} className="flex items-center">
-                            {/* Step circle */}
-                            <div
-                              className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
-                                index <= previewCurrentPage
-                                  ? "bg-yellow-400 text-black"
-                                  : "bg-gray-200 text-gray-600"
-                              }`}
-                            >
-                              {index + 1}
-                            </div>
-
-                            {/* Connector line between circles */}
-                            {index < template.pages.length - 1 && (
+                        {Array.from(
+                          { length: template.pages.length },
+                          (_, index) => (
+                            <div key={index} className="flex items-center">
+                              {/* Step circle */}
                               <div
-                                className={`h-1 w-16 mx-1 ${
-                                  index < previewCurrentPage
-                                    ? "bg-yellow-400"
-                                    : "bg-gray-200"
+                                className={`flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-full text-xs md:text-sm font-medium ${
+                                  index <= previewCurrentPage
+                                    ? "bg-yellow-400 text-black"
+                                    : "bg-gray-200 text-gray-600"
                                 }`}
-                              ></div>
-                            )}
-                          </div>
-                        ))}
+                              >
+                                {index + 1}
+                              </div>
+
+                              {/* Connector line between circles */}
+                              {index < template.pages.length - 1 && (
+                                <div
+                                  className={`h-1 w-12 md:w-16 mx-1 ${
+                                    index < previewCurrentPage
+                                      ? "bg-yellow-400"
+                                      : "bg-gray-200"
+                                  }`}
+                                ></div>
+                              )}
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
 
                     {/* Current page heading */}
-                    <div className="mb-6">
-                      <h3 className="text-lg font-semibold">
+                    <div className="mb-4 md:mb-6">
+                      <h3 className="text-base md:text-lg font-semibold">
                         {template.pages[previewCurrentPage]?.title}
                       </h3>
                       {template.pages[previewCurrentPage]?.description && (
-                        <p className="text-sm text-gray-600 mt-1">
+                        <p className="text-xs md:text-sm text-gray-600 mt-1">
                           {template.pages[previewCurrentPage]?.description}
                         </p>
                       )}
                     </div>
 
                     {/* Current page fields */}
-                    <div className="space-y-4">
-                      {template.pages[previewCurrentPage]?.fields.map((field: Field, idx: number) => (
-                        <div key={idx} className="space-y-2">
-                          <label className="block text-sm font-medium text-gray-700">
-                            {field.label}
-                            {field.required && <span className="text-red-500 ml-1">*</span>}
-                          </label>
-                          {renderFieldPreview(field)}
-                        </div>
-                      ))}
+                    <div className="space-y-3 md:space-y-4">
+                      {template.pages[previewCurrentPage]?.fields.map(
+                        (field: Field, idx: number) => (
+                          <div key={idx} className="space-y-1.5">
+                            <label className="block text-sm font-medium text-gray-700">
+                              {field.label}
+                              {field.required && (
+                                <span className="text-red-500 ml-1">*</span>
+                              )}
+                            </label>
+                            {renderFieldPreview(field)}
+                          </div>
+                        )
+                      )}
                     </div>
 
                     {/* Navigation buttons */}
-                    <div className="flex justify-between py-6">
-                      <div className="flex gap-2">
-                        <Button
-                          type="button"
-                          onClick={() => setPreviewCurrentPage(Math.max(0, previewCurrentPage - 1))}
-                          className="bg-gray-200 hover:bg-gray-300 text-black font-medium px-6 py-2 flex items-center gap-2 cursor-pointer"
-                          disabled={previewCurrentPage === 0}
-                        >
-                          <ArrowUp className="h-4 w-4 rotate-[-90deg]" /> Previous
-                        </Button>
-                      </div>
+                    <div className="flex justify-between py-4 md:py-6">
+                      <Button
+                        type="button"
+                        onClick={() =>
+                          setPreviewCurrentPage(
+                            Math.max(0, previewCurrentPage - 1)
+                          )
+                        }
+                        className="bg-gray-200 hover:bg-gray-300 text-black font-medium px-4 py-2 text-sm flex items-center gap-2 cursor-pointer"
+                        disabled={previewCurrentPage === 0}
+                      >
+                        <ArrowUp className="h-4 w-4 rotate-[-90deg]" /> Prev
+                      </Button>
 
                       {previewCurrentPage < template.pages.length - 1 ? (
                         <Button
                           type="button"
-                          onClick={() => setPreviewCurrentPage(Math.min(template.pages.length - 1, previewCurrentPage + 1))}
-                          className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-6 py-2 flex items-center gap-2 cursor-pointer"
+                          onClick={() =>
+                            setPreviewCurrentPage(
+                              Math.min(
+                                template.pages.length - 1,
+                                previewCurrentPage + 1
+                              )
+                            )
+                          }
+                          className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-4 py-2 text-sm flex items-center gap-2 cursor-pointer"
                         >
                           Next <ArrowDown className="h-4 w-4 rotate-[-90deg]" />
                         </Button>
                       ) : (
                         <Button
                           type="button"
-                          className="bg-yellow-400 text-black font-medium px-8 py-2 flex items-center gap-2 cursor-not-allowed"
+                          className="bg-yellow-400 text-black font-medium px-6 py-2 text-sm flex items-center gap-2 cursor-not-allowed"
                           disabled
                         >
-                          Submit Application <Eye className="h-4 w-4" />
+                          Submit <Eye className="h-4 w-4" />
                         </Button>
                       )}
                     </div>
                   </div>
                 ) : (
-                  <div className="text-center py-10 text-gray-500">
+                  <div className="text-center py-10 text-gray-500 text-sm">
                     No pages added to this template yet.
                   </div>
                 )}
               </div>
-
             </div>
           </div>
         )}
