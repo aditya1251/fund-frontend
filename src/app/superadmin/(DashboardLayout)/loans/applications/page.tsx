@@ -1,4 +1,3 @@
-
 import DSAApplications from "../../features/dsaApplications";
 
 export default function Page() {
