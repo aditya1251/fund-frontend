@@ -8,8 +8,11 @@ import UpcomingSchedules from '@/app/superadmin/(DashboardLayout)/components/das
 import TopPayingClients from '@/app/superadmin/(DashboardLayout)/components/dashboard/TopPayingClients'
 import Blog from '@/app/superadmin/(DashboardLayout)/components/dashboard/Blog'
 import ProductSales from '@/app/superadmin/(DashboardLayout)/components/dashboard/ProductSales'
+import { useSession } from 'next-auth/react'
 
 const Dashboard = () => {
+  const { data: session } = useSession();
+    const userId = session?.user?.id || "";
   return (
     <PageContainer title='Dashboard' description='this is Dashboard'>
       <Box>
@@ -30,28 +33,25 @@ const Dashboard = () => {
               <Grid size={12}>
                 <TrafficDistribution />
               </Grid>
-              <Grid size={12}>
-                <ProductSales />
-              </Grid>
             </Grid>
           </Grid>
           <Grid
             size={{
               xs: 12,
-              lg: 4,
+              lg: 4.5,
             }}>
-            <UpcomingSchedules />
+            <UpcomingSchedules userId={userId} />
           </Grid>
           <Grid
             size={{
               xs: 12,
-              lg: 8,
+              lg: 7,
             }}>
             <TopPayingClients />
           </Grid>
-          <Grid size={12}>
+          {/* <Grid size={12}>
             <Blog />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Box>
     </PageContainer>

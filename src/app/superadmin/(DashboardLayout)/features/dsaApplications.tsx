@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   useGetLoansQuery,
   useUpdateLoanMutation,
@@ -24,23 +24,38 @@ export default function DSAApplications({
         return "quick";
       case "Taxation":
         return "taxation";
+      default:
+        return "";
     }
   };
-
-  const {
-    data: loansData = [],
-    isLoading,
-    error,
-    refetch,
-  } = useGetLoansQuery({ loanType: getQueryParams() });
-  const { data: adminData } = useGetAdminsQuery();
-  const [updateLoan] = useUpdateLoanMutation();
-  const [createNotification] = useCreateNotificationMutation();
 
   const [filter, setFilter] = useState<
     "all" | "pending" | "approved" | "rejected"
   >("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit] = useState(10);
+
+  const {
+    data: loansDataResponse = { loans: [], total: 0 },
+    isLoading,
+    error,
+    refetch,
+  } = useGetLoansQuery({
+    loanType: getQueryParams(),
+    status: filter,
+    search: searchTerm,
+    page: currentPage,
+    limit,
+  });
+
+  const loansData = loansDataResponse.loans || [];
+  const totalCount = loansDataResponse.total || 0;
+
+  const { data: adminData } = useGetAdminsQuery();
+  const [updateLoan] = useUpdateLoanMutation();
+  const [createNotification] = useCreateNotificationMutation();
+
   const [rejectionReason, setRejectionReason] = useState("");
   const [showReasonInputId, setShowReasonInputId] = useState<string | null>(
     null
@@ -53,6 +68,20 @@ export default function DSAApplications({
 
   const [selectedLoan, setSelectedLoan] = useState<any | null>(null);
   const [showModal, setShowModal] = useState(false);
+
+  const [isRefetching, setIsRefetching] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsRefetching(true);
+      try {
+        await refetch();
+      } finally {
+        setIsRefetching(false);
+      }
+    };
+    fetchData();
+  }, [filter, searchTerm]);
 
   const openModal = (loan: any) => {
     setSelectedLoan(loan);
@@ -69,28 +98,6 @@ export default function DSAApplications({
       personalInfo?.fields?.find((f: any) => f.label === label)?.value || ""
     );
   };
-
-  const filteredLoans = useMemo(() => {
-    let filtered = loansData;
-    if (filter !== "all") {
-      filtered = filtered.filter((loan: any) => loan.status === filter);
-    }
-    if (searchTerm.trim() !== "") {
-      filtered = filtered.filter((loan: any) => {
-        const name = extractField(loan, "Name").toLowerCase();
-        const email = extractField(loan, "Email").toLowerCase();
-        return (
-          name.includes(searchTerm.toLowerCase()) ||
-          email.includes(searchTerm.toLowerCase())
-        );
-      });
-    }
-    return [...filtered].sort(
-      (a, b) =>
-        new Date(b.createdAt || "").getTime() -
-        new Date(a.createdAt || "").getTime()
-    );
-  }, [loansData, filter, searchTerm]);
 
   const handleStatusChange = async (
     id: string,
@@ -145,58 +152,63 @@ export default function DSAApplications({
     }
   };
 
+  const totalPages = Math.ceil(totalCount / limit);
+
   return (
-    <div className="min-h-screen py-4 sm:py-6 md:py-8 px-2 sm:px-4">
+    <div className="min-h-screen py-6 px-4">
       {notification && (
         <div
-          className={`fixed top-2 right-2 sm:top-4 sm:right-4 z-50 flex items-center gap-2 p-3 sm:p-4 rounded shadow-lg text-xs sm:text-sm ${
+          className={`fixed top-4 right-4 z-50 p-4 rounded shadow-lg text-sm ${
             notification.type === "success"
               ? "bg-green-100 text-green-800"
               : "bg-red-100 text-red-800"
-          }`}
-        >
+          }`}>
           {notification.type === "success" ? (
             <CheckCircle size={16} />
           ) : (
             <XCircle size={16} />
           )}
-          <span>{notification.message}</span>
+          <span className="ml-2">{notification.message}</span>
         </div>
       )}
 
-      <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8 md:space-y-10">
-        {/* Header */}
+      <div className="max-w-6xl mx-auto space-y-6">
         <div className="text-center">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900">
             Manage <span className="text-[#FFD439]">{applicationType}</span>{" "}
             Applications
           </h1>
-          <p className="text-sm sm:text-base md:text-lg text-gray-600 mt-1 sm:mt-2">
+          <p className="text-gray-600 mt-2">
             Approve or reject based on application review.
           </p>
         </div>
 
         {/* Controls */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 border-b border-gray-300 pb-3 md:pb-4">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-b pb-4">
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
             placeholder="Search by name or email"
-            className="px-3 sm:px-4 py-2 border border-gray-300 rounded-md w-full md:w-1/2 hover:ring-1 ring-black focus:outline-none focus:ring-1 text-sm sm:text-base"
+            className="px-4 py-2 border rounded-md w-full md:w-1/2"
           />
-          <div className="flex flex-wrap justify-center gap-1 sm:gap-2">
+          <div className="flex gap-2 flex-wrap justify-center">
             {(["all", "pending", "approved", "rejected"] as const).map(
               (tab) => (
                 <button
                   key={tab}
-                  onClick={() => setFilter(tab)}
-                  className={`capitalize px-3 py-1 sm:px-4 sm:py-2 font-semibold rounded-full text-xs sm:text-sm cursor-pointer ${
+                  onClick={() => {
+                    setFilter(tab);
+                    setCurrentPage(1);
+                  }}
+                  className={`capitalize px-4 py-2 font-semibold rounded-full text-sm ${
                     filter === tab
-                      ? "bg-[#FFD439] text-black shadow-[3px_3px_0_0_#000]"
+                      ? "bg-[#FFD439] text-black shadow-md"
                       : "text-gray-600 hover:text-black"
-                  }`}
-                >
+                  }`}>
                   {tab}
                 </button>
               )
@@ -204,20 +216,18 @@ export default function DSAApplications({
           </div>
         </div>
 
-        {/* Cards */}
-        <div className="space-y-4 sm:space-y-6">
-          {isLoading ? (
+        {/* Loan Cards */}
+        <div className="space-y-6">
+          {isLoading || isRefetching ? (
             <Loading />
           ) : error ? (
-            <div className="text-center text-red-500 text-sm sm:text-base">
+            <p className="text-center text-red-500">
               Failed to load applications.
-            </div>
-          ) : filteredLoans.length === 0 ? (
-            <div className="text-center text-gray-500 text-sm sm:text-base">
-              No applications found.
-            </div>
+            </p>
+          ) : loansData.length === 0 ? (
+            <p className="text-center text-gray-500">No applications found.</p>
           ) : (
-            filteredLoans.map((loan) => {
+            loansData.map((loan) => {
               const name = extractField(loan, "Name");
               const email = extractField(loan, "Email");
               const phone = extractField(loan, "Phone");
@@ -226,59 +236,48 @@ export default function DSAApplications({
               return (
                 <div
                   key={loan._id}
-                  className="bg-white border relative transition-all ease-in-out duration-500 hover:shadow-[1px_1px_0_0_#000] border-black shadow-[4px_4px_0_0_#000] sm:shadow-[6px_6px_0_0_#000] rounded-lg p-4 sm:p-6"
-                >
-                  <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
+                  className="border shadow-md rounded-lg p-4  bg-white hover:shadow-lg transition-shadow cursor-pointer">
+                  <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <h3 className="font-bold text-base sm:text-lg">{name}</h3>
-                      <p className="text-xs sm:text-sm text-gray-700">
-                        Email: {email}
-                      </p>
-                      <p className="text-xs sm:text-sm text-gray-700">
-                        Phone: {phone}
-                      </p>
-                      <p className="text-xs sm:text-sm text-gray-700">
-                        Age: {age}
-                      </p>
+                      <h3 className="font-bold">{name}</h3>
+                      <p>Email: {email}</p>
+                      <p>Phone: {phone}</p>
+                      <p>Age: {age}</p>
                     </div>
                     <div>
-                      <p className="text-xs sm:text-sm text-gray-700">
+                      <p>
                         Submitted:{" "}
                         {new Date(loan.createdAt).toLocaleDateString()}
                       </p>
-                      <p className="text-xs sm:text-sm text-gray-700">
-                        Subscriber: {loan.subscriber}
-                      </p>
-                      <p className="text-xs sm:text-sm text-gray-700">
+                      <p>Subscriber: {loan.subscriber}</p>
+                      <p>
                         Status: <strong>{loan.status}</strong>
                       </p>
                     </div>
                   </div>
 
                   {loan.status === "pending" && (
-                    <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row gap-2">
+                    <div className="mt-3 flex flex-wrap gap-2">
                       <button
                         onClick={() => handleStatusChange(loan._id, "approved")}
                         disabled={updatingId === loan._id}
-                        className="bg-green-100 text-green-800 px-3 py-1 sm:px-4 sm:py-2 rounded hover:bg-green-200 text-xs sm:text-sm font-medium cursor-pointer"
-                      >
+                        className="bg-green-100 text-green-800 px-4 py-2 rounded hover:bg-green-200 text-sm">
                         Approve
                       </button>
                       <button
                         onClick={() => handleStatusChange(loan._id, "rejected")}
                         disabled={updatingId === loan._id}
-                        className="bg-red-100 text-red-700 px-3 py-1 sm:px-4 sm:py-2 rounded hover:bg-red-200 text-xs sm:text-sm font-medium cursor-pointer"
-                      >
+                        className="bg-red-100 text-red-700 px-4 py-2 rounded hover:bg-red-200 text-sm">
                         Reject
                       </button>
                     </div>
                   )}
 
                   {showReasonInputId === loan._id && (
-                    <div className="mt-3 flex flex-col sm:flex-row gap-2 items-start">
+                    <div className="mt-3 flex flex-col sm:flex-row gap-2">
                       <input
                         type="text"
-                        className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm"
+                        className="w-full border px-3 py-2 rounded-md text-sm"
                         placeholder="Rejection reason"
                         value={rejectionReason}
                         onChange={(e) => setRejectionReason(e.target.value)}
@@ -286,34 +285,56 @@ export default function DSAApplications({
                       <button
                         onClick={() => handleStatusChange(loan._id, "rejected")}
                         disabled={!rejectionReason.trim()}
-                        className="bg-red-600 text-white px-4 py-2 rounded shadow hover:bg-red-700 text-xs sm:text-sm"
-                      >
+                        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 text-sm">
                         Confirm
                       </button>
                     </div>
                   )}
 
-                  <button
-                    onClick={() => openModal(loan)}
-                    className="bg-blue-100 text-blue-800 px-3 py-1 sm:px-4 sm:py-2 absolute right-2 bottom-2 sm:right-4 sm:bottom-4 rounded hover:bg-blue-200 text-xs sm:text-sm font-medium mt-3 sm:mt-4 cursor-pointer"
-                  >
-                    View Details
-                  </button>
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      onClick={() => openModal(loan)}
+                      className="bg-blue-100 text-blue-800 px-4 py-2 rounded hover:bg-blue-200 text-sm">
+                      View Details
+                    </button>
+                  </div>
                 </div>
               );
             })
           )}
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center gap-4 mt-6">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="px-4 py-2 border rounded disabled:opacity-50">
+              Prev
+            </button>
+            <span className="text-sm mt-2">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 border rounded disabled:opacity-50">
+              Next
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Modal */}
       {showModal && selectedLoan && (
-        <div className="fixed inset-0 z-50 bg-opacity-40 backdrop-blur-sm flex justify-center items-center p-2">
+        <div className="fixed inset-0  bg-opacity-40 backdrop-blur-sm flex justify-center items-center p-2">
           <div className="bg-white w-full max-w-full sm:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-xl border-2 border-black shadow-[6px_6px_0_0_#000] sm:shadow-[8px_8px_0_0_#000] relative">
             <button
               onClick={closeModal}
-              className="absolute top-2 right-2 sm:top-3 sm:right-3 text-black p-1 sm:p-2 rounded-full hover:bg-gray-200 cursor-pointer"
-            >
+              className="absolute top-2 right-2 sm:top-3 sm:right-3 text-black p-1 sm:p-2 rounded-full hover:bg-gray-200 cursor-pointer">
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 md:mb-6 text-black">
@@ -330,8 +351,7 @@ export default function DSAApplications({
                     {page.fields.map((field: any, index: number) => (
                       <div
                         key={index}
-                        className="bg-gray-100 p-3 sm:p-4 rounded-lg border border-gray-300"
-                      >
+                        className="bg-gray-100 p-3 sm:p-4 rounded-lg border border-gray-300">
                         <label className="block text-xs sm:text-sm font-medium text-black mb-1">
                           {field.label}
                         </label>
@@ -374,9 +394,8 @@ export const FileViewer = ({ fileKey }: { fileKey: string }) => {
   return (
     <button
       onClick={handleViewFile}
-      className="text-blue-600 hover:underline text-xs sm:text-sm break-all cursor-pointer"
-      disabled={loading}
-    >
+      className="text-blue-600 hover:underline hover:cursor-pointer text-sm break-all"
+      disabled={loading}>
       {loading ? "Loading..." : "View Document"}
     </button>
   );

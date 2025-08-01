@@ -11,14 +11,22 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const menuOptions = ["Export", "Download", "Print"];
 
-const LoanCategoryChart = () => {
-  const theme = useTheme();
+interface LoanCategoryChartProps {
+  statsData: {
+    [key: string]: {
+      approved: number;
+      pending: number;
+      rejected: number;
+      total: number;
+    };
+  };
+}
 
-  /* ---------- RESPONSIVE HOOKS ---------- */
+const LoanCategoryChart: React.FC<LoanCategoryChartProps> = ({ statsData }) => {
+  const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("sm"));
   const isSm = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const isMd = useMediaQuery(theme.breakpoints.between("md", "lg"));
-  /* -------------------------------------- */
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -27,9 +35,6 @@ const LoanCategoryChart = () => {
   };
   const handleClose = () => setAnchorEl(null);
 
-  /* ---------- DATA LOGIC (unchanged) ---------- */
-  const { useGetLoansQuery } = require("@/redux/services/loanApi");
-  const { data: loansData = [], isLoading } = useGetLoansQuery({});
   const [chartData, setChartData] = React.useState({
     approved: [0, 0, 0],
     pending: [0, 0, 0],
@@ -37,32 +42,50 @@ const LoanCategoryChart = () => {
   });
 
   React.useEffect(() => {
-    if (!loansData?.length) return;
-    const counts = {
-      approved: [0, 0, 0],
-      pending: [0, 0, 0],
-      rejected: [0, 0, 0],
-    };
-    loansData.forEach((loan: any) => {
-      let idx = 0;
-      if (loan.loanType?.toLowerCase() === "government") idx = 1;
-      else if (loan.loanType?.toLowerCase() === "insurance") idx = 2;
-      if (loan.status.toLowerCase() === "approved") counts.approved[idx]++;
-      else if (loan.status.toLowerCase() === "pending") counts.pending[idx]++;
-      else if (loan.status.toLowerCase() === "rejected") counts.rejected[idx]++;
-    });
-    setChartData(counts);
-  }, [loansData]);
+  if (!statsData) return;
 
-  /* ---------- THEME COLORS ---------- */
+  const newData = {
+    approved: [0, 0, 0],
+    pending: [0, 0, 0],
+    rejected: [0, 0, 0],
+  };
+
+  const keys = Object.keys(statsData);
+  const findStats = (match: string) =>
+    statsData[
+      keys.find((key) => key.toLowerCase().includes(match.toLowerCase())) || ""
+    ] || { approved: 0, pending: 0, rejected: 0 };
+
+  const privateStats = findStats("private");
+  const governmentStats = findStats("government");
+  const insuranceStats = findStats("insurance");
+
+  newData.approved = [
+    privateStats.approved,
+    governmentStats.approved,
+    insuranceStats.approved,
+  ];
+  newData.pending = [
+    privateStats.pending,
+    governmentStats.pending,
+    insuranceStats.pending,
+  ];
+  newData.rejected = [
+    privateStats.rejected,
+    governmentStats.rejected,
+    insuranceStats.rejected,
+  ];
+
+  setChartData(newData);
+}, [statsData]);
+
+
   const primary = "#FFD439";
   const secondary = "#111111";
   const tertiary = "#EF4444";
 
-  /* ---------- RESPONSIVE CHART HEIGHT ---------- */
   const chartHeight = isXs ? 220 : isSm ? 280 : isMd ? 320 : 350;
 
-  /* ---------- RESPONSIVE OPTIONS ---------- */
   const chartOptions: ApexCharts.ApexOptions = {
     chart: {
       type: "bar",
@@ -74,7 +97,6 @@ const LoanCategoryChart = () => {
       bar: {
         borderRadius: isXs ? 4 : 8,
         columnWidth: "45%",
-        distributed: false,
       },
     },
     colors: [primary, secondary, tertiary],
