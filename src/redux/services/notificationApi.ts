@@ -7,13 +7,21 @@ export const NotificationApi = createApi({
 	tagTypes: ["Notifications"],
 	endpoints: (builder) => ({
 		// ✅ GET: Fetch notifications
-		getNotifications: builder.query<any, string>({
-			query: (userId) => ({
-				url: `notifications?userId=${userId}`,
+		getNotifications: builder.query<
+			{
+				notifications: Notification[];
+				total: number;
+				page: number;
+				limit: number;
+			},
+			{ userId: string; page: number; limit: number }
+		>({
+			query: ({ userId, page, limit }) => ({
+				url: `notifications?userId=${userId}&page=${page}&limit=${limit}`,
 			}),
-			// Poll every 60 seconds
 			providesTags: ["Notifications"],
 		}),
+
 
 		// ✅ POST: Create a new notification
 		createNotification: builder.mutation<

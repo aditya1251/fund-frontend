@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Typography,
   Box,
@@ -7,170 +9,140 @@ import {
   TableHead,
   TableRow,
   Chip,
-  Paper,
+  Skeleton,
+  ToggleButton,
+  ToggleButtonGroup,
+  Stack,
+  Divider,
 } from "@mui/material";
 import DashboardCard from "@/app/superadmin/(DashboardLayout)/components/shared/DashboardCard";
-import TableContainer from "@mui/material/TableContainer";
-import BlankCard from "../shared/BlankCard";
+import { useState } from "react";
+import { useGetTopUsersQuery } from "@/redux/services/analyticsApi";
+import GroupIcon from "@mui/icons-material/Groups";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
-const products = [
-  {
-    id: "1",
-    name: "Sunil Joshi",
-    post: "Web Designer",
-    pname: "Elite Admin",
-    priority: "Low",
-    pbg: "primary.main",
-    budget: "3.9",
-  },
-  {
-    id: "2",
-    name: "Andrew McDownland",
-    post: "Project Manager",
-    pname: "Real Homes WP Theme",
-    priority: "Medium",
-    pbg: "secondary.main",
-    budget: "24.5",
-  },
-  {
-    id: "3",
-    name: "Christopher Jamil",
-    post: "Project Manager",
-    pname: "MedicalPro WP Theme",
-    priority: "High",
-    pbg: "error.main",
-    budget: "12.8",
-  },
-  {
-    id: "4",
-    name: "Nirav Joshi",
-    post: "Frontend Engineer",
-    pname: "Hosting Press HTML",
-    priority: "Critical",
-    pbg: "success.main",
-    budget: "2.4",
-  },
-];
+const LIGHT_YELLOW = "#FFF9C4";
+const BLACK = "#212121";
 
-const TopPayingClients = () => {
+const TopUsersTable = () => {
+  const [mode, setMode] = useState<"dsa" | "rm">("dsa");
+  const { data, isLoading } = useGetTopUsersQuery(mode);
+
+  const users = mode === "dsa" ? data?.topDSAs || [] : data?.topRMs || [];
+
+  const handleChange = (_: any, newMode: "dsa" | "rm" | null) => {
+    if (newMode) setMode(newMode);
+  };
+
   return (
-    (<DashboardCard title="Top Paying Clients">
-      <Box sx={{ overflow: "auto" }}>
-        <Box mt={2} sx={{ width: "100%", display: "table", tableLayout: "fixed" }}>
-          <Table
+    <DashboardCard
+      title={
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Typography variant="h5" fontWeight={600}>
+            Top Working {mode === "dsa" ? "DSAs" : "RMs"}
+          </Typography>
+
+          <ToggleButtonGroup
+            value={mode}
+            exclusive
+            onChange={handleChange}
+            size="small"
             sx={{
-              whiteSpace: "nowrap",
-            }}
-          >
+              backgroundColor: "#f7f7f7",
+              borderRadius: "8px",
+              "& .MuiToggleButton-root": {
+                border: "none",
+                px: 2,
+                py: 0.5,
+                fontWeight: 600,
+                color: "#333",
+                "&.Mui-selected": {
+                  backgroundColor: LIGHT_YELLOW,
+                  color: BLACK,
+                },
+              },
+            }}>
+            <ToggleButton value="dsa">
+              <GroupIcon fontSize="small" sx={{ mr: 0.5 }} />
+              DSA
+            </ToggleButton>
+            <ToggleButton value="rm">
+              <ManageAccountsIcon fontSize="small" sx={{ mr: 0.5 }} />
+              RM
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Stack>
+      }>
+      <Box sx={{ overflowX: "auto" }}>
+        <Box
+          mt={2}
+          sx={{
+            width: "100%",
+            display: "table",
+            tableLayout: "fixed",
+            minHeight: 320,
+          }}>
+          <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell>
-                  <Typography variant="subtitle2" sx={{
-                    fontWeight: 600
-                  }}>
-                    Id
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="subtitle2" sx={{
-                    fontWeight: 600
-                  }}>
-                    Assigned
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="subtitle2" sx={{
-                    fontWeight: 600
-                  }}>
-                    Name
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="subtitle2" sx={{
-                    fontWeight: 600
-                  }}>
-                    Priority
-                  </Typography>
-                </TableCell>
-                <TableCell align="right">
-                  <Typography variant="subtitle2" sx={{
-                    fontWeight: 600
-                  }}>
-                    Budget
-                  </Typography>
-                </TableCell>
+                {[
+                  "Rank",
+                  "Name",
+                  "Email",
+                  "Loan Count",
+                  mode === "dsa" ? "Plan" : "DSAs Assigned",
+                ].map((header) => (
+                  <TableCell key={header}>
+                    <Typography variant="subtitle2" fontWeight={600}>
+                      {header}
+                    </Typography>
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {products.map((product) => (
-                <TableRow key={product.name}>
-                  <TableCell>
-                    <Typography
-                      sx={{
-                        fontSize: "15px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      {product.id}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Box>
-                        <Typography variant="subtitle2" sx={{
-                          fontWeight: 600
-                        }}>
-                          {product.name}
-                        </Typography>
-                        <Typography
-                          color="textSecondary"
-                          sx={{
-                            fontSize: "13px",
-                          }}
-                        >
-                          {product.post}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      color="textSecondary"
-                      variant="subtitle2"
-                      sx={{
-                        fontWeight: 400
-                      }}
-                    >
-                      {product.pname}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      sx={{
-                        px: "4px",
-                        backgroundColor: product.pbg,
-                        color: "#fff",
-                      }}
-                      size="small"
-                      label={product.priority}
-                    ></Chip>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="h6">${product.budget}k</Typography>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {isLoading
+                ? Array.from({ length: 5 }).map((_, idx) => (
+                    <TableRow key={idx}>
+                      {Array.from({ length: 5 }).map((__, i) => (
+                        <TableCell key={i}>
+                          <Skeleton variant="text" height={24} />
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                : users.map((user: any, index: number) => (
+                    <TableRow key={user._id || index}>
+                      <TableCell>{user.rank ?? index + 1}</TableCell>
+                      <TableCell>{user.name}</TableCell>
+                      <TableCell>{user.email}</TableCell>
+                      <TableCell>{user.loanCount ?? 0}</TableCell>
+                      <TableCell>
+                        {mode === "dsa" ? (
+                          <Chip
+                            label={user.planName || "N/A"}
+                            size="small"
+                            sx={{
+                              backgroundColor: LIGHT_YELLOW,
+                              color: BLACK,
+                              fontWeight: 600,
+                              borderRadius: "6px",
+                            }}
+                          />
+                        ) : (
+                          <Typography fontWeight={500}>
+                            {user.dsaAssignedCount || 0}
+                          </Typography>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </Table>
         </Box>
       </Box>
-    </DashboardCard>)
+    </DashboardCard>
   );
 };
 
-export default TopPayingClients;
+export default TopUsersTable;

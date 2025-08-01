@@ -7,6 +7,7 @@ import { loanApi } from "./services/loanApi";
 import { loanTemplateApi } from "./services/loanTemplateApi";
 import { DsaApi } from "./services/dsaApi";
 import { usersApi } from "./services/usersApi";
+import { AnalyticsApi } from "./services/analyticsApi";
 
 export const store = configureStore({
 	reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
 		[loanTemplateApi.reducerPath]: loanTemplateApi.reducer,
 		[DsaApi.reducerPath]: DsaApi.reducer,
 		[usersApi.reducerPath]: usersApi.reducer,
+		[AnalyticsApi.reducerPath]: AnalyticsApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware().concat(
@@ -28,7 +30,8 @@ export const store = configureStore({
 			loanApi.middleware,
 			loanTemplateApi.middleware,
 			DsaApi.middleware,
-			usersApi.middleware
+			usersApi.middleware,
+			AnalyticsApi.middleware
 		),
 });
 

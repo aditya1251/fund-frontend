@@ -1,20 +1,29 @@
+'use client'
+
 import dynamic from 'next/dynamic'
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
 import { useTheme } from '@mui/material/styles'
-import { Grid, Stack, Typography, Avatar } from '@mui/material'
+import { Grid, Stack, Typography, Avatar, Skeleton } from '@mui/material'
 import { IconArrowUpLeft } from '@tabler/icons-react'
 
 import DashboardCard from '@/app/superadmin/(DashboardLayout)/components/shared/DashboardCard'
+import { useGetPlanAnalyticsQuery } from '@/redux/services/analyticsApi'
+
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
 
 const TrafficDistribution = () => {
-  // chart color
   const theme = useTheme()
-  const primary = theme.palette.primary.main
-  const error = theme.palette.error.main
-  const secondary = theme.palette.secondary.light
-  const successlight = theme.palette.success.light
+  const lightYellow = '#FFEB3B'
+  const black = '#212121'
 
-  // chart
+  // Fetch plan analytics data
+  const { data, isLoading } = useGetPlanAnalyticsQuery()
+
+  const colors = [lightYellow, black, theme.palette.secondary.light]
+
+  // Prepare chart data
+  const planNames = data?.map((item) => item.planName) || []
+  const planCounts = data?.map((item) => item.count) || []
+
   const optionscolumnchart: any = {
     chart: {
       type: 'donut',
@@ -25,7 +34,7 @@ const TrafficDistribution = () => {
       },
       height: 170,
     },
-    colors: [secondary, error, primary],
+    colors: colors,
     plotOptions: {
       pie: {
         startAngle: 0,
@@ -49,6 +58,7 @@ const TrafficDistribution = () => {
     legend: {
       show: false,
     },
+    labels: planNames,
     responsive: [
       {
         breakpoint: 991,
@@ -60,115 +70,93 @@ const TrafficDistribution = () => {
       },
     ],
   }
-  const seriescolumnchart: any = [5368, 3500, 4106]
 
   return (
-    <DashboardCard title='Traffic Distribution'>
+    <div className=' -z-50 relative'>
+    <DashboardCard  title='Current Plan Usage'>
       <Grid container spacing={3}>
-        {/* column */}
+        {/* Left Column */}
         <Grid
-          size={{
-            xs: 6,
-            sm: 7,
-          }}>
-          <Typography
-            variant='h3'
-            sx={{
-              fontWeight: '700',
-            }}>
-            $36,358
-          </Typography>
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={1}
-            sx={{
-              mt: 1,
-              alignItems: 'center',
-            }}>
-            <Stack direction='row'>
-              <Avatar sx={{ bgcolor: successlight, width: 21, height: 21 }}>
-                <IconArrowUpLeft width={18} color='#39B69A' />
-              </Avatar>
-              <Typography
-                variant='subtitle2'
-                sx={{
-                  fontWeight: '600',
-                }}>
-                +9%
+          item
+          xs={6}
+          sm={7}
+        >
+          {isLoading ? (
+            <>
+              <Skeleton variant='text' width={120} height={35} />
+              <Skeleton variant='text' width={160} height={20} />
+              <Skeleton variant='rectangular' height={40} width={120} />
+              <Skeleton variant='text' width={100} height={20} sx={{ mt: 2 }} />
+            </>
+          ) : (
+            <>
+              <Typography variant='h3' sx={{ fontWeight: '700' }}>
+                {planCounts.reduce((a, b) => a + b, 0)} Users
               </Typography>
-            </Stack>
-            <Typography variant='subtitle2' color='textSecondary'>
-              last year
-            </Typography>
-          </Stack>
-          <Stack
-            spacing={3}
-            direction='row'
-            sx={{
-              mt: 3,
-            }}>
-            <Stack
-              direction='row'
-              spacing={1}
-              sx={{
-                alignItems: 'center',
-              }}>
-              <Avatar
-                sx={{
-                  width: 9,
-                  height: 9,
-                  bgcolor: primary,
-                  svg: { display: 'none' },
-                }}></Avatar>
-              <Typography
-                variant='subtitle2'
-                color='textSecondary'
-                sx={{
-                  fontSize: '12px',
-                }}>
-                Oragnic
-              </Typography>
-            </Stack>
-            <Stack
-              direction='row'
-              spacing={1}
-              sx={{
-                alignItems: 'center',
-              }}>
-              <Avatar
-                sx={{
-                  width: 9,
-                  height: 9,
-                  bgcolor: error,
-                  svg: { display: 'none' },
-                }}></Avatar>
-              <Typography
-                variant='subtitle2'
-                color='textSecondary'
-                sx={{
-                  fontSize: '12px',
-                }}>
-                Refferal
-              </Typography>
-            </Stack>
-          </Stack>
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={1}
+                sx={{ mt: 1, alignItems: 'center' }}
+              >
+                {/* <Stack direction='row'>
+                  <Avatar sx={{ bgcolor: '#e0f7fa', width: 21, height: 21 }}>
+                    <IconArrowUpLeft width={18} color='#39B69A' />
+                  </Avatar>
+                  <Typography variant='subtitle2' sx={{ fontWeight: '600' }}>
+                    +9%
+                  </Typography>
+                </Stack>
+                <Typography variant='subtitle2' color='textSecondary'>
+                  since last month
+                </Typography> */}
+              </Stack>
+              <Stack spacing={2} sx={{ mt: 3 }}>
+                {planNames.map((name, idx) => (
+                  <Stack
+                    key={name}
+                    direction='row'
+                    spacing={1}
+                    alignItems='center'
+                  >
+                    <Avatar
+                      sx={{
+                        width: 9,
+                        height: 9,
+                        bgcolor: colors[idx % colors.length],
+                        svg: { display: 'none' },
+                      }}
+                    />
+                    <Typography
+                      variant='subtitle2'
+                      color='textSecondary'
+                      sx={{ fontSize: '12px' }}
+                    >
+                      {name}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </>
+          )}
         </Grid>
-        {/* column */}
-        <Grid
-          size={{
-            xs: 6,
-            sm: 5,
-          }}>
-          <Chart
-            options={optionscolumnchart}
-            series={seriescolumnchart}
-            type='donut'
-            width={'100%'}
-            height='150px'
-          />
+
+        {/* Right Column - Chart */}
+        <Grid item xs={6} sm={5} >
+          {isLoading ? (
+            <Skeleton variant='circular' width='150px' height='150px' />
+          ) : (
+            <Chart
+              options={optionscolumnchart}
+              series={planCounts}
+              type='donut'
+              width='100%'
+              height='150px'
+            />
+          )}
         </Grid>
       </Grid>
     </DashboardCard>
+    </div>
   )
 }
 

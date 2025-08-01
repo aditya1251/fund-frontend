@@ -6,64 +6,36 @@ import Menuitems from "./MenuItems";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { Submenu } from "./Submenu";
-import { useGetLoansQuery } from "@/redux/services/loanApi";
 import { useGetApplicationsQuery } from "@/redux/services/applicationApi";
 
 // Custom hook to manage the pending counts
+import { useGetLoanPendingCountsQuery } from "@/redux/services/loanApi";
+
 const usePendingCounts = () => {
-	const {
-		data: loansData = [],
-		isLoading: isLoansLoading,
-		error: loansError,
-	} = useGetLoansQuery({});
-	const {
-		data: quickLoansData = [],
-		isLoading: isQuickLoansLoading,
-		error: quickLoansError,
-	}	= useGetLoansQuery({loanType: "quick"});
-	const {
-		data: taxationData = [],
-		isLoading: isTaxationLoading,
-		error: taxationError,
-	}	= useGetLoansQuery({loanType: "taxation"});
+  const { data: pendingData, isLoading: isLoanCountLoading, error: loanCountError } =
+    useGetLoanPendingCountsQuery();
 
-	const {
-		data: applicationsData = [],
-		isLoading: isAppsLoading,
-		error: appsError,
-	} = useGetApplicationsQuery(undefined);
+  const {
+    data: applicationsData = [],
+    isLoading: isAppsLoading,
+    error: appsError,
+  } = useGetApplicationsQuery(undefined);
 
-	// Used useMemo to avoid recalculating on every render
-	const pendingLoanCount = useMemo(() => {
-		if (isLoansLoading || loansError) return null;
-		return loansData.filter((loan: any) => loan.status === "pending").length;
-	}, [loansData, isLoansLoading, loansError]);
+  const pendingAppCount = useMemo(() => {
+    if (isAppsLoading || appsError) return null;
+    return applicationsData.filter((app: any) => app.status === "pending").length;
+  }, [applicationsData, isAppsLoading, appsError]);
 
-	const pendingAppCount = useMemo(() => {
-		if (isAppsLoading || appsError) return null;
-		return applicationsData.filter((app: any) => app.status === "pending")
-			.length;
-	}, [applicationsData, isAppsLoading, appsError]);
-
-	const pendingQuickLoanCount = useMemo(() => {
-		if (isQuickLoansLoading || quickLoansError) return null;
-		return quickLoansData.filter((loan: any) => loan.status === "pending").length;
-	}, [quickLoansData, isQuickLoansLoading, quickLoansError]);
-
-	const pendingTaxationCount = useMemo(() => {
-		if (isTaxationLoading || taxationError) return null;
-		return taxationData.filter((loan: any) => loan.status === "pending").length;
-	}, [taxationData, isTaxationLoading, taxationError]);
-
-	return {
-		pendingLoanCount,
-		pendingAppCount,
-		pendingQuickLoanCount,
-		pendingTaxationCount,
-		isLoading: isLoansLoading || isAppsLoading,
-		hasError: loansError || appsError,
-	};
+  return {
+    pendingLoanCount: pendingData?.applications ?? 0,
+    pendingQuickLoanCount: pendingData?.quickApplications ?? 0,
+    pendingTaxationCount: pendingData?.taxApplications ?? 0,
+    pendingAppCount,
+    isLoading: isLoanCountLoading || isAppsLoading,
+    hasError: loanCountError || appsError,
+  };
 };
+
 
 const renderMenuItems = (items: any[], pathDirect: string) => {
 	const { pendingLoanCount, pendingAppCount, pendingQuickLoanCount, pendingTaxationCount, hasError } = usePendingCounts();
