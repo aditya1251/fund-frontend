@@ -12,7 +12,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
-          const res = await fetch("http://localhost:5000/api/superadmin/login", {
+          const res = await fetch( process.env.NEXT_PUBLIC_BACKEND_URL + "/superadmin/login", { 
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
