@@ -102,22 +102,22 @@ export default function LoanDashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-3xl mx-auto mb-8">
           <Button
             onClick={() => router.push("/superadmin/loans/private")}
-            className="bg-black text-white w-full flex gap-2">
+            className="bg-black text-white w-full flex gap-2 hover:bg-gray-900">
             <HandCoins /> Add New Private Loan
           </Button>
           <Button
             onClick={() => router.push("/superadmin/loans/government")}
-            className="bg-black text-white w-full flex gap-2">
+            className="bg-black text-white w-full flex gap-2 hover:bg-gray-900">
             <Building /> Add New Government Loan
           </Button>
           <Button
             onClick={() => router.push("/superadmin/loans/insurance")}
-            className="bg-black text-white w-full flex gap-2">
+            className="bg-black text-white w-full flex gap-2 hover:bg-gray-900">
             <ShieldCheck /> Add New Insurance Plan
           </Button>
           <Button
             onClick={() => router.push("/superadmin/loans/applications")}
-            className="bg-[#ffd439] font-semibold w-full flex gap-2">
+            className="bg-[#ffd439] font-semibold w-full flex gap-2 hover:bg-yellow-500">
             <FileText /> View All Applications
           </Button>
         </div>
