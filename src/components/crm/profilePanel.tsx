@@ -22,6 +22,7 @@ const ProfilePanel = ({
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+	const [isDeleting, setIsDeleting] = useState(false);
 	const router = useRouter();
 	const [deleteAdmin] = useDeleteAdminMutation();
 
@@ -30,19 +31,21 @@ const ProfilePanel = ({
 	};
 
 	const handleCancelDelete = () => {
-		setShowDeleteConfirmation(false);
+		if (!isDeleting) setShowDeleteConfirmation(false);
 	};
 
 	const handleConfirmDelete = () => {
+		setIsDeleting(true);
 		deleteAdmin(user.id)
 			.unwrap()
 			.then(() => {
+				setShowDeleteConfirmation(false);
 				router.push("/login");
 			})
 			.catch((error) => {
+				setIsDeleting(false);
 				console.error("Failed to delete account:", error);
 			});
-		setShowDeleteConfirmation(false);
 	};
 
 	const handleResetPassword = () => {
@@ -155,7 +158,7 @@ const ProfilePanel = ({
 						className="fixed inset-0 bg-black opacity-50"
 						onClick={handleCancelDelete}
 					></div>
-					<div className="relative z-50 bg-white rounded-lg p-6 w-80 max-w-full shadow-xl">
+					<div className="relative z-50 bg-white rounded-lg p-6 w-84 max-w-full shadow-xl">
 						<div className="flex items-center mb-4 text-red-500">
 							<AlertTriangle className="w-6 h-6 mr-2" />
 							<h3 className="text-lg font-bold">Delete Account</h3>
@@ -170,13 +173,20 @@ const ProfilePanel = ({
 							<button
 								onClick={handleCancelDelete}
 								className="flex-1 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100 text-sm font-medium transition-colors"
+								disabled={isDeleting}
 							>
 								Cancel
 							</button>
 							<button
 								onClick={handleConfirmDelete}
-								className="flex-1 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm font-medium transition-colors"
+								className={`flex-1 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+									isDeleting ? "opacity-70 cursor-not-allowed" : ""
+								}`}
+								disabled={isDeleting}
 							>
+								{isDeleting && (
+									<span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+								)}
 								Confirm Delete
 							</button>
 						</div>
