@@ -6,15 +6,14 @@ import Image from 'next/image'
 import { usePathname } from "next/navigation";
 import {
 	BadgeIndianRupee,
-	BookOpenText,
 	Calculator,
+	Files,
 	HandCoins,
 	Handshake,
 	House,
 	Landmark,
 	LogOutIcon,
-	Megaphone,
-	MessageSquareText,
+	MessageSquareWarning,
 	PanelLeftClose,
 	Timer,
 	Users,
@@ -35,12 +34,7 @@ const navItems: NavItem[] = [
 	{ href: "/govt-loans", label: "Govt. Loans", icon: <Landmark /> },
 	{ href: "/insurance", label: "Insurance", icon: <Handshake /> },
 	{ href: "/quick-loans", label: "Quick Loans", icon: <Timer /> },
-	{ href: "/drafts", label: "Drafts", icon: <Timer /> },
-	{
-		href: "/campaign-marketing",
-		label: "Campaign & Marketing",
-		icon: <Megaphone />,
-	},
+	{ href: "/drafts", label: "Drafts", icon: <Files /> },
 	{ href: "/taxation", label: "Taxation", icon: <BadgeIndianRupee /> },
 	{
 		href: "/emi-calculator",
@@ -48,14 +42,9 @@ const navItems: NavItem[] = [
 		icon: <Calculator />,
 	},
 	{
-		href: "/training-support",
-		label: "Training & Support",
-		icon: <BookOpenText />,
-	},
-	{
-		href: "/feedback-grievance",
-		label: "Feedback & Grievance",
-		icon: <MessageSquareText />,
+		href: "/report",
+		label: "Report an Issue",
+		icon: <MessageSquareWarning />,
 	},
 ];
 

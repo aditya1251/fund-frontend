@@ -173,6 +173,12 @@ const Menuitems: MenuitemsType[] = [
 		chipColor: "primary",
 		href: "/superadmin/tax-applications",
 	},
+	{
+		id: uniqueId(),
+		title: "Feedback",
+		icon: "dialog-2-line-duotone",
+		href: "/superadmin/reports",
+	},
 ];
 
 export default Menuitems;
