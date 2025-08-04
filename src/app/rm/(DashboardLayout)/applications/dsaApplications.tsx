@@ -356,8 +356,8 @@ export default function DsaApplicationsPage({
 			</div>
 
 			{showModal && selectedLoan && (
-				<div className="fixed inset-0 z-50 bg-opacity-40 backdrop-blur-sm flex justify-center items-center">
-					<div className="bg-white w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 rounded-xl border-2 border-black shadow-[8px_8px_0_0_#000] relative">
+				<div className="fixed inset-0 start-0 lg:start-[270px] z-50 bg-opacity-40 backdrop-blur-sm flex justify-center items-center">
+					<div className="bg-white w-full max-w-3xl max-h-[75vh] overflow-y-auto p-6 rounded-xl border-2 border-black shadow-[8px_8px_0_0_#000] relative">
 						<button
 							onClick={closeModal}
 							className="absolute top-3 right-3 p-2 rounded-full text-black hover:bg-gray-200"

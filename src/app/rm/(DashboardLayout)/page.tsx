@@ -224,11 +224,11 @@ export default function LoanDashboardPage() {
         {/* Table */}
         <div className="bg-white rounded-xl shadow-[4px_4px_0_0_#000] sm:shadow-[6px_6px_0_0_#000] p-4 sm:p-6">
           {/* Header with View All */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-            <h2 className="text-lg sm:text-xl flex justify-center gap-2 items-center font-semibold text-black">
+          <div className="flex flex-col sm:flex-row sm:items-center items-start justify-between gap-3 mb-4">
+            <div className="text-lg sm:text-xl flex justify-center gap-2 items-center font-semibold text-black">
               <FileText className="w-6 h-6 sm:w-8 sm:h-8" /> 
               <span>Recent Requests</span>
-            </h2>
+            </div>
             <button
               onClick={() => router.push("/rm/loans/applications")}
               className="text-xs sm:text-sm font-medium text-[#ffd439] hover:underline hover:text-black transition"

@@ -309,7 +309,7 @@ export default function DSAApplications({
 										</div>
 									</div>
 
-									<div className="mt-6 pt-6 border-t border-gray-200 flex items-center justify-between">
+									<div className="mt-6 pt-6 border-t border-gray-200 flex flex-col-reverse sm:flex-row gap-2 items-center justify-between">
 										{loan.status === "pending" && (
 											<div className="flex flex-wrap gap-3">
 												<button
@@ -334,7 +334,7 @@ export default function DSAApplications({
 												</button>
 											</div>
 										)}
-										<div className="ml-auto">
+										<div className="mx-auto  sm:mr-0">
 											<button
 												onClick={() => openModal(loan)}
 												className="bg-blue-100 text-blue-800 px-6 py-3 rounded-lg hover:bg-blue-200 text-sm transition-all"
@@ -400,8 +400,8 @@ export default function DSAApplications({
 
 			{/* Modal */}
 			{showModal && selectedLoan && (
-				<div className="fixed inset-0 bg-opacity-40 backdrop-blur-sm flex justify-center items-center p-2">
-					<div className="bg-white w-full max-w-full sm:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-xl border-2 border-black shadow-[6px_6px_0_0_#000] sm:shadow-[8px_8px_0_0_#000] relative">
+				<div className="fixed inset-0 start-0 lg:start-[270px] bg-opacity-40 backdrop-blur-sm flex justify-center items-center p-2">
+					<div className="bg-white w-full max-w-full sm:max-w-2xl lg:max-w-3xl max-h-[75vh] overflow-y-auto p-4 sm:p-6 rounded-xl border-2 border-black shadow-[6px_6px_0_0_#000] sm:shadow-[8px_8px_0_0_#000] relative">
 						<button
 							onClick={closeModal}
 							className="absolute top-2 right-2 sm:top-3 sm:right-3 text-black p-1 sm:p-2 rounded-full hover:bg-gray-200 cursor-pointer"
