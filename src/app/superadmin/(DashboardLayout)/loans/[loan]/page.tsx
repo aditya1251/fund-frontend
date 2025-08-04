@@ -721,8 +721,8 @@ export default function LoanTemplateBuilder() {
 
         {/* Preview Modal */}
         {showPreview && (
-          <div className="fixed inset-0 z-50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-2">
-            <div className="bg-white rounded-xl shadow-[6px_6px_0_0_#000] md:shadow-[8px_8px_0_0_#000] border-2 border-black w-full max-w-full md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-hidden">
+          <div className="fixed inset-0 start-0 lg:start-[270px] z-50 bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-2">
+            <div className="bg-white rounded-xl shadow-[6px_6px_0_0_#000] md:shadow-[8px_8px_0_0_#000] border-2 border-black w-full max-w-full md:max-w-2xl lg:max-w-3xl max-h-[75vh] overflow-hidden">
               {/* Preview Header */}
               <div className="flex items-center justify-between p-4 md:p-6">
                 <div>
@@ -744,7 +744,7 @@ export default function LoanTemplateBuilder() {
               </div>
 
               {/* Preview Content */}
-              <div className="p-4 md:p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+              <div className="p-4 md:p-6 overflow-y-auto max-h-[calc(75vh-120px)]">
                 {template.pages.length > 0 ? (
                   <div className="space-y-4 md:space-y-6">
                     {/* Step indicator with circles */}

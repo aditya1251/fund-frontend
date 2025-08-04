@@ -1,6 +1,5 @@
 import React from "react";
 import Header from "@/components/crm/header";
-import Banner from "@/components/crm/banner";
 import Sidebar from "@/components/crm/sidebar";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -19,12 +18,22 @@ export default async function CrmLayout({
 		redirect("/");
 	}
 	return (
-		<div className="flex h-screen bg-gray-50 font-space-grotesk overflow-hidden">
-			<Sidebar />
-			<main className="flex-1 overflow-x-hidden overscroll-y-contain">
-				<Header />
-				<div className="flex-1 min-h-screen overflow-y-auto ">{children}</div>
-			</main>
-		</div>
+		<html lang="en">
+			<head>
+				<link rel="icon" href="/images/favicon.ico" />
+				<title>CRM Panel</title>
+			</head>
+			<body>
+				<div className="flex h-screen bg-gray-50 font-space-grotesk overflow-hidden">
+					<Sidebar />
+					<main className="flex-1 overflow-x-hidden overscroll-y-contain">
+						<Header />
+						<div className="flex-1 min-h-[calc(100vh-4rem)] overflow-y-auto ">
+							{children}
+						</div>
+					</main>
+				</div>
+			</body>
+		</html>
 	);
 }

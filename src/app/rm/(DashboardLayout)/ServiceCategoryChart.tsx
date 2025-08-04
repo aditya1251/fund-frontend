@@ -13,7 +13,7 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const menuOptions = ["Export", "Download", "Print"];
 
-const LoanCategoryChart = () => {
+const ServiceCategoryChart = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -33,9 +33,9 @@ const LoanCategoryChart = () => {
   
   // State for chart data
   const [chartData, setChartData] = React.useState({
-    approved: [0, 0, 0], // [Private, Government, Insurance]
-    pending: [0, 0, 0],
-    rejected: [0, 0, 0],
+    approved: [0, 0, 0, 0, 0], // [Private, Government, Insurance, Quick Loan, Taxation]
+    pending: [0, 0, 0, 0, 0],
+    rejected: [0, 0, 0, 0, 0],
   });
   
   // Process loan data for the chart
@@ -43,9 +43,9 @@ const LoanCategoryChart = () => {
     if (loansData && loansData.length > 0) {
       // Initialize counters
       const counts = {
-        approved: [0, 0, 0], // [Private, Government, Insurance]
-        pending: [0, 0, 0],
-        rejected: [0, 0, 0],
+        approved: [0, 0, 0, 0, 0], // [Private, Government, Insurance, Quick Loan, Taxation]
+        pending: [0, 0, 0, 0, 0],
+        rejected: [0, 0, 0, 0, 0],
       };
       
       // Process each loan
@@ -57,6 +57,11 @@ const LoanCategoryChart = () => {
           categoryIndex = 1;
         } else if (loan.loanType?.toLowerCase() === 'insurance') {
           categoryIndex = 2;
+        }
+        else if (loan.loanType?.toLowerCase() === 'quick loan') {
+          categoryIndex = 3;
+        } else if (loan.loanType?.toLowerCase() === 'taxation') {
+          categoryIndex = 4;
         }
         
         // Count by status
@@ -112,7 +117,7 @@ const LoanCategoryChart = () => {
       strokeDashArray: 4,
     },
     xaxis: {
-      categories: ["Private", "Government", "Insurance"],
+      categories: ["Private", "Government", "Insurance", "Quick Loan", "Taxation"],
       axisBorder: { show: false },
       labels: {
         style: { 
@@ -218,7 +223,7 @@ const LoanCategoryChart = () => {
 
   return (
     <DashboardCard
-      title="Loan Category Comparison"
+      title="Services Category Comparison"
       action={
         <>
           <IconButton
@@ -261,4 +266,4 @@ const LoanCategoryChart = () => {
   );
 };
 
-export default LoanCategoryChart;
+export default ServiceCategoryChart;

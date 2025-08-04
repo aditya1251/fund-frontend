@@ -6,6 +6,7 @@ import {
 	useGetDsaDetailsQuery,
 	useUpdateDsaDetailsMutation,
 } from "@/redux/services/dsaApi";
+import Loading from "@/components/Loading";
 
 export default function Page() {
 	const [isEditMode, setIsEditMode] = useState(false);
@@ -59,9 +60,13 @@ export default function Page() {
 
 		// Check if this is a bank detail field
 		if (
-			["accountHolderName", "accountNumber", "ifsc", "branchName", "bankName"].includes(
-				name
-			)
+			[
+				"accountHolderName",
+				"accountNumber",
+				"ifsc",
+				"branchName",
+				"bankName",
+			].includes(name)
 		) {
 			setFormData({
 				...formData,
@@ -117,11 +122,7 @@ export default function Page() {
 	};
 
 	if (isLoading) {
-		return (
-			<div className="flex justify-center items-center min-h-[300px]">
-				<div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-yellow-500"></div>
-			</div>
-		);
+		return <Loading />;
 	}
 
 	return (
