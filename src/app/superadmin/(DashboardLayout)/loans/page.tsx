@@ -165,9 +165,9 @@ export default function LoanDashboardPage() {
         {/* Recent Loan Table */}
         <div className="bg-white p-6 rounded-xl shadow-md">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold flex items-center gap-2">
+            <div className="text-lg sm:text-xl font-semibold flex items-center gap-2">
               <FileText /> Recent Loan Requests
-            </h2>
+            </div>
             <button
               onClick={() => router.push("/superadmin/loans/applications")}
               className="text-[#ffb700] hover:underline text-sm">

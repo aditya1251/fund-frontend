@@ -175,7 +175,7 @@ const Menuitems: MenuitemsType[] = [
 	},
 	{
 		id: uniqueId(),
-		title: "Feedback",
+		title: "Issue Reports",
 		icon: "dialog-2-line-duotone",
 		href: "/superadmin/reports",
 	},
