@@ -4,6 +4,7 @@ import { Check, Clock, AlertCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useGetDsaDetailsQuery } from "@/redux/services/dsaApi";
 import { useGetPlanByIdQuery } from "@/redux/services/plansApi";
+import Loading from "@/components/Loading";
 
 export default function Page() {
 	const { data: session } = useSession();
@@ -21,11 +22,7 @@ export default function Page() {
 	const isLoading = isDsaLoading || isPlanLoading;
 
 	if (isLoading) {
-		return (
-			<div className="flex justify-center items-center min-h-[300px]">
-				<div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-yellow-500"></div>
-			</div>
-		);
+		return <Loading />;
 	}
 	return (
 		<div className="mx-auto py-8 rounded-md">
@@ -60,7 +57,7 @@ export default function Page() {
 						</div>
 
 						<div className="p-6">
-							<div className="flex justify-between items-center mb-6">
+							<div className="flex justify-between items-center mb-6 flex-col md:flex-row">
 								<div>
 									<span className="text-3xl font-bold text-black">
 										₹{planData.amount}
@@ -75,7 +72,7 @@ export default function Page() {
 									<span className="text-sm text-gray-500">
 										{planData.duration === 0
 											? "Lifetime Access"
-											: `Expires in ${planData.duration} months`}
+											: `Access for ${planData.duration} months`}
 									</span>
 								</div>
 							</div>

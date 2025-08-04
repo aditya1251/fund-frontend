@@ -16,7 +16,7 @@ export default function ProfileHeader() {
 	return (
 		<>
 			<div className="w-full py-2 flex items-center gap-4">
-				<div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200">
+				<div className="w-12 h-12 md:w-16 md:h-16 lg:w-24 lg:h-24 rounded-full overflow-hidden bg-gray-200">
 					<img
 						src={user?.image || "/placeholder.svg"}
 						alt="User Avatar"

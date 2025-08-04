@@ -34,7 +34,7 @@ export async function uploadFile(file: File): Promise<{ filename: string }> {
 
 export async function getFileUrl(filename: string): Promise<string> {
   try {
-    const response = await fetch( process.env.NEXT_PUBLIC_BACKEND_URL + `/download/${filename}`, {
+    const response = await fetch( process.env.NEXT_PUBLIC_BACKEND_URL + `/upload/${filename}`, {
       method: 'GET',
     });
     if (!response.ok) {
