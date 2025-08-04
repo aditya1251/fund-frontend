@@ -124,7 +124,7 @@ export default function ManageDSAs() {
 
   return (
     <div className="min-h-screen py-16 px-4">
-      <div className="max-w-6xl mx-auto flex flex-col gap-12">
+      <div className="max-w-6xl mx-auto space-y-12">
         <div className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Manage <span className="text-[#FFD439]">DSA Users</span>
@@ -136,8 +136,8 @@ export default function ManageDSAs() {
 
         {/* Notification Overlay */}
         {showNotifyOverlay && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-40 backdrop-blur-sm">
-            <div className="bg-white border-2 border-black shadow-[6px_6px_0_0_#000] rounded-xl p-6 max-w-md w-full">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
+            <div className="bg-white border-2 border-black shadow-[6px_6px_0_0_#000] rounded-xl p-6 max-w-md w-full m-4">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-black">
                   Notify
@@ -145,7 +145,7 @@ export default function ManageDSAs() {
                 </h2>
                 <button
                   onClick={() => setShowNotifyOverlay(false)}
-                  className="text-neutral-900 hover:bg-neutral-200 rounded-full p-1 transition-colors"
+                  className="text-gray-500 hover:text-black"
                 >
                   <X size={20} />
                 </button>
@@ -215,7 +215,7 @@ export default function ManageDSAs() {
                 placeholder="Search DSA users..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full border-2 border-black rounded-lg pl-4 pr-10 py-2 hover:ring-1 focus:outline-none focus:ring-2 ring-black"
+                className="w-full border-2 border-black rounded-lg pl-4 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-black"
               />
             </div>
 
@@ -224,7 +224,7 @@ export default function ManageDSAs() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="border-2 border-black rounded-lg px-4 py-2 bg-white hover:ring-1 focus:outline-none focus:ring-2 ring-black cursor-pointer"
+                  className="border-2 border-black rounded-lg px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-black"
                 >
                   <option value="all">All Status</option>
                   <option value="active">Active</option>

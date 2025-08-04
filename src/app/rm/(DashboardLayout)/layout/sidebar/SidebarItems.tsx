@@ -10,6 +10,9 @@ import { useGetApplicationsQuery } from "@/redux/services/applicationApi";
 import { useGetLoansByRmIdQuery } from "@/redux/services/loanApi";
 import { useSession } from "next-auth/react";
 
+// Custom hook to manage the pending counts
+import { useGetLoanPendingCountsQuery } from "@/redux/services/loanApi";
+
 const usePendingCounts = () => {
 	const { data: session } = useSession();
 	const {
@@ -17,12 +20,19 @@ const usePendingCounts = () => {
 		isLoading: isLoanCountLoading,
 		error: loanCountError,
 	} = useGetLoansByRmIdQuery(session?.user?.id || "");
+  const { data: pendingData, isLoading: isLoanCountLoading, error: loanCountError } =
+	useGetLoanPendingCountsQuery();
 
 	const {
 		data: applicationsData = [],
 		isLoading: isAppsLoading,
 		error: appsError,
 	} = useGetApplicationsQuery(undefined);
+  const {
+	data: applicationsData = [],
+	isLoading: isAppsLoading,
+	error: appsError,
+  } = useGetApplicationsQuery(undefined);
 
 	const pendingAppCount = useMemo(() => {
 		if (isAppsLoading || appsError) return null;
@@ -50,6 +60,10 @@ const usePendingCounts = () => {
 			{ applications: 0, quickApplications: 0, taxApplications: 0 }
 		);
 	}, [loansData, isLoanCountLoading, loanCountError]);
+  const pendingAppCount = useMemo(() => {
+	if (isAppsLoading || appsError) return null;
+	return applicationsData.filter((app: any) => app.status === "pending").length;
+  }, [applicationsData, isAppsLoading, appsError]);
 
 	return {
 		pendingLoanCount: pendingData?.applications ?? 0,
@@ -59,7 +73,16 @@ const usePendingCounts = () => {
 		isLoading: isLoanCountLoading || isAppsLoading,
 		hasError: loanCountError || appsError,
 	};
+  return {
+	pendingLoanCount: pendingData?.applications ?? 0,
+	pendingQuickLoanCount: pendingData?.quickApplications ?? 0,
+	pendingTaxationCount: pendingData?.taxApplications ?? 0,
+	pendingAppCount,
+	isLoading: isLoanCountLoading || isAppsLoading,
+	hasError: loanCountError || appsError,
+  };
 };
+
 
 const renderMenuItems = (items: any[], pathDirect: string) => {
 	const {
@@ -69,6 +92,7 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
 		pendingTaxationCount,
 		hasError,
 	} = usePendingCounts();
+	const { pendingLoanCount, pendingAppCount, pendingQuickLoanCount, pendingTaxationCount, hasError } = usePendingCounts();
 
 	return items.map((item) => {
 		if (item.subheader) {
@@ -126,6 +150,7 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
 					item.chip ||
 					item.title in
 						["Loan Applications", "Contacts", "Quick Loan", "Taxation"]
+					item.chip || item.title === "Applications" || item.title === "Contacts" || item.title === "Quick Applications"
 						? true
 						: false
 				}
@@ -139,6 +164,11 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
 						: item.title === "Taxation"
 						? pendingTaxationCount
 						: item.chip || "0"
+						: item.title === "Quick Applications"
+						? pendingQuickLoanCount
+						: item.title === "Tax Applications"
+						? pendingTaxationCount
+						: item.chip || ""
 				}
 				badgeColor={
 					hasError &&
