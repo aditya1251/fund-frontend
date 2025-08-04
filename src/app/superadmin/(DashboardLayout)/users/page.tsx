@@ -182,7 +182,7 @@ export default function ManageAdmins() {
 
 	return (
 		<div className="min-h-screen py-16 px-4">
-			<div className="max-w-full mx-auto space-y-12 overflow-hidden">
+			<div className="max-w-full mx-auto flex flex-col gap-12 overflow-hidden">
 				<div className="text-center">
 					<h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
 						Manage <span className="text-[#FFD439]">Users</span>

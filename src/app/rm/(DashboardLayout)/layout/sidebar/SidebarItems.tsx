@@ -7,25 +7,72 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { Submenu } from "./Submenu";
 import { useGetApplicationsQuery } from "@/redux/services/applicationApi";
+import { useGetLoansByRmIdQuery } from "@/redux/services/loanApi";
+import { useSession } from "next-auth/react";
 
 // Custom hook to manage the pending counts
 import { useGetLoanPendingCountsQuery } from "@/redux/services/loanApi";
 
 const usePendingCounts = () => {
+	const { data: session } = useSession();
+	const {
+		data: loansData,
+		isLoading: isLoanCountLoading,
+		error: loanCountError,
+	} = useGetLoansByRmIdQuery(session?.user?.id || "");
   const { data: pendingData, isLoading: isLoanCountLoading, error: loanCountError } =
 	useGetLoanPendingCountsQuery();
 
+	const {
+		data: applicationsData = [],
+		isLoading: isAppsLoading,
+		error: appsError,
+	} = useGetApplicationsQuery(undefined);
   const {
 	data: applicationsData = [],
 	isLoading: isAppsLoading,
 	error: appsError,
   } = useGetApplicationsQuery(undefined);
 
+	const pendingAppCount = useMemo(() => {
+		if (isAppsLoading || appsError) return null;
+		return applicationsData.filter((app: any) => app.status === "pending")
+			.length;
+	}, [applicationsData, isAppsLoading, appsError]);
+
+	const pendingData = useMemo(() => {
+		if (isLoanCountLoading || loanCountError) return null;
+		return loansData?.reduce(
+			(acc: any, loan: any) => {
+				if (loan.status === "pending") {
+					if (["private", "government", "insurance"].includes(loan.loanType)) {
+						acc.applications += 1;
+					}
+					if (loan.loanType === "quick") {
+						acc.quickApplications += 1;
+					}
+					if (loan.loanType === "tax") {
+						acc.taxApplications += 1;
+					}
+				}
+				return acc;
+			},
+			{ applications: 0, quickApplications: 0, taxApplications: 0 }
+		);
+	}, [loansData, isLoanCountLoading, loanCountError]);
   const pendingAppCount = useMemo(() => {
 	if (isAppsLoading || appsError) return null;
 	return applicationsData.filter((app: any) => app.status === "pending").length;
   }, [applicationsData, isAppsLoading, appsError]);
 
+	return {
+		pendingLoanCount: pendingData?.applications ?? 0,
+		pendingQuickLoanCount: pendingData?.quickApplications ?? 0,
+		pendingTaxationCount: pendingData?.taxApplications ?? 0,
+		pendingAppCount,
+		isLoading: isLoanCountLoading || isAppsLoading,
+		hasError: loanCountError || appsError,
+	};
   return {
 	pendingLoanCount: pendingData?.applications ?? 0,
 	pendingQuickLoanCount: pendingData?.quickApplications ?? 0,
@@ -38,6 +85,13 @@ const usePendingCounts = () => {
 
 
 const renderMenuItems = (items: any[], pathDirect: string) => {
+	const {
+		pendingLoanCount,
+		pendingAppCount,
+		pendingQuickLoanCount,
+		pendingTaxationCount,
+		hasError,
+	} = usePendingCounts();
 	const { pendingLoanCount, pendingAppCount, pendingQuickLoanCount, pendingTaxationCount, hasError } = usePendingCounts();
 
 	return items.map((item) => {
@@ -93,15 +147,23 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
 				component="div"
 				link={item.href && item.href !== "" ? item.href : undefined}
 				badge={
+					item.chip ||
+					item.title in
+						["Loan Applications", "Contacts", "Quick Loan", "Taxation"]
 					item.chip || item.title === "Applications" || item.title === "Contacts" || item.title === "Quick Applications"
 						? true
 						: false
 				}
 				badgeContent={
-					item.title === "Applications"
+					item.title === "Loan Applications"
 						? pendingLoanCount
 						: item.title === "Contacts"
 						? pendingAppCount
+						: item.title === "Quick Loan"
+						? pendingQuickLoanCount
+						: item.title === "Taxation"
+						? pendingTaxationCount
+						: item.chip || "0"
 						: item.title === "Quick Applications"
 						? pendingQuickLoanCount
 						: item.title === "Tax Applications"
@@ -110,7 +172,8 @@ const renderMenuItems = (items: any[], pathDirect: string) => {
 				}
 				badgeColor={
 					hasError &&
-					(item.title === "Applications" || item.title === "Contacts")
+					item.title in
+						["Loan Applications", "Contacts", "Quick Loan", "Taxation"]
 						? "error"
 						: item.chipColor || "secondary"
 				}

@@ -52,7 +52,7 @@ const Header = () => {
     [theme.breakpoints.up("lg")]: {
       minHeight: "70px",
     },
-    zIndex: "unset",
+    zIndex: "999",
   }));
 
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({

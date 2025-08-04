@@ -331,6 +331,13 @@ export default function NavigationHeader() {
                 </Button>
               </Link>
             )}
+            {session.user?.role === "RM" && (
+              <Link href="/rm" onClick={toggle}>
+                <Button className="w-full mt-4 bg-[#f7c430] text-black font-medium cursor-pointer">
+                  RM Panel
+                </Button>
+              </Link>
+            )}
             {session.user?.role === "SUPERADMIN" && (
               <Link href="/superadmin" onClick={toggle}>
                 <Button className="w-full mt-4 bg-[#f7c430] text-black font-medium">
@@ -387,6 +394,13 @@ export default function NavigationHeader() {
                   <Link href="/crm">
                     <Button className="bg-[#f7c430] text-black font-medium px-4 py-2 rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
                       CRM Panel
+                    </Button>
+                  </Link>
+                )}
+                {status === "authenticated" && session?.user?.role === "RM" && (
+                  <Link href="/rm">
+                    <Button className="bg-[#f7c430] text-black font-medium px-4 py-2 rounded-md shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow">
+                      RM Panel
                     </Button>
                   </Link>
                 )}
