@@ -139,8 +139,8 @@ const MobileDots = ({
   const currentSlide = slides[currentSlideIndex];
 
   // Define the routes/links
-  const applyRoute = "/apply"; // Your general apply route
-  const becomeRoute = "/become"; // Your become partner route
+  const applyRoute = "/contact"; // Your general apply route
+  const becomeRoute = "/contact"; // Your become partner route
 
   // Determine the current button link
   const currentButtonLink = currentSlideIndex === 2 ? becomeRoute : applyRoute; // Index 2 is the 3rd slide (DSA partner)
