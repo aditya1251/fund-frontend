@@ -146,7 +146,8 @@ const ContactPage = () => {
                 <Phone className="w-8 h-8 text-black" />
               </div>
               <h3 className="font-bold text-lg mb-2 text-neutral-900">Call Us</h3>
-              <p className="text-gray-600 mb-3">Mon-Fri 9am-6pm</p>
+              <p className="text-gray-600 mb-1">Monday - Friday</p>
+              <p className="text-gray-700 font-medium mb-3">9:00 AM - 6:00 PM</p>
               <a href="tel:+917098662830" className="text-yellow-600 font-semibold hover:underline">
                 +91 7098 66230
               </a>
@@ -181,7 +182,6 @@ const ContactPage = () => {
               <h3 className="font-bold text-lg mb-2 text-neutral-900">Business Hours</h3>
               <p className="text-gray-600 mb-1">Monday - Friday</p>
               <p className="text-gray-700 font-medium">9:00 AM - 6:00 PM</p>
-              <p className="text-gray-600 mt-2">Weekend consultations available</p>
             </div>
           </div>
         </div>
