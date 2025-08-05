@@ -93,8 +93,8 @@ useEffect(() => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
       {/* Stats column */}
       <div className="flex flex-col gap-2 p-3 md:p-4 justify-evenly bg-white shadow-md rounded-lg">
-        <h3 className="text-base md:text-lg font-semibold mb-2 px-1">Loan Statistics</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        <h3 className="text-base md:text-lg text-black font-semibold mb-2 px-1">Loan Statistics</h3>
+        <div className="grid grid-cols-1 gap-2">
           {stats.map((item, idx) => (
             <StatsCard key={idx} {...item} />
           ))}

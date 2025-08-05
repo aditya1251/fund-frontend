@@ -82,10 +82,10 @@ const Sidebar = () => {
 		<>
 			{/* Mobile hamburger menu (only visible on mobile when sidebar is closed) */}
 			{isMobile && !open && (
-				<div className="fixed top-4 left-4 z-[1001]">
+				<div className="fixed top-1 left-2 z-[1001]">
 					<button
 						onClick={toggleSidebar}
-						className="p-2 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-gray-100"
+						className="p-2.5 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-gray-100"
 						aria-label="Open sidebar"
 					>
 						<Menu size={24} className="text-black" />
@@ -94,32 +94,31 @@ const Sidebar = () => {
 			)}
 
 			{/* Overlay for mobile (only visible when sidebar is open on mobile) */}
-			{open && isMobile && (
+			{isMobile && (
 				<div 
-					className="fixed inset-0 bg-black bg-opacity-50 z-[999]"
+					className={`fixed inset-0 bg-black transition-opacity duration-300 ease-in-out z-[999] ${open ? 'opacity-50 visible' : 'opacity-0 invisible'}`}
 					onClick={toggleSidebar}
-					style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
 				/>
 			)}
 
 			<aside
-				className={`fixed md:relative flex flex-col bg-white shadow-lg h-full z-[1000] transition-all duration-300 ease-in-out
+				className={`flex flex-col bg-white h-full z-[1000] transition-all duration-300 ease-in-out
 					${isMobile ? 
-						(open ? "translate-x-0 w-64" : "-translate-x-full") : 
-						(open ? "w-64" : "w-20")}
+						(open ? "fixed translate-x-0 w-64 shadow-2xl" : "fixed -translate-x-full w-0 opacity-0") : 
+						(open ? "w-64 shadow-md" : "w-20 shadow-sm")}
 				`}
-				style={{ position: 'fixed', top: 0, left: 0, bottom: 0 }}
+				style={{ position: isMobile ? 'fixed' : 'static', top: 0, left: 0, bottom: 0 }}
 			>
 				<div>
 					{/* Header */}
 					<div className="text-black flex items-center justify-between px-4 py-4 border-b border-gray-200">
-						<Link href="/crm">
+						<Link href="/crm" className="flex items-center">
 							<Image
 								src={logo}
 								alt="Logo"
 								width={40}
 								height={40}
-								className={`transition-all duration-300 ${open ? "w-10 h-10" : "w-0 h-0"}`}
+								className={`transition-all duration-300 ${!open && !isMobile ? 'w-0 h-0 opacity-0' : 'w-10 h-10 opacity-100'}`}
 								quality={100}
 								placeholder="blur"
 								blurDataURL="/placeholder.svg" // Placeholder image for blur effect
@@ -130,10 +129,10 @@ const Sidebar = () => {
 						<button
 							onClick={toggleSidebar}
 							aria-label="Toggle sidebar"
-							className="p-1 rounded hover:bg-gray-200"
+							className={`p-1.5 rounded hover:bg-gray-200 ${isMobile ? 'text-gray-800' : ''}`}
 						>
 							{isMobile ? (
-								<X className="cursor-pointer" />
+								<X size={20} className="cursor-pointer" />
 							) : (
 								<PanelLeftClose className={`cursor-pointer ${!open ? 'rotate-180' : ''}`} />
 							)}
@@ -149,14 +148,14 @@ const Sidebar = () => {
 									<li key={href}>
 										<Link
 											href={`${baseUrl}${href}`}
-											className={`flex items-center p-2 gap-3 rounded-lg text-sm transition-colors duration-200 ${isActive
+											className={`flex items-center p-2.5 gap-3 rounded-lg text-sm transition-colors duration-200 ${isActive
 												? "bg-[#f5d949] text-black"
 												: "text-black hover:bg-gray-200"
 												}`}
 											onClick={isMobile ? toggleSidebar : undefined}
 										>
-											<div>{icon}</div>
-											<span className={`${!open && !isMobile ? 'hidden' : 'block'}`}>{label}</span>
+											<div className="min-w-[24px] flex items-center justify-center">{icon}</div>
+											<span className={`transition-opacity duration-300 ${!open && !isMobile ? 'opacity-0 w-0 hidden' : 'opacity-100'}`}>{label}</span>
 										</Link>
 									</li>
 								);
@@ -169,10 +168,10 @@ const Sidebar = () => {
 								signOut();
 								if (isMobile) toggleSidebar();
 							}}
-							className="flex items-center p-2 gap-3 rounded-lg text-sm text-neutral-500 hover:bg-gray-200 transition-colors duration-200 cursor-pointer mt-auto"
+							className="flex items-center p-2.5 gap-3 rounded-lg text-sm text-neutral-500 hover:bg-gray-200 transition-colors duration-200 cursor-pointer mt-auto"
 						>
-							<LogOutIcon />
-							<span className={`${!open && !isMobile ? 'hidden' : 'block'}`}>Log Out</span>
+							<div className="min-w-[24px] flex items-center justify-center"><LogOutIcon /></div>
+							<span className={`transition-opacity duration-300 ${!open && !isMobile ? 'opacity-0 w-0 hidden' : 'opacity-100'}`}>Log Out</span>
 						</div>
 					</nav>
 				</div>

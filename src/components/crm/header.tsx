@@ -7,10 +7,10 @@ interface NotificationPanel {
 	userId: string;
 }
 interface ProfilePanel {
-	user: string;
+	 user: string;
 }
 
-export default function Header() {
+export default function 	Header() {
 	const { data: session } = useSession();
 
 	return (
@@ -35,13 +35,11 @@ export default function Header() {
 			{/* Right: Notification & Profile */}
 			<div className="flex items-center space-x-2 sm:space-x-4">
 				<NotificationPanel userId={session?.user?.id || ""} pane="left" />
-				<ProfilePanel
-					user={{
-						name: session?.user?.name ?? "",
-						email: session?.user?.email ?? "",
-						id: session?.user?.id ?? "",
-					}}
-				/>
+				<ProfilePanel user={{ 
+					id: session?.user?.id || "", 
+					name: session?.user?.name || "", 
+					email: session?.user?.email || "" 
+				}} />
 			</div>
 		</header>
 	);

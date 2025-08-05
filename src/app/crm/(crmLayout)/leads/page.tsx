@@ -318,8 +318,6 @@ const LeadActivityStatus: React.FC = () => {
                 </tbody>
               </table>
             </TableWrapper>
-
-            <ViewAllButton />
           </div>
         </div>
       </div>

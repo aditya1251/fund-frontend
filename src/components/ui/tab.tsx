@@ -80,7 +80,7 @@ interface TabsIconProps {
 }
 
 export function TabsIcon({ children, className }: TabsIconProps) {
-    return <div className={`w-5 h-5 flex-shrink-0 ${className || ''}`}>{children}</div>;
+    return <div className={`w-5 h-5 text-black flex-shrink-0 ${className || ''}`}>{children}</div>;
 }
 
 interface TabsLabelProps {
@@ -91,7 +91,7 @@ interface TabsLabelProps {
 export function TabsLabel({ children, className }: TabsLabelProps) {
     return (
         // Changed to flex-col to stack name and description vertically
-        <div className={`flex flex-col flex-grow ${className || ''}`}>
+        <div className={`flex flex-col text-black flex-grow ${className || ''}`}>
             {children}
         </div>
     );
