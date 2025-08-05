@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "./ui/button";
 import { Star, Instagram, Twitter, Facebook, Youtube } from "lucide-react";
 import Image from "next/image";
@@ -6,9 +8,11 @@ import hdfc from "../../public/assets/hdfc.png"; // Adjust the path as necessary
 import bajaj from "../../public/assets/bajaj.png"; // Adjust the path as necessary
 import axis from "../../public/assets/axis.png"; // Adjust the path as necessary
 import lic from "../../public/assets/lic.png"; // Adjust the path as necessary
-
+import { useRouter } from "next/navigation";
 
 export default function Footer() {
+  const router = useRouter();
+
   return (
     <div className="w-full">
       {/* Main Footer Section */}
@@ -188,7 +192,9 @@ export default function Footer() {
                 Transparent. Trusted. Impactful. Let's Build A Better Future.
               </p>
 
-              <Button className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow cursor-pointer">
+              <Button
+              onClick={() => router.push("/contact")}
+              className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow cursor-pointer">
                 Get Started
               </Button>
 
