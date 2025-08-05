@@ -250,8 +250,6 @@ export default function Page() {
                 </tbody>
               </table>
             </TableWrapper>
-
-            <ViewAllButton />
           </div>
         </div>
       </div>
