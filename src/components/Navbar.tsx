@@ -117,20 +117,20 @@ export default function NavigationHeader() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-48">
           <DropdownMenuItem><Link href="/income-tax" className="w-full text-black">ITR Services</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/gst" className="w-full text-black">TDS Return filling</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">GST Services</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">CMA/Project report</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">Trademark Registration</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">Company Registration</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">IEC Registration</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">ISO Registration</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">FSSAI Registration</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">Udyog Aadhar Registration</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">PF/ESIC</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">ROC Filling</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">Trade License</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">Company Audit</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/tax-planning" className="w-full text-black">Balance Sheet/Finance</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/tds" className="w-full text-black">TDS Return filling</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/gst" className="w-full text-black">GST Services</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/cma" className="w-full text-black">CMA/Project report</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/trademark" className="w-full text-black">Trademark Registration</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/company-registration" className="w-full text-black">Company Registration</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/iec" className="w-full text-black">IEC Registration</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/iso" className="w-full text-black">ISO Registration</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/fssai" className="w-full text-black">FSSAI Registration</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/udyog-aadhar" className="w-full text-black">Udyog Aadhar Registration</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/pf-esic" className="w-full text-black">PF/ESIC</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/roc-filling" className="w-full text-black">ROC Filling</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/trade-license" className="w-full text-black">Trade License</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/company-audit" className="w-full text-black">Company Audit</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/balance-sheet" className="w-full text-black">Balance Sheet/Finance</Link></DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -194,20 +194,20 @@ export default function NavigationHeader() {
 
         <MobileAccordion title="Taxation">
           <div><Link href="/income-tax" onClick={toggle} className="text-black">ITR Services</Link></div>
-          <div><Link href="/gst" onClick={toggle} className="text-black">TDS Return filling</Link></div>
-          <div><Link href="/tax-planning" onClick={toggle} className="text-black">GST Services</Link></div>
-          <div><Link href="/tax-planning" onClick={toggle} className="text-black">CMA/Project report</Link></div>
-          <div><Link href="/tax-planning" onClick={toggle} className="text-black">Trademark Registration</Link></div>
-          <div><Link href="/tax-planning" onClick={toggle} className="text-black">Company Registration</Link></div>
-          <div><Link href="/tax-planning" onClick={toggle} className="text-black">IEC Registration</Link></div>
-          <div><Link href="/tax-planning" onClick={toggle} className="text-black">ISO Registration</Link></div>
-          <div><Link href="/tax-planning" onClick={toggle} className="text-black">FSSAI Registration</Link></div>
-          <div><Link href="/tax-planning" onClick={toggle} className="text-black">Udyog Aadhar Registration</Link></div>
-          <div><Link href="/tax-planning" onClick={toggle} className="text-black">PF/ESIC</Link></div>
-          <div><Link href="/tax-planning" onClick={toggle} className="text-black">ROC Filling</Link></div>
-          <div><Link href="/tax-planning" onClick={toggle} className="text-black">Trade License</Link></div>
-          <div><Link href="/tax-planning" onClick={toggle} className="text-black">Company Audit</Link></div>
-          <div><Link href="/tax-planning" onClick={toggle} className="text-black">Balance Sheet/Finance</Link></div>
+          <div><Link href="/tds" onClick={toggle} className="text-black">TDS Return filling</Link></div>
+          <div><Link href="/gst" onClick={toggle} className="text-black">GST Services</Link></div>
+          <div><Link href="/cma-project-report" onClick={toggle} className="text-black">CMA/Project report</Link></div>
+          <div><Link href="/trademark-registration" onClick={toggle} className="text-black">Trademark Registration</Link></div>
+          <div><Link href="/company-registration" onClick={toggle} className="text-black">Company Registration</Link></div>
+          <div><Link href="/iec-registration" onClick={toggle} className="text-black">IEC Registration</Link></div>
+          <div><Link href="/iso-registration" onClick={toggle} className="text-black">ISO Registration</Link></div>
+          <div><Link href="/fssai-registration" onClick={toggle} className="text-black">FSSAI Registration</Link></div>
+          <div><Link href="/udyog-aadhar-registration" onClick={toggle} className="text-black">Udyog Aadhar Registration</Link></div>
+          <div><Link href="/pf-esic" onClick={toggle} className="text-black">PF/ESIC</Link></div>
+          <div><Link href="/roc-filling" onClick={toggle} className="text-black">ROC Filling</Link></div>
+          <div><Link href="/trade-license" onClick={toggle} className="text-black">Trade License</Link></div>
+          <div><Link href="/company-audit" onClick={toggle} className="text-black">Company Audit</Link></div>
+          <div><Link href="/balance-sheet" onClick={toggle} className="text-black">Balance Sheet/Finance</Link></div>
         </MobileAccordion>
 
         <MobileAccordion title="Marketing">
