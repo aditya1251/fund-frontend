@@ -43,7 +43,7 @@ const Banks: React.FC = () => {
 
   return (
     <div className="relative overflow-hidden bg-white shadow-md rounded-lg mb-6 py-4 sm:py-8">
-      <h3 className="text-base md:text-lg font-semibold mb-4 px-4 sm:px-6">Our Partner Banks</h3>
+      <h3 className="text-base md:text-lg font-semibold mb-4 px-4 text-black sm:px-6">Our Partner Banks</h3>
       
       {/* Gradient overlays for fade effect */}
       <div className="absolute inset-y-0 left-0 w-12 sm:w-16 md:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />

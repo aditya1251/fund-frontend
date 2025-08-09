@@ -28,12 +28,11 @@ export default function Fund() {
                 className="relative z-10"
               />
             </div>
-            <h3 className="text-2xl font-bold text-black mb-4">
-              Website Builder
-            </h3>
+            <h3 className="text-2xl font-bold text-black mb-4">Transparency</h3>
             <p className="text-gray-600 text-lg leading-relaxed">
-              Easily Create Stunning, Responsive Websites Without Coding Using
-              Our Intuitive Builder.
+              DSA Workflow with Real-Time Status Tracking Track the entire loan
+              lifecycle—from lead to disbursement—with live dashboards, alerts,
+              and borrower updates to boost DSA trust and cut follow-ups.
             </p>
           </div>
 
@@ -49,11 +48,11 @@ export default function Fund() {
               />
             </div>
             <h3 className="text-2xl font-bold text-black mb-4">
-              Grow Your Business
+              Timely Payments
             </h3>
             <p className="text-gray-600 text-lg leading-relaxed">
-              Grow Your Business Online With Powerful Tools And Smart Digital
-              Solutions.
+              DSAs get full visibility of their earnings with real-time updates,
+              and timely payout options.
             </p>
           </div>
 
@@ -69,11 +68,11 @@ export default function Fund() {
               />
             </div>
             <h3 className="text-2xl font-bold text-black mb-4">
-              Design Anything.
+              BCP(Business Channel Partner) Plan
             </h3>
             <p className="text-gray-600 text-lg leading-relaxed">
-              Design Anything You Imagine With Flexible Tools And Creative
-              Freedom.
+              We enable DSAs to become channel partners and build their own
+              network by onboarding sub- DSAs under them.
             </p>
           </div>
         </div>

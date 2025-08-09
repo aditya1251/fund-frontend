@@ -271,7 +271,7 @@ export default function ContactForm() {
                       Submitting...
                     </>
                   ) : (
-                    "Get Your Home Threater Setup"
+                    "Let's Connect"
                   )}
                 </Button>
               </form>
