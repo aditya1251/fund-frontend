@@ -280,7 +280,7 @@ const Page = () => {
 	}
 
 	return (
-		<div className="mx-auto px-4 py-6">
+		<div className="mx-auto max-w-6xl px-4 py-6">
 			<div className="mb-8">
 				<h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
 					Report an Issue
@@ -298,13 +298,13 @@ const Page = () => {
 						<label className="block text-sm font-medium text-gray-700 mb-3">
 							Issue Category <span className="text-red-500">*</span>
 						</label>
-						<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+						<div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
 							{categoryOptions.map((option) => {
 								const IconComponent = option.icon;
 								return (
 									<label
 										key={option.value}
-										className={`relative flex flex-col items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+										className={`relative flex justify-center items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
 											formData.category === option.value
 												? "border-yellow-400 bg-yellow-100 text-neutral-900"
 												: "border-gray-200 hover:border-gray-300 text-neutral-500 hover:text-neutral-700"
@@ -318,7 +318,7 @@ const Page = () => {
 											onChange={handleInputChange}
 											className="sr-only"
 										/>
-										<IconComponent className="w-6 h-6 mb-2" />
+										<IconComponent className="w-6 h-6" />
 										<span className="text-sm font-medium text-center">
 											{option.label}
 										</span>
@@ -385,7 +385,7 @@ const Page = () => {
 							value={formData.description}
 							onChange={handleInputChange}
 							placeholder="Please provide a detailed description of the issue, including steps to reproduce if applicable..."
-							rows={6}
+							rows={4}
 							className="w-full px-4 py-3 border border-gray-300 text-black rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent resize-vertical"
 							required
 						/>

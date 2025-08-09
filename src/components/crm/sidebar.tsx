@@ -19,6 +19,7 @@ import {
 	X,
 	Timer,
 	Users,
+	BookOpenText,
 } from "lucide-react";
 import logo from "../../../public/assets/logo.png"; // Adjust the path as necessary
 import { signOut } from "next-auth/react";
@@ -27,6 +28,7 @@ interface NavItem {
 	href: string;
 	label: string;
 	icon: React.ReactNode;
+	external?: boolean;
 }
 
 const navItems: NavItem[] = [
@@ -42,6 +44,12 @@ const navItems: NavItem[] = [
 		href: "/emi-calculator",
 		label: "EMI Calculator",
 		icon: <Calculator />,
+	},
+	{
+		href: "https://drive.google.com/drive/folders/1CHqORL-WO-TSxpW3hBOIhd0X0UJNNjow?usp=sharing",
+		label: "Training Support",
+		external: true,
+		icon: <BookOpenText />,
 	},
 	{
 		href: "/report",
@@ -96,7 +104,7 @@ const Sidebar = () => {
 			{/* Overlay for mobile (only visible when sidebar is open on mobile) */}
 			{open && isMobile && (
 				<div 
-					className="fixed inset-0 bg-black bg-opacity-50 z-[999]"
+					className="fixed inset-0  bg-opacity-50 z-[999]"
 					onClick={toggleSidebar}
 					style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
 				/>
@@ -143,20 +151,21 @@ const Sidebar = () => {
 					{/* Navigation */}
 					<nav className="p-4 flex flex-col gap-4 overflow-y-auto max-h-[calc(100vh-80px)]">
 						<ul className="flex flex-col gap-2">
-							{navItems.map(({ href, label, icon }) => {
-								const isActive = pathname === `${baseUrl}${href}`;
+							{navItems.map((navItem) => {
+								const isActive = pathname === `${baseUrl}${navItem.href}`;
 								return (
-									<li key={href}>
+									<li key={navItem.href}>
 										<Link
-											href={`${baseUrl}${href}`}
+											href={navItem.external ? navItem.href : `${baseUrl}${navItem.href}`}
+											target={navItem.external ? "_blank" : "_self"}
 											className={`flex items-center p-2 gap-3 rounded-lg text-sm transition-colors duration-200 ${isActive
 												? "bg-[#f5d949] text-black"
 												: "text-black hover:bg-gray-200"
 												}`}
 											onClick={isMobile ? toggleSidebar : undefined}
 										>
-											<div>{icon}</div>
-											<span className={`${!open && !isMobile ? 'hidden' : 'block'}`}>{label}</span>
+											<div>{navItem.icon}</div>
+											<span className={`${!open && !isMobile ? 'hidden' : 'block'}`}>{navItem.label}</span>
 										</Link>
 									</li>
 								);

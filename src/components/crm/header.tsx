@@ -26,7 +26,7 @@ export default function Header() {
 			</div>
 
 			{/* Mobile: Company Logo or Name */}
-			<div className="flex lg:hidden items-center">
+			<div className="flex ml-14 w-full mt-1.5 lg:hidden items-center">
 				<span className="text-gray-900 text-sm font-bold">
 					FundsRaize
 				</span>
