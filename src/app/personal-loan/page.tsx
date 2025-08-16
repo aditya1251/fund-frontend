@@ -6,12 +6,12 @@ import Footer from "@/components/Footer";
 
 function personalLoan() {
   return (
-    <div>
+    <>
       <NavigationHeader />
       <PersonalLoanLanding />
       <ContactForm />
       <Footer />
-    </div>
+    </>
   )
 }
 
