@@ -9,6 +9,7 @@ import bajaj from "../../public/assets/bajaj.png"; // Adjust the path as necessa
 import axis from "../../public/assets/axis.png"; // Adjust the path as necessary
 import lic from "../../public/assets/lic.png"; // Adjust the path as necessary
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Footer() {
   const router = useRouter();
@@ -192,11 +193,13 @@ export default function Footer() {
                 Transparent. Trusted. Impactful. Let's Build A Better Future.
               </p>
 
-              <Button
-              onClick={() => router.push("/contact")}
-              className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow cursor-pointer">
-                Get Started
-              </Button>
+              <Link href={"/contact"}>
+                <Button
+                onClick={() => router.push("/contact")}
+                className="bg-[#f7c430] text-black font-medium px-6 py-2 rounded-md duration-200 shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] transition-shadow cursor-pointer">
+                  Get Started
+                </Button>
+              </Link>
 
               <div className="flex items-center gap-3 mt-4">
                 <span className="text-black text-sm font-medium">
