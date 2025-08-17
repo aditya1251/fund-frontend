@@ -74,7 +74,7 @@ export default function LeadOverview({data}) {
           return (
             <div
               key={index}
-              className="relative aspect-[16/9] md:aspect-auto md:h-36 bg-center bg-cover rounded-lg flex flex-col justify-end shadow-sm shadow-neutral-400"
+              className="relative aspect-[16/9] md:aspect-auto md:h-36 bg-center rounded-lg flex flex-col justify-end shadow-sm shadow-neutral-400"
               style={{ backgroundImage: `url(${card.bgImage})` }}
             >
               <h5 className="px-3 py-1.5 md:px-4 md:py-2 text-sm md:text-base font-inter text-black drop-shadow">
@@ -98,7 +98,7 @@ export default function LeadOverview({data}) {
         return (
           <div
             key={index}
-            className="relative aspect-[16/9] md:aspect-auto md:h-36 bg-cover bg-center rounded-lg flex flex-col justify-between p-3 md:p-4 shadow-sm shadow-neutral-400"
+            className="relative aspect-[16/9] md:aspect-auto md:h-36 bg-center rounded-lg flex flex-col justify-between p-3 md:p-4 shadow-sm shadow-neutral-400"
             style={{ backgroundImage: `url(${card.bgImage})` }}
           >
             <h4 className="text-lg md:text-xl font-bold text-black drop-shadow">
