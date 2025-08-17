@@ -143,8 +143,8 @@ export default function NavigationHeader() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-48">
           <DropdownMenuItem><Link href="/digital-marketing" className="w-full text-black">Digital Marketing</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/social-media" className="w-full text-black">Social Media</Link></DropdownMenuItem>
-          <DropdownMenuItem><Link href="/content-marketing" className="w-full text-black">Content Marketing</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/social-media" className="w-full text-black">Google &amp; Meta Ads</Link></DropdownMenuItem>
+          <DropdownMenuItem><Link href="/content-marketing" className="w-full text-black">WhatsApp Campaigns Ads</Link></DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -212,8 +212,8 @@ export default function NavigationHeader() {
 
         <MobileAccordion title="Marketing">
           <div><Link href="/digital-marketing" onClick={toggle} className="text-black">Digital Marketing</Link></div>
-          <div><Link href="/social-media" onClick={toggle} className="text-black">Social Media</Link></div>
-          <div><Link href="/content-marketing" onClick={toggle} className="text-black">Content Marketing</Link></div>
+          <div><Link href="/social-media" onClick={toggle} className="text-black">Google &amp; Meta Ads</Link></div>
+          <div><Link href="/content-marketing" onClick={toggle} className="text-black">WhatsApp Campaigns Ads</Link></div>
         </MobileAccordion>
 
         <Link href="/about" onClick={toggle} className="block py-3 text-black font-medium">About</Link>
