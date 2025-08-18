@@ -27,6 +27,7 @@ import { useGetLoanTemplatesByTypeQuery } from "@/redux/services/loanTemplateApi
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import Loading from "@/components/Loading";
+import { MobileCard, MobileCardList } from "@/components/ui/mobile-card";
 
 export default function Page() {
   const session = useSession();
@@ -41,6 +42,11 @@ export default function Page() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [sortBy, setSortBy] = useState("date-desc"); // default to latest
+  
+  // Mobile pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const itemsPerPage = 10;
 
   // Filtered and sorted data
   const filteredLeads = useMemo(() => {
@@ -96,6 +102,18 @@ export default function Page() {
     });
     return leads;
   }, [loansData, search, statusFilter, sortBy]);
+
+  // Mobile pagination logic
+  const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
+  const paginatedLeads = filteredLeads.slice(0, currentPage * itemsPerPage);
+
+  const handleLoadMore = () => {
+    setIsLoadingMore(true);
+    setTimeout(() => {
+      setCurrentPage(prev => prev + 1);
+      setIsLoadingMore(false);
+    }, 500); // Simulate loading delay
+  };
 
   return (
     <RequireFeature feature="Loans">
@@ -198,10 +216,11 @@ export default function Page() {
                 </div>
               </div>
 
+            {/* Desktop Table View */}
+            <div className="hidden md:block">
               {/* TableWrapper with horizontal scrolling for overflow */}
-              <TableWrapper>
-                {/* Desktop Table */}
-                <table className="hidden md:table w-full bg-white text-sm whitespace-nowrap">
+              <TableWrapper className="overflow-x-auto">
+                <table className="w-full bg-white text-sm whitespace-nowrap"> {/* Added whitespace-nowrap to prevent cell content wrapping */}
                   <TableHeadings
                     columns={[
                       "File No.",
@@ -224,14 +243,8 @@ export default function Page() {
                           lead.loanSubType,
                           lead.mode ? lead.mode : "Online",
                           lead.values[0].fields[0].value,
-                          <EmailCell
-                            key={`sub-${index}`}
-                            email={lead.subscriber}
-                          />,
-                          <EmailCell
-                            key={`email-${index}`}
-                            email={lead.values[0].fields[1].value}
-                          />,
+                          <EmailCell key={`sub-${index}`} email={lead.subscriber} />,
+                          <EmailCell key={`email-${index}`} email={lead.values[0].fields[1].value} />,
                           lead.values[0].fields[2].value,
                           lead.rejectionMessage,
                           <StatusBadge
@@ -248,87 +261,39 @@ export default function Page() {
                     ))}
                   </tbody>
                 </table>
-
-                {/* Mobile Card Layout */}
-                <div className="block md:hidden space-y-4">
-                  {filteredLeads.map((lead: any, index: number) => (
-                    <div
-                      key={index}
-                      className="rounded-xl border border-gray-200 bg-white shadow-md p-4 space-y-3">
-                      {/* Top Row: Applicant & Status */}
-                      <div className="flex justify-between items-start">
-                        <div className="min-w-0">
-                          <p className="text-xs text-gray-500">Applicant</p>
-                          <p className="text-lg font-semibold text-gray-900 break-words">
-                            {lead.values[0]?.fields?.[0]?.value}
-                          </p>
-                        </div>
-                        <div className="shrink-0">
-                          <StatusBadge
-                            status={
-                              lead.status.toLowerCase() as
-                                | "approved"
-                                | "pending"
-                                | "rejected"
-                            }
-                          />
-                        </div>
-                      </div>
-
-                      {/* Loan Info */}
-                      <div className="grid grid-cols-2 gap-y-2 text-sm break-words">
-                        <p className="text-gray-500">File No.</p>
-                        <p className="font-medium text-gray-800 break-all">
-                          {lead._id}
-                        </p>
-
-                        <p className="text-gray-500">Loan Type</p>
-                        <p className="font-medium text-gray-800">
-                          {lead.loanSubType}
-                        </p>
-
-                        <p className="text-gray-500">Mode</p>
-                        <p className="font-medium text-gray-800">
-                          {lead.mode || "Online"}
-                        </p>
-                      </div>
-
-                      {/* Contact Info */}
-                      <div className="border-t border-gray-200 pt-3 space-y-1">
-                        <div className="flex items-center gap-2 break-words">
-                          <span className="text-gray-500 text-sm">
-                            Subscriber:
-                          </span>
-                          <EmailCell email={lead.subscriber} />
-                        </div>
-                        <div className="flex items-center gap-2 break-words">
-                          <span className="text-gray-500 text-sm">Email:</span>
-                          <EmailCell
-                            email={lead.values[0]?.fields?.[1]?.value}
-                          />
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-500 text-sm">Phone:</span>
-                          <span className="text-gray-800 font-medium break-all">
-                            {lead.values[0]?.fields?.[2]?.value}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Review / Notes */}
-                      {lead.rejectionMessage && (
-                        <div className="bg-gray-50 border border-gray-200 rounded-md p-2 text-sm text-gray-700 break-words">
-                          <span className="font-medium">Review:</span>{" "}
-                          {lead.rejectionMessage}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
               </TableWrapper>
             </div>
+
+            {/* Mobile Card View */}
+            <MobileCardList
+              items={paginatedLeads}
+              renderCard={(lead: any, index: number) => (
+                <MobileCard
+                  key={index}
+                  data={{
+                    id: lead._id,
+                    type: lead.loanSubType,
+                    mode: lead.mode,
+                    applicant: lead.values[0].fields[0].value,
+                    subscriber: lead.subscriber,
+                    email: lead.values[0].fields[1].value,
+                    phone: lead.values[0].fields[2].value,
+                    review: lead.rejectionMessage,
+                    status: lead.status.toLowerCase() as "approved" | "pending" | "rejected",
+                    createdAt: lead.createdAt,
+                  }}
+                />
+              )}
+              emptyMessage="No loan leads found"
+              showLoadMore={true}
+              onLoadMore={handleLoadMore}
+              isLoadingMore={isLoadingMore}
+              currentPage={currentPage}
+              totalPages={totalPages}
+            />
           </div>
         </div>
+      </div>
       )}
     </RequireFeature>
   );

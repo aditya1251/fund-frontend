@@ -59,6 +59,7 @@ export default function LoanForm() {
   const [message, setMessage] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [showDraftModal, setShowDraftModal] = useState<boolean>(false);
   const [savedDrafts, setSavedDrafts] = useState<any[]>([]);
   const [uploading, setUploading] = useState<Record<string, boolean>>({});
@@ -297,95 +298,114 @@ export default function LoanForm() {
   };
 
   const submitForm = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setMessage("");
-    if (!templateData?._id) {
-      setMessage("No template found for this loan type.");
-      return;
-    }
+		e.preventDefault();
+		setMessage("");
+		setIsSubmitting(true);
 
-    // Check if any files are still uploading
-    if (Object.values(uploading).some((status) => status === true)) {
-      setMessage(
-        "Please wait for all file uploads to complete before submitting."
-      );
-      return;
-    }
+		if (!templateData?._id) {
+			setMessage("No template found for this loan type.");
+			setIsSubmitting(false);
+			return;
+		}
 
-    // Validate all required fields
-    const missingFields = [];
-    for (const page of templateData.pages) {
-      for (const field of page.fields) {
-        if (field.required && !formValues[field.label]) {
-          missingFields.push(field.label);
-        }
-      }
-    }
+		// Check if any files are still uploading
+		if (Object.values(uploading).some((status) => status === true)) {
+			setMessage("Please wait for all file uploads to complete before submitting.");
+			setIsSubmitting(false);
+			return;
+		}
 
-    if (missingFields.length > 0) {
-      setMessage(
-        `Please fill all required fields: ${missingFields.join(", ")}`
-      );
-      return;
-    }
+		// Validate all required fields
+		const missingFields = [];
+		for (const page of templateData.pages) {
+			for (const field of page.fields) {
+				if (field.required && !formValues[field.label]) {
+					missingFields.push(field.label);
+				}
+			}
+		}
 
-    // Check for any upload errors
-    if (Object.keys(uploadErrors).length > 0) {
-      setMessage("Please fix file upload errors before submitting.");
-      return;
-    }
+		if (missingFields.length > 0) {
+			setMessage(`Please fill all required fields: ${missingFields.join(", ")}`);
+			setIsSubmitting(false);
+			return;
+		}
 
-    const subscriber = session?.user?.email;
-    const dsaId = session?.user?.id;
-    const rmId = session?.user?.rmId;
+		// Check for any upload errors
+		if (Object.keys(uploadErrors).length > 0) {
+			setMessage("Please fix file upload errors before submitting.");
+			setIsSubmitting(false);
+			return;
+		}
 
-    try {
-      // Form submission with uploaded document filenames and user info
-      await createLoanFormSubmission({
-        formData: formValues,
-        subscriber,
-        dsaId,
-        rmId,
-        loanSubType: templateData.name,
-        loanType: templateData.loanType,
-        templateId: templateData._id,
-      }).unwrap();
-      await notifySuperAdmin({
-        title: `New Form Submission - ${templateData.name}`,
-        message: `A new form has been submitted for ${templateData.name} by ${subscriber}.`
-      }).unwrap();
+		const subscriber = session?.user?.email;
+		const dsaId = session?.user?.id;
+		const rmId = session?.user?.rmId;
 
-      setFormSubmitted(true);
-      setMessage("Form submitted successfully!");
+		try {
+			// Form submission with uploaded document filenames and user info
+			await createLoanFormSubmission({
+				formData: formValues,
+				subscriber,
+				dsaId,
+				rmId,
+				loanSubType: templateData.name,
+				loanType: templateData.loanType,
+				templateId: templateData._id,
+			}).unwrap();
+			await notifySuperAdmin({
+				title: `New Form Submission - ${templateData.name}`,
+				message: `A new form has been submitted for ${templateData.name} by ${subscriber}.`,
+			}).unwrap();
 
-      // Remove the draft from local storage if it was a draft
-      if (draftId) {
-        try {
-          const storedDrafts = localStorage.getItem("loanFormDrafts");
-          if (storedDrafts) {
-            const parsedDrafts = JSON.parse(storedDrafts);
-            const updatedDrafts = parsedDrafts.filter(
-              (draft: any) => draft.id !== draftId
-            );
-            localStorage.setItem(
-              "loanFormDrafts",
-              JSON.stringify(updatedDrafts)
-            );
-            setSavedDrafts(updatedDrafts);
-          }
-        } catch (error) {
-          console.error("Error removing submitted draft:", error);
-        }
-      }
+			setFormSubmitted(true);
+			setMessage("Form submitted successfully!");
 
-      // Reset form after submission
-      setTimeout(() => {
-        router.push(`/crm/loans`); // Use router.push for navigation
-      }, 500);
-    } catch (err) {
-      setMessage("Error submitting form");
-    }
-  };
+			// Remove the draft from local storage if it was a draft
+			if (draftId) {
+				try {
+					const storedDrafts = localStorage.getItem("loanFormDrafts");
+					if (storedDrafts) {
+						const parsedDrafts = JSON.parse(storedDrafts);
+						const updatedDrafts = parsedDrafts.filter((draft: any) => draft.id !== draftId);
+						localStorage.setItem("loanFormDrafts", JSON.stringify(updatedDrafts));
+						setSavedDrafts(updatedDrafts);
+					}
+				} catch (error) {
+					console.error("Error removing submitted draft:", error);
+				}
+			}
+
+			// Redirect to return URL or default to appropriate page based on loan type
+			setTimeout(() => {
+				// Default redirection based on loan type
+				switch (templateData.loanType) {
+					case "government":
+						router.push("/crm/govt-loans");
+						break;
+					case "private":
+						router.push("/crm/loans");
+						break;
+					case "quick":
+						router.push("/crm/quick-loans");
+						break;
+					case "insurance":
+						router.push("/crm/insurance");
+						break;
+					case "taxation":
+						router.push("/crm/taxation");
+						break;
+					default:
+						router.push("/crm/leads");
+				}
+			}, 1500);
+		} catch (err) {
+			setMessage("Error submitting form. Please try again.");
+			console.error("Form submission error:", err);
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
 
   // Function to handle loading a draft
   const loadDraft = (draftIdToLoad: string) => { // Renamed parameter to avoid conflict with outer scope draftId
@@ -954,9 +974,19 @@ export default function LoanForm() {
                     <Button
                       type="button"
                       onClick={submitForm}
-                      className="bg-yellow-400 text-black font-medium px-8 py-2 flex items-center gap-2 w-full sm:w-auto" // Responsive width
+                      disabled={isSubmitting}
+                      className="bg-yellow-400 hover:bg-yellow-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-black font-medium px-8 py-2 flex items-center gap-2 w-full sm:w-auto transition-colors duration-200" // Responsive width
                     >
-                      Submit Application <Check className="h-4 w-4" />
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Submitting...
+                        </>
+                      ) : (
+                        <>
+                          Submit Application <Check className="h-4 w-4" />
+                        </>
+                      )}
                     </Button>
                   )}
                 </div>
