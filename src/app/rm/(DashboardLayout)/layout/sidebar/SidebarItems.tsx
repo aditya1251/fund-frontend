@@ -8,7 +8,9 @@ import Link from "next/link";
 import { Submenu } from "./Submenu";
 import { useGetApplicationsQuery } from "@/redux/services/applicationApi";
 import { useGetLoansByRmIdQuery } from "@/redux/services/loanApi";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { LogOutIcon } from "lucide-react";
 
 const usePendingCounts = () => {
 	const { data: session } = useSession();
@@ -191,6 +193,12 @@ const SidebarItems = () => {
 					</Typography>
 				</Box>
 				{renderMenuItems(Menuitems, pathDirect)}
+				<div >
+					<Button className="flex justify-start hover:bg-amber-100 w-full items-center gap-3 mt-3" onClick={() => signOut()}>
+						<LogOutIcon />
+						Logout
+					</Button>
+				</div>
 			</MUI_Sidebar>
 		</Box>
 	);
