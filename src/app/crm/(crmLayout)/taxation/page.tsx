@@ -28,6 +28,7 @@ import { useGetLoanTemplatesByTypeQuery } from "@/redux/services/loanTemplateApi
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import Loading from "@/components/Loading";
+import { MobileCard, MobileCardList } from "@/components/ui/mobile-card";
 
 export default function Page() {
   // --- ALL HOOKS AND DEPENDENT LOGIC MUST BE AT THE TOP ---
@@ -38,6 +39,11 @@ export default function Page() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [sortBy, setSortBy] = useState("date-desc");
+  
+  // Mobile pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const itemsPerPage = 10;
 
   // Data fetching hooks
   const { data, isLoading: loansLoading } = useGetLoansByDsaIdQuery(dsaId);
@@ -118,6 +124,18 @@ export default function Page() {
     });
     return leads;
   }, [taxData, search, statusFilter, sortBy]);
+
+  // Mobile pagination logic
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const paginatedData = filteredData.slice(0, currentPage * itemsPerPage);
+
+  const handleLoadMore = () => {
+    setIsLoadingMore(true);
+    setTimeout(() => {
+      setCurrentPage(prev => prev + 1);
+      setIsLoadingMore(false);
+    }, 500); // Simulate loading delay
+  };
 
   // --- CONDITIONAL RETURN IS NOW AFTER ALL HOOKS ---
   if (loansLoading || templatesLoading) {
@@ -200,56 +218,95 @@ export default function Page() {
               </div>
             </div>
 
-            {/* Table wrapper with horizontal overflow for responsiveness */}
-            <TableWrapper className="overflow-x-auto">
-              <table className="w-full whitespace-nowrap bg-white text-sm"> {/* whitespace-nowrap to prevent cell content wrapping */}
-                <TableHeadings
-                  columns={[
-                    "File No.",
-                    "Service",
-                    "Applicant name",
-                    "Subscriber",
-                    "Email",
-                    "Phone",
-                    "Review",
-                    "Status",
-                  ]}
-                />
-                <tbody>
-                  {filteredData.map((lead: any, index: number) => {
-                    const fields = lead.values[0]?.fields || [];
+            {/* Desktop Table View */}
+            <div className="hidden md:block">
+              {/* Table wrapper with horizontal overflow for responsiveness */}
+              <TableWrapper className="overflow-x-auto">
+                <table className="w-full whitespace-nowrap bg-white text-sm"> {/* whitespace-nowrap to prevent cell content wrapping */}
+                  <TableHeadings
+                    columns={[
+                      "File No.",
+                      "Service",
+                      "Applicant name",
+                      "Subscriber",
+                      "Email",
+                      "Phone",
+                      "Review",
+                      "Status",
+                    ]}
+                  />
+                  <tbody>
+                    {filteredData.map((lead: any, index: number) => {
+                      const fields = lead.values[0]?.fields || [];
 
-                    const getFieldValue = (label: string) => {
-                      const field = fields.find((f: any) => f.label === label);
-                      return field?.value || "-";
-                    };
-                    return (
-                      <TableRow
-                        key={index}
-                        row={[
-                          lead._id,
-                          getFieldValue("Services"),
-                          getFieldValue("Name"),
-                          <EmailCell key={`email-sub-${index}`} email={lead.subscriber} />,
-                          <EmailCell key={`email-val-${index}`} email={getFieldValue("Email")} />,
-                          getFieldValue("Phone"),
-                          lead.rejectionMessage,
-                          <StatusBadge
-                            key={`status-${index}`}
-                            status={
-                              lead.status.toLowerCase() as
-                                | "approved"
-                                | "pending"
-                                | "rejected"
-                            }
-                          />,
-                        ]}
-                      />
-                    );
-                  })}
-                </tbody>
-              </table>
-            </TableWrapper>
+                      const getFieldValue = (label: string) => {
+                        const field = fields.find((f: any) => f.label === label);
+                        return field?.value || "-";
+                      };
+                      return (
+                        <TableRow
+                          key={index}
+                          row={[
+                            lead._id,
+                            getFieldValue("Services"),
+                            getFieldValue("Name"),
+                            <EmailCell key={`email-sub-${index}`} email={lead.subscriber} />,
+                            <EmailCell key={`email-val-${index}`} email={getFieldValue("Email")} />,
+                            getFieldValue("Phone"),
+                            lead.rejectionMessage,
+                            <StatusBadge
+                              key={`status-${index}`}
+                              status={
+                                lead.status.toLowerCase() as
+                                  | "approved"
+                                  | "pending"
+                                  | "rejected"
+                              }
+                            />,
+                          ]}
+                        />
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </TableWrapper>
+            </div>
+
+            {/* Mobile Card View */}
+            <MobileCardList
+              items={paginatedData}
+              renderCard={(lead: any, index: number) => {
+                const fields = lead.values[0]?.fields || [];
+                const getFieldValue = (label: string) => {
+                  const field = fields.find((f: any) => f.label === label);
+                  return field?.value || "-";
+                };
+                
+                return (
+                  <MobileCard
+                    key={index}
+                    data={{
+                      id: lead._id,
+                      type: getFieldValue("Services"),
+                      mode: "Online", // Taxation services are typically online
+                      applicant: getFieldValue("Name"),
+                      subscriber: lead.subscriber,
+                      email: getFieldValue("Email"),
+                      phone: getFieldValue("Phone"),
+                      review: lead.rejectionMessage,
+                      status: lead.status.toLowerCase() as "approved" | "pending" | "rejected",
+                      createdAt: lead.createdAt,
+                    }}
+                  />
+                );
+              }}
+              emptyMessage="No taxation requests found"
+              showLoadMore={true}
+              onLoadMore={handleLoadMore}
+              isLoadingMore={isLoadingMore}
+              currentPage={currentPage}
+              totalPages={totalPages}
+            />
           </div>
         </div>
       </div>

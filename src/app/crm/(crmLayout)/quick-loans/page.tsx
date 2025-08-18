@@ -27,6 +27,7 @@ import { useGetLoanTemplatesByTypeQuery } from "@/redux/services/loanTemplateApi
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import Loading from "@/components/Loading";
+import { MobileCard, MobileCardList } from "@/components/ui/mobile-card";
 
 export default function Page() {
   const session = useSession();
@@ -36,6 +37,11 @@ export default function Page() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [sortBy, setSortBy] = useState("date-desc"); // default to latest
+  
+  // Mobile pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const itemsPerPage = 10;
 
   const { data, isLoading: loansLoading } = useGetLoansByDsaIdQuery(dsaId);
   const { data: loansTemplates = [], isLoading: templatesLoading } =
@@ -99,6 +105,19 @@ export default function Page() {
     });
     return leads;
   }, [loansData, search, statusFilter, sortBy]);
+
+  // Mobile pagination logic
+  const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
+  const paginatedLeads = filteredLeads.slice(0, currentPage * itemsPerPage);
+
+  const handleLoadMore = () => {
+    setIsLoadingMore(true);
+    setTimeout(() => {
+      setCurrentPage(prev => prev + 1);
+      setIsLoadingMore(false);
+    }, 500); // Simulate loading delay
+  };
+
 
   // Now, you can conditionally return, as all hooks have been called
   if (loansLoading || templatesLoading) {
@@ -209,50 +228,81 @@ export default function Page() {
               </div>
             </div>
 
-            {/* Table wrapper with horizontal overflow for responsiveness */}
-            <TableWrapper className="overflow-x-auto">
-              <table className="w-full whitespace-nowrap bg-white text-sm"> {/* whitespace-nowrap to prevent cell content wrapping */}
-                <TableHeadings
-                  columns={[
-                    "File No.",
-                    "Loan",
-                    "Loan Mode",
-                    "Applicant",
-                    "Subscriber",
-                    "Email",
-                    "Phone",
-                    "Review",
-                    "Status",
-                  ]}
+            {/* Desktop Table View */}
+            <div className="hidden md:block">
+              {/* Table wrapper with horizontal overflow for responsiveness */}
+              <TableWrapper className="overflow-x-auto">
+                <table className="w-full whitespace-nowrap bg-white text-sm"> {/* whitespace-nowrap to prevent cell content wrapping */}
+                  <TableHeadings
+                    columns={[
+                      "File No.",
+                      "Loan",
+                      "Loan Mode",
+                      "Applicant",
+                      "Subscriber",
+                      "Email",
+                      "Phone",
+                      "Review",
+                      "Status",
+                    ]}
+                  />
+                  <tbody>
+                    {filteredLeads.map((lead: any, index: number) => (
+                      <TableRow
+                        key={index}
+                        row={[
+                          lead._id,
+                          lead.loanSubType,
+                          lead.mode ? lead.mode : "Online",
+                          lead.values[0].fields[0].value,
+                          <EmailCell key={`email-sub-${index}`} email={lead.subscriber} />,
+                          <EmailCell key={`email-val-${index}`} email={lead.values[0].fields[1].value} />,
+                          lead.values[0].fields[2].value,
+                          lead.rejectionMessage,
+                          <StatusBadge
+                            key={`status-${index}`}
+                            status={
+                              lead.status.toLowerCase() as
+                                | "approved"
+                                | "pending"
+                                | "rejected"
+                            }
+                          />,
+                        ]}
+                      />
+                    ))}
+                  </tbody>
+                </table>
+              </TableWrapper>
+            </div>
+
+            {/* Mobile Card View */}
+            <MobileCardList
+              items={paginatedLeads}
+              renderCard={(lead: any, index: number) => (
+                <MobileCard
+                  key={index}
+                  data={{
+                    id: lead._id,
+                    type: lead.loanSubType,
+                    mode: lead.mode,
+                    applicant: lead.values[0].fields[0].value,
+                    subscriber: lead.subscriber,
+                    email: lead.values[0].fields[1].value,
+                    phone: lead.values[0].fields[2].value,
+                    review: lead.rejectionMessage,
+                    status: lead.status.toLowerCase() as "approved" | "pending" | "rejected",
+                    createdAt: lead.createdAt,
+                  }}
                 />
-                <tbody>
-                  {filteredLeads.map((lead: any, index: number) => (
-                    <TableRow
-                      key={index}
-                      row={[
-                        lead._id,
-                        lead.loanSubType,
-                        lead.mode ? lead.mode : "Online",
-                        lead.values[0].fields[0].value,
-                        <EmailCell key={`email-sub-${index}`} email={lead.subscriber} />,
-                        <EmailCell key={`email-val-${index}`} email={lead.values[0].fields[1].value} />,
-                        lead.values[0].fields[2].value,
-                        lead.rejectionMessage,
-                        <StatusBadge
-                          key={`status-${index}`}
-                          status={
-                            lead.status.toLowerCase() as
-                              | "approved"
-                              | "pending"
-                              | "rejected"
-                          }
-                        />,
-                      ]}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            </TableWrapper>
+              )}
+              emptyMessage="No quick loan leads found"
+              showLoadMore={true}
+              onLoadMore={handleLoadMore}
+              isLoadingMore={isLoadingMore}
+              currentPage={currentPage}
+              totalPages={totalPages}
+            />
           </div>
         </div>
       </div>
