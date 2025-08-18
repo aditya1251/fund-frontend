@@ -28,6 +28,7 @@ import { Building, Car, House, LandPlot, User, History } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import Loading from "@/components/Loading";
+import { MobileCard, MobileCardList } from "@/components/ui/mobile-card";
 
 export default function Page() {
   const session = useSession();
@@ -40,6 +41,11 @@ export default function Page() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [sortBy, setSortBy] = useState("date-desc");
+  
+  // Mobile pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const itemsPerPage = 10;
 
   const loansData = useMemo(() => {
     return data?.filter((loan: any) => loan.loanType === "government") || [];
@@ -97,11 +103,21 @@ export default function Page() {
     return leads;
   }, [loansData, search, statusFilter, sortBy]);
 
+  // Mobile pagination logic
+  const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
+  const paginatedLeads = filteredLeads.slice(0, currentPage * itemsPerPage);
+
+  const handleLoadMore = () => {
+    setIsLoadingMore(true);
+    setTimeout(() => {
+      setCurrentPage(prev => prev + 1);
+      setIsLoadingMore(false);
+    }, 500); // Simulate loading delay
+  };
 
   if (loansLoading || templatesLoading) {
     return <Loading />;
   }
-
 
   return (
     <RequireFeature feature="Govt-Loans">
@@ -198,50 +214,81 @@ export default function Page() {
               </div>
             </div>
 
-            <TableWrapper className="overflow-x-auto">
-              <table className="w-full bg-white text-sm whitespace-nowrap"> {/* Added whitespace-nowrap to prevent cell content wrapping */}
-                <TableHeadings
-                  columns={[
-                    "File No.",
-                    "Loan",
-                    "Loan Mode",
-                    "Applicant",
-                    "Subscriber",
-                    "Email",
-                    "Phone",
-                    "Review",
-                    "Status",
-                  ]}
+            {/* Desktop Table View */}
+            <div className="hidden md:block">
+              <TableWrapper className="overflow-x-auto">
+                <table className="w-full bg-white text-sm whitespace-nowrap"> {/* Added whitespace-nowrap to prevent cell content wrapping */}
+                  <TableHeadings
+                    columns={[
+                      "File No.",
+                      "Loan",
+                      "Loan Mode",
+                      "Applicant",
+                      "Subscriber",
+                      "Email",
+                      "Phone",
+                      "Review",
+                      "Status",
+                    ]}
+                  />
+                  <tbody>
+                    {/* Ensure filteredLeads is always an array before mapping */}
+                    {filteredLeads.map((lead: any, index: number) => (
+                      <TableRow
+                        key={index}
+                        row={[
+                          lead._id,
+                          lead.loanSubType,
+                          lead.mode ? lead.mode : "Online",
+                          lead.values[0].fields[0].value,
+                          <EmailCell key={`sub-${index}`} email={lead.subscriber} />,
+                          <EmailCell key={`email-${index}`} email={lead.values[0].fields[1].value} />,
+                          lead.values[0].fields[2].value,
+                          lead.rejectionMessage,
+                          <StatusBadge
+                            key={`status-${index}`}
+                            status={
+                              lead.status.toLowerCase() as
+                                | "approved"
+                                | "pending"
+                                | "rejected"
+                            }
+                          />,
+                        ]}
+                      />
+                    ))}
+                  </tbody>
+                </table>
+              </TableWrapper>
+            </div>
+
+            {/* Mobile Card View */}
+            <MobileCardList
+              items={paginatedLeads}
+              renderCard={(lead: any, index: number) => (
+                <MobileCard
+                  key={index}
+                  data={{
+                    id: lead._id,
+                    type: lead.loanSubType,
+                    mode: lead.mode,
+                    applicant: lead.values[0].fields[0].value,
+                    subscriber: lead.subscriber,
+                    email: lead.values[0].fields[1].value,
+                    phone: lead.values[0].fields[2].value,
+                    review: lead.rejectionMessage,
+                    status: lead.status.toLowerCase() as "approved" | "pending" | "rejected",
+                    createdAt: lead.createdAt,
+                  }}
                 />
-                <tbody>
-                  {/* Ensure filteredLeads is always an array before mapping */}
-                  {filteredLeads.map((lead: any, index: number) => (
-                    <TableRow
-                      key={index}
-                      row={[
-                        lead._id,
-                        lead.loanSubType,
-                        lead.mode ? lead.mode : "Online",
-                        lead.values[0].fields[0].value,
-                        <EmailCell key={`sub-${index}`} email={lead.subscriber} />,
-                        <EmailCell key={`email-${index}`} email={lead.values[0].fields[1].value} />,
-                        lead.values[0].fields[2].value,
-                        lead.rejectionMessage,
-                        <StatusBadge
-                          key={`status-${index}`}
-                          status={
-                            lead.status.toLowerCase() as
-                              | "approved"
-                              | "pending"
-                              | "rejected"
-                          }
-                        />,
-                      ]}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            </TableWrapper>
+              )}
+              emptyMessage="No government loan leads found"
+              showLoadMore={true}
+              onLoadMore={handleLoadMore}
+              isLoadingMore={isLoadingMore}
+              currentPage={currentPage}
+              totalPages={totalPages}
+            />
           </div>
         </div>
       </div>
