@@ -11,9 +11,12 @@ import {
 	X,
 	AlertTriangle,
 	RefreshCw,
+	CardSim,
+	CircleDollarSign,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useDeleteAdminMutation } from "@/redux/services/superadminApi";
+import { MoneyRounded } from "@mui/icons-material";
 
 const ProfilePanel = ({
 	user,
@@ -124,6 +127,10 @@ const ProfilePanel = ({
 								label="My RM Details"
 								redirect="/crm/rm-details"
 							/>
+							<PanelItem 
+							icon={<CircleDollarSign className="w-4 h-4" />}
+							label="My Payout"
+							redirect="/crm/payout" />
 							<PanelItem
 								icon={<Bell className="w-4 h-4" />}
 								label="Notifications"

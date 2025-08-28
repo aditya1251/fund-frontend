@@ -9,6 +9,8 @@ import { DsaApi } from "./services/dsaApi";
 import { usersApi } from "./services/usersApi";
 import { AnalyticsApi } from "./services/analyticsApi";
 import { IssueApi } from "./services/issueApi";
+import { commissionApi } from "./services/commissionApi";
+import { withdrawalApi } from "./services/withdrawalApi";
 
 export const store = configureStore({
 	reducer: {
@@ -22,6 +24,8 @@ export const store = configureStore({
 		[usersApi.reducerPath]: usersApi.reducer,
 		[AnalyticsApi.reducerPath]: AnalyticsApi.reducer,
 		[IssueApi.reducerPath]: IssueApi.reducer,
+		[commissionApi.reducerPath]: commissionApi.reducer,
+		[withdrawalApi.reducerPath]: withdrawalApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware().concat(
@@ -34,7 +38,9 @@ export const store = configureStore({
 			DsaApi.middleware,
 			usersApi.middleware,
 			AnalyticsApi.middleware,
-			IssueApi.middleware
+			IssueApi.middleware,
+			commissionApi.middleware,
+			withdrawalApi.middleware,
 		),
 });
 
