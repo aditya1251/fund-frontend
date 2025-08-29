@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 
 export default function LifeInsuranceLanding() {
   const insuranceTypes = [
@@ -123,21 +124,15 @@ export default function LifeInsuranceLanding() {
               not just a financial product; it's a promise you make to your family that their future will be secure.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href='/contact'>
               <Button
                 size="lg"
                 className="bg-[#F7C430] hover:bg-[#E6B429] text-[#1E1E1E] font-semibold px-8 py-4 text-lg"
-              >
+                >
                 <Shield className="mr-2 h-5 w-5" />
                 Get Protected Today
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-[#F7C430] text-[#1E1E1E] hover:bg-[#FFF0C3] px-8 py-4 text-lg bg-transparent"
-              >
-                <Calculator className="mr-2 h-5 w-5" />
-                Calculate Coverage
-              </Button>
+                </Link>
             </div>
           </div>
         </div>
@@ -151,7 +146,7 @@ export default function LifeInsuranceLanding() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <Card className="border-[#FFF0C3] shadow-lg">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <p className="text-lg text-[#1E1E1E] leading-relaxed mb-6">
                     In simple terms, life insurance is a contract between you and an insurance company. You pay a small
                     amount of money (called a premium) every month or year. If something happens to you, the company
@@ -168,7 +163,7 @@ export default function LifeInsuranceLanding() {
             <div className="grid grid-cols-2 gap-4">
               {protectionAreas.map((area, index) => (
                 <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors">
-                  <CardContent className="p-6 text-center">
+                  <CardContent className="p-6 text-center mt-4">
                     <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                       <div className="text-[#1E1E1E]">{area.icon}</div>
                     </div>
@@ -250,7 +245,7 @@ export default function LifeInsuranceLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {helpFeatures.map((feature, index) => (
               <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-6">
                   <div className="flex items-start gap-4">
                     <div className="flex-shrink-0">
                       <div className="p-3 bg-[#F7C430] rounded-lg text-[#1E1E1E]">{feature.icon}</div>
