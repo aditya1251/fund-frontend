@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 
 export default function TrademarkRegistrationLanding() {
   const whyTrademarkCrucial = [
@@ -188,21 +189,18 @@ export default function TrademarkRegistrationLanding() {
               from copying it.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+             <Link href='/contact'>
               <Button
                 size="lg"
                 className="bg-[#F7C430] hover:bg-[#E6B429] text-[#1E1E1E] font-semibold px-8 py-4 text-lg"
-              >
+                >
                 <Shield className="mr-2 h-5 w-5" />
                 Register Trademark
+              
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-[#F7C430] text-[#1E1E1E] hover:bg-[#FFF0C3] px-8 py-4 text-lg bg-transparent"
-              >
-                <Search className="mr-2 h-5 w-5" />
-                Check Availability
-              </Button>
+              </Link>
+
+
             </div>
           </div>
         </div>
@@ -235,7 +233,7 @@ export default function TrademarkRegistrationLanding() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <Card className="border-[#FFF0C3] shadow-lg">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="p-2 bg-[#F7C430] rounded-lg">
                       <Stamp className="h-6 w-6 text-[#1E1E1E]" />
@@ -257,7 +255,7 @@ export default function TrademarkRegistrationLanding() {
             <div className="grid grid-cols-2 gap-4">
               {trademarkTypes.map((type, index) => (
                 <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors">
-                  <CardContent className="p-6 text-center">
+                  <CardContent className="p-6 text-center mt-4">
                     <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                       <div className="text-[#1E1E1E]">{type.icon}</div>
                     </div>
@@ -283,7 +281,7 @@ export default function TrademarkRegistrationLanding() {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
             {registrationProcess.map((process, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg text-center relative">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto w-12 h-12 bg-[#F7C430] rounded-full flex items-center justify-center mb-4">
                     <span className="text-lg font-bold text-[#1E1E1E]">{index + 1}</span>
                   </div>
@@ -317,7 +315,7 @@ export default function TrademarkRegistrationLanding() {
                 key={index}
                 className="bg-[#FFFFFF] border-[#FFF0C3] shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
               >
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-start gap-4">
                     <div className={`p-3 rounded-lg ${reason.color.replace("text-", "text-").replace("bg-", "bg-")}`}>
                       {reason.icon}
@@ -346,7 +344,7 @@ export default function TrademarkRegistrationLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {trademarkClasses.map((tmClass, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg">
-                <CardContent className="p-8 text-center">
+                <CardContent className="p-8 text-center mt-4">
                   <div className="mx-auto w-20 h-20 bg-[#F7C430] rounded-full flex items-center justify-center mb-6">
                     <span className="text-2xl font-bold text-[#1E1E1E]">{tmClass.class}</span>
                   </div>
@@ -370,7 +368,7 @@ export default function TrademarkRegistrationLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {protectionBenefits.map((benefit, index) => (
               <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                     <div className="text-[#1E1E1E]">{benefit.icon}</div>
                   </div>
@@ -426,10 +424,10 @@ export default function TrademarkRegistrationLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {businessTypes.map((type, index) => (
               <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                     <div className="text-[#1E1E1E]">{type.icon}</div>
-                  </div>
+                  </div> 
                   <h3 className="font-semibold text-[#1E1E1E] text-lg mb-3">{type.title}</h3>
                   <p className="text-[#1E1E1E] text-sm leading-relaxed">{type.description}</p>
                 </CardContent>

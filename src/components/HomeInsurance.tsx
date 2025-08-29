@@ -24,6 +24,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 
 export default function HomeInsuranceLanding() {
   const homeBenefits = [
@@ -157,6 +158,9 @@ export default function HomeInsuranceLanding() {
               home will always be protected, no matter what comes its way.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              
+              
+              <Link href='/contact'>
               <Button
                 size="lg"
                 className="bg-[#F7C430] hover:bg-[#E6B429] text-[#1E1E1E] font-semibold px-8 py-4 text-lg"
@@ -164,14 +168,7 @@ export default function HomeInsuranceLanding() {
                 <Shield className="mr-2 h-5 w-5" />
                 Protect My Home
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-[#F7C430] text-[#1E1E1E] hover:bg-[#FFF0C3] px-8 py-4 text-lg bg-transparent"
-              >
-                <Calculator className="mr-2 h-5 w-5" />
-                Get Quote
-              </Button>
+            </Link>
             </div>
           </div>
         </div>
@@ -202,7 +199,7 @@ export default function HomeInsuranceLanding() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <Card className="border-[#FFF0C3] shadow-lg">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="p-2 bg-[#F7C430] rounded-lg">
                       <Shield className="h-6 w-6 text-[#1E1E1E]" />
@@ -224,7 +221,7 @@ export default function HomeInsuranceLanding() {
             <div className="grid grid-cols-2 gap-4">
               {protectionTypes.map((type, index) => (
                 <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors">
-                  <CardContent className="p-6 text-center">
+                  <CardContent className="p-6 text-center mt-4">
                     <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                       <div className="text-[#1E1E1E]">{type.icon}</div>
                     </div>
@@ -254,7 +251,7 @@ export default function HomeInsuranceLanding() {
                 key={index}
                 className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
               >
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-start gap-4">
                     <div className={`p-3 rounded-lg ${benefit.color.replace("text-", "text-").replace("bg-", "bg-")}`}>
                       {benefit.icon}
@@ -284,7 +281,7 @@ export default function HomeInsuranceLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {belongingsCategories.map((category, index) => (
               <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="text-center mb-4">
                     <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-3">
                       <div className="text-[#1E1E1E]">{category.icon}</div>
@@ -319,7 +316,7 @@ export default function HomeInsuranceLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {serviceFeatures.map((feature, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-start gap-4">
                     <div className="flex-shrink-0">
                       <div className="p-3 bg-[#F7C430] rounded-lg text-[#1E1E1E]">{feature.icon}</div>
