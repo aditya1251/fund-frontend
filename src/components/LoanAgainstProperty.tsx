@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 
 export default function LoanAgainstPropertyLanding() {
   const keyFeatures = [
@@ -359,6 +360,7 @@ export default function LoanAgainstPropertyLanding() {
               consolidation, education, or any major financial requirement.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href='/contact'>
               <Button
                 size="lg"
                 className="bg-[#F7C430] hover:bg-[#E6B429] text-[#1E1E1E] font-semibold px-8 py-4 text-lg"
@@ -366,14 +368,8 @@ export default function LoanAgainstPropertyLanding() {
                 <Home className="mr-2 h-5 w-5" />
                 Apply for LAP
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-[#F7C430] text-[#1E1E1E] hover:bg-[#FFF0C3] px-8 py-4 text-lg bg-transparent"
-              >
-                <Calculator className="mr-2 h-5 w-5" />
-                Calculate Loan Amount
-              </Button>
+              </Link>
+              
             </div>
           </div>
         </div>
@@ -411,7 +407,7 @@ export default function LoanAgainstPropertyLanding() {
                 key={index}
                 className="bg-[#FFFFFF] border-[#FFF0C3] shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
               >
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-6">
                   <div className="flex items-start gap-4">
                     <div className={`p-3 rounded-lg ${feature.color.replace("text-", "text-").replace("bg-", "bg-")}`}>
                       {feature.icon}
@@ -440,7 +436,7 @@ export default function LoanAgainstPropertyLanding() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {propertyTypes.map((property, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-6">
                   <div className="flex items-start gap-4 mb-6">
                     <div className="p-3 bg-[#F7C430] rounded-lg">
                       <Building2 className="h-6 w-6 text-[#1E1E1E]" />
@@ -522,7 +518,7 @@ export default function LoanAgainstPropertyLanding() {
             {eligibilityCriteria.map((criteria, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg">
                 <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-4 py-4">
                     <div className="p-2 bg-[#F7C430] rounded-lg">
                       <div className="text-[#1E1E1E]">{criteria.icon}</div>
                     </div>
@@ -558,7 +554,7 @@ export default function LoanAgainstPropertyLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {documentCategories.map((category, index) => (
               <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-6">
                   <div className="flex items-start gap-4 mb-4">
                     <div className={`p-2 rounded-lg ${category.color.replace("text-", "text-").replace("bg-", "bg-")}`}>
                       {category.icon}
@@ -595,7 +591,7 @@ export default function LoanAgainstPropertyLanding() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {applicationProcess.map((process, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg text-center relative">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-6">
                   <div className="mx-auto w-12 h-12 bg-[#F7C430] rounded-full flex items-center justify-center mb-4">
                     <span className="text-lg font-bold text-[#1E1E1E]">{index + 1}</span>
                   </div>
@@ -624,7 +620,7 @@ export default function LoanAgainstPropertyLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {interestRateFactors.map((factor, index) => (
               <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-6">
                   <div className="flex items-start gap-4">
                     <div className="p-2 bg-[#F7C430] rounded-lg">
                       <Percent className="h-5 w-5 text-[#1E1E1E]" />
@@ -654,7 +650,7 @@ export default function LoanAgainstPropertyLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {commonMistakes.map((mistake, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-6">
                   <div className="flex items-start gap-4">
                     <div className="p-2 bg-red-100 rounded-lg">
                       <AlertTriangle className="h-5 w-5 text-red-600" />
@@ -684,7 +680,7 @@ export default function LoanAgainstPropertyLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {lapBenefits.map((benefit, index) => (
               <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-6">
                   <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                     <div className="text-[#1E1E1E]">{benefit.icon}</div>
                   </div>
@@ -709,7 +705,7 @@ export default function LoanAgainstPropertyLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {businessTypes.map((business, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg text-center">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-6">
                   <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                     <div className="text-[#1E1E1E]">{business.icon}</div>
                   </div>

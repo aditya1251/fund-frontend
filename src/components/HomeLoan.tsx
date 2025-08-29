@@ -1,6 +1,7 @@
 import { Calculator, CheckCircle, CreditCard, DollarSign, FileText, Heart, Home, Shield, Star, Users, Building, TrendingUp, Briefcase, Target, Lock, Unlock, Key, MapPin } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import Link from 'next/link'
 
 export default function HomeLoanLanding() {
   return (
@@ -19,14 +20,15 @@ export default function HomeLoanLanding() {
               make the process simple and stress-free, so you can focus on finding the perfect place to call your own.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              
+              <Link href='/contact'>
+              
               <Button size="lg" className="bg-[#F7C430] hover:bg-[#E6B429] text-[#1E1E1E] font-semibold px-8 py-3">
                 <Home className="mr-2 h-5 w-5" />
                 Apply for Home Loan
               </Button>
-              <Button size="lg" variant="outline" className="border-[#F7C430] text-[#F7C430] hover:bg-[#F7C430] hover:text-[#1E1E1E] px-8 py-3">
-                <Calculator className="mr-2 h-5 w-5" />
-                Calculate Payments
-              </Button>
+              </Link>
+              
             </div>
           </div>
         </div>
@@ -64,7 +66,7 @@ export default function HomeLoanLanding() {
             
             <div className="grid md:grid-cols-2 gap-8">
               <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-[#F7C430] p-3 rounded-full">
                       <Users className="h-6 w-6 text-[#1E1E1E]" />
@@ -82,7 +84,7 @@ export default function HomeLoanLanding() {
               </Card>
 
               <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-[#F7C430] p-3 rounded-full">
                       <FileText className="h-6 w-6 text-[#1E1E1E]" />
@@ -100,7 +102,7 @@ export default function HomeLoanLanding() {
               </Card>
 
               <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-[#F7C430] p-3 rounded-full">
                       <Shield className="h-6 w-6 text-[#1E1E1E]" />
@@ -118,7 +120,7 @@ export default function HomeLoanLanding() {
               </Card>
 
               <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-[#F7C430] p-3 rounded-full">
                       <Target className="h-6 w-6 text-[#1E1E1E]" />
@@ -149,14 +151,15 @@ export default function HomeLoanLanding() {
               payments, and our friendly team is always ready to help you take the next step.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              
+              
+              <Link href='/contact'>
               <Button size="lg" className="bg-[#F7C430] hover:bg-[#E6B429] text-[#1E1E1E] font-semibold px-8 py-3">
                 <Users className="mr-2 h-5 w-5" />
                 Talk to a Home Loan Expert
               </Button>
-              <Button size="lg" variant="outline" className="border-[#F7C430] text-[#F7C430] hover:bg-[#F7C430] hover:text-[#1E1E1E] px-8 py-3">
-                <Calculator className="mr-2 h-5 w-5" />
-                Use Home Loan Calculator
-              </Button>
+              </Link>
+              
             </div>
           </div>
         </div>
@@ -204,7 +207,7 @@ export default function HomeLoanLanding() {
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-6 text-center">
+                <CardContent className="p-6 text-center mt-6">
                   <div className="bg-[#F7C430] p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <Heart className="h-8 w-8 text-[#1E1E1E]" />
                   </div>
@@ -217,7 +220,7 @@ export default function HomeLoanLanding() {
               </Card>
 
               <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-6 text-center">
+                <CardContent className="p-6 text-center mt-6">
                   <div className="bg-[#F7C430] p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <TrendingUp className="h-8 w-8 text-[#1E1E1E]" />
                   </div>
@@ -230,7 +233,7 @@ export default function HomeLoanLanding() {
               </Card>
 
               <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-6 text-center">
+                <CardContent className="p-6 text-center mt-6">
                   <div className="bg-[#F7C430] p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <FileText className="h-8 w-8 text-[#1E1E1E]" />
                   </div>
@@ -243,7 +246,7 @@ export default function HomeLoanLanding() {
               </Card>
 
               <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-6 text-center">
+                <CardContent className="p-6 text-center mt-6">
                   <div className="bg-[#F7C430] p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <DollarSign className="h-8 w-8 text-[#1E1E1E]" />
                   </div>
@@ -256,7 +259,7 @@ export default function HomeLoanLanding() {
               </Card>
 
               <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow md:col-span-2 lg:col-span-1">
-                <CardContent className="p-6 text-center">
+                <CardContent className="p-6 text-center mt-6">
                   <div className="bg-[#F7C430] p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <Calculator className="h-8 w-8 text-[#1E1E1E]" />
                   </div>
