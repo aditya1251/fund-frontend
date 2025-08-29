@@ -298,17 +298,14 @@ const LeadActivityStatus: React.FC = () => {
                 </div>
               </div>
 
-<<<<<<< HEAD
+
               {/* TableWrapper now has overflow-x-auto for horizontal scrolling on small screens */}
-              <TableWrapper className="overflow-x-auto md:overflow-x-visible">
-                <table className="hidden md:table w-full bg-white overflow-hidden text-sm">
-=======
+
             {/* Desktop Table View */}
             <div className="hidden md:block">
               {/* TableWrapper now has overflow-x-auto for horizontal scrolling on small screens */}
               <TableWrapper className="overflow-x-auto">
                 <table className="w-full bg-white overflow-hidden text-sm">
->>>>>>> 57db061c6a1a4487e994a0ce85e947ab97d31bdc
                   <TableHeadings
                     columns={[
                       "File No.",
@@ -331,7 +328,7 @@ const LeadActivityStatus: React.FC = () => {
                           lead.loanSubType,
                           lead.mode ? lead.mode : "Online",
                           lead.values[0].fields[0].value,
-<<<<<<< HEAD
+
                           <EmailCell
                             key={`sub-${index}`}
                             email={lead.subscriber}
@@ -340,10 +337,6 @@ const LeadActivityStatus: React.FC = () => {
                             key={`email-${index}`}
                             email={lead.values[0].fields[1].value}
                           />,
-=======
-                          <EmailCell key={`sub-${index}`} email={lead.subscriber} />,
-                          <EmailCell key={`email-${index}`} email={lead.values[0].fields[1].value} />,
->>>>>>> 57db061c6a1a4487e994a0ce85e947ab97d31bdc
                           lead.values[0].fields[2].value,
                           lead.rejectionMessage,
                           <StatusBadge
@@ -360,88 +353,6 @@ const LeadActivityStatus: React.FC = () => {
                     ))}
                   </tbody>
                 </table>
-<<<<<<< HEAD
-
-                <div className="block md:hidden space-y-4">
-                  {filteredLeads.map((lead: any, index: number) => (
-                    <div
-                      key={index}
-                      className="rounded-xl border border-gray-200 bg-white shadow-md p-4 space-y-3">
-                      {/* Top Row: Applicant & Status */}
-                      <div className="flex justify-between items-start">
-                        <div className="min-w-0">
-                          <p className="text-xs text-gray-500">Applicant</p>
-                          <p className="text-lg font-semibold text-gray-900 break-words">
-                            {lead.values[0]?.fields?.[0]?.value}
-                          </p>
-                        </div>
-                        <div className="shrink-0">
-                          <StatusBadge
-                            status={
-                              lead.status.toLowerCase() as
-                                | "approved"
-                                | "pending"
-                                | "rejected"
-                            }
-                          />
-                        </div>
-                      </div>
-
-                      {/* Loan Info */}
-                      <div className="grid grid-cols-2 gap-y-2 text-sm break-words">
-                        <p className="text-gray-500">File No.</p>
-                        <p className="font-medium text-gray-800 break-all">
-                          {lead._id}
-                        </p>
-
-                        <p className="text-gray-500">Loan Type</p>
-                        <p className="font-medium text-gray-800">
-                          {lead.loanSubType}
-                        </p>
-
-                        <p className="text-gray-500">Mode</p>
-                        <p className="font-medium text-gray-800">
-                          {lead.mode || "Online"}
-                        </p>
-                      </div>
-
-                      {/* Contact Info */}
-                      <div className="border-t border-gray-200 pt-3 space-y-1">
-                        <div className="flex items-center gap-2 break-words">
-                          <span className="text-gray-500 text-sm">
-                            Subscriber:
-                          </span>
-                          <span className="text-blue-600 underline break-all">
-                            {lead.subscriber}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 break-words">
-                          <span className="text-gray-500 text-sm">Email:</span>
-                          <span className="text-blue-600 underline break-all">
-                            {lead.values[0]?.fields?.[1]?.value}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-500 text-sm">Phone:</span>
-                          <span className="text-gray-800 font-medium break-all">
-                            {lead.values[0]?.fields?.[2]?.value}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Review / Notes */}
-                      {lead.rejectionMessage && (
-                        <div className="bg-gray-50 border border-gray-200 rounded-md p-2 text-sm text-gray-700 break-words">
-                          <span className="font-medium">Review:</span>{" "}
-                          {lead.rejectionMessage}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </TableWrapper>
-            </div>
-=======
               </TableWrapper>
             </div>
 
@@ -472,12 +383,14 @@ const LeadActivityStatus: React.FC = () => {
               currentPage={currentPage}
               totalPages={totalPages}
             />
->>>>>>> 57db061c6a1a4487e994a0ce85e947ab97d31bdc
+            </div>
           </div>
         </div>
       )}
     </RequireFeature>
   );
-};
+}
 
-export default LeadActivityStatus;
+export default function Page() {
+  return <LeadActivityStatus />;
+}

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 export function RequireFeature({ feature, children }: { feature: string; children: React.ReactNode }) {
   const { data: session } = useSession();
   const router = useRouter();
-  const features: string[] = session?.user?.features || [];
+  const features: string[] = (session?.user as any)?.features || [];
 
   if (!features.includes(feature)) {
     return (
