@@ -5,8 +5,10 @@ import Loading from "@/components/Loading";
 import { useCreateWithdrawMutation, useGetMyWithdrawalsQuery } from "@/redux/services/withdrawalApi";
 import { Button } from "@/components/ui/button";
 import CommissionsPage from "./commissionblock";
+import { useGetMyCommissionsQuery } from "@/redux/services/commissionApi";
 
 export default function WithdrawalsPage() {
+  const { data: commissions = [] } = useGetMyCommissionsQuery();
   const { data: session } = useSession();
   const [amount, setAmount] = useState<number | "">("");
   const [remarks, setRemarks] = useState("");
@@ -36,11 +38,15 @@ export default function WithdrawalsPage() {
     }
   };
 
-  if (isLoading) return <Loading />;
+  // if (isLoading) return <Loading />;
 
   return (
     <div className="container text-black mx-auto py-6 px-4">
-      <CommissionsPage />
+      <div className="flex bg-white p-4 rounded shadow mb-6 justify-between items-center">
+        <h5>Balance: <strong>₹ {Number(session?.user?.balance).toLocaleString("en-IN")}</strong></h5>
+        <h5>No. of Commission: <strong>{Number(commissions.length).toLocaleString("en-IN")}</strong></h5>
+      </div>
+      
       <h2 className="text-2xl font-semibold mb-4">Withdrawals</h2>
 
       <div className="bg-white p-4 rounded shadow mb-6">
@@ -87,6 +93,7 @@ export default function WithdrawalsPage() {
           ))}
         </ul>
       </div>
+      <CommissionsPage />
     </div>
   );
 }

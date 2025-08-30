@@ -12,6 +12,7 @@ declare module "next-auth" {
       rmId?: string | null;
       planName?: string | null;
       planId?: string | null;
+      balance?: number | null;
     };
   }
 } 
