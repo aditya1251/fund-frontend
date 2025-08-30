@@ -295,7 +295,7 @@ export default function CompanyRegistrationLanding() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <Card className="border-[#FFF0C3] shadow-lg">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="p-2 bg-[#F7C430] rounded-lg">
                       <Scale className="h-6 w-6 text-[#1E1E1E]" />
@@ -327,7 +327,7 @@ export default function CompanyRegistrationLanding() {
                   key={index}
                   className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors"
                 >
-                  <CardContent className="p-4">
+                  <CardContent className="p-4 mt-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-[#F7C430] rounded-full flex items-center justify-center">
@@ -368,7 +368,7 @@ export default function CompanyRegistrationLanding() {
                 key={index}
                 className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow"
               >
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-start gap-4 mb-6">
                     <div className="p-3 bg-[#F7C430] rounded-lg">
                       <div className="text-[#1E1E1E]">{type.icon}</div>
@@ -422,7 +422,7 @@ export default function CompanyRegistrationLanding() {
                 key={index}
                 className="border-[#FFF0C3] shadow-lg text-center relative"
               >
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto w-12 h-12 bg-[#F7C430] rounded-full flex items-center justify-center mb-4">
                     <span className="text-lg font-bold text-[#1E1E1E]">
                       {index + 1}
@@ -465,7 +465,7 @@ export default function CompanyRegistrationLanding() {
                 key={index}
                 className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
               >
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-start gap-4">
                     <div
                       className={`p-3 rounded-lg ${reason.color
@@ -507,7 +507,7 @@ export default function CompanyRegistrationLanding() {
                 key={index}
                 className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center"
               >
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                     <div className="text-[#1E1E1E]">{benefit.icon}</div>
                   </div>
@@ -553,7 +553,7 @@ export default function CompanyRegistrationLanding() {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="mt-4">
                   <p className="text-[#1E1E1E] leading-relaxed">
                     {step.description}
                   </p>
@@ -582,7 +582,7 @@ export default function CompanyRegistrationLanding() {
                 key={index}
                 className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center"
               >
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                     <div className="text-[#1E1E1E]">{sector.icon}</div>
                   </div>

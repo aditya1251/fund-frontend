@@ -3,7 +3,6 @@ import {
   Award,
   TrendingUp,
   FileText,
-  Phone,
   Clock,
   Target,
   Calculator,
@@ -22,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 
 export default function UdyogRegistrationLanding() {
   const whyudyogCrucial = [
@@ -227,6 +227,7 @@ export default function UdyogRegistrationLanding() {
               number and a certificate from the government.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/contact">
               <Button
                 size="lg"
                 className="bg-[#F7C430] hover:bg-[#E6B429] text-[#1E1E1E] font-semibold px-8 py-4 text-lg"
@@ -234,14 +235,7 @@ export default function UdyogRegistrationLanding() {
                 <Building className="mr-2 h-5 w-5" />
                 Get Udyog Registration
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-[#F7C430] text-[#1E1E1E] hover:bg-[#FFF0C3] px-8 py-4 text-lg bg-transparent"
-              >
-                <Calculator className="mr-2 h-5 w-5" />
-                Check Eligibility
-              </Button>
+             </Link>
             </div>
           </div>
         </div>
@@ -274,7 +268,7 @@ export default function UdyogRegistrationLanding() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <Card className="border-[#FFF0C3] shadow-lg">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="p-2 bg-[#F7C430] rounded-lg">
                       <Star className="h-6 w-6 text-[#1E1E1E]" />
@@ -297,7 +291,7 @@ export default function UdyogRegistrationLanding() {
               <h3 className="text-xl font-semibold text-[#1E1E1E] mb-4">Required Information</h3>
               {requiredInformation.map((info, index) => (
                 <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors">
-                  <CardContent className="p-4">
+                  <CardContent className="p-4 mt-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-[#F7C430] rounded-full flex items-center justify-center">
                         <div className="text-[#1E1E1E]">{info.icon}</div>
@@ -326,7 +320,7 @@ export default function UdyogRegistrationLanding() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {msmeCategories.map((category, index) => (
               <Card key={index} className={`${category.color} border-2 shadow-lg hover:shadow-xl transition-shadow`}>
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="text-center mb-6">
                     <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                       <div className="text-[#1E1E1E]">{category.icon}</div>
@@ -366,7 +360,7 @@ export default function UdyogRegistrationLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {governmentBenefits.map((benefit, index) => (
               <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                     <div className="text-[#1E1E1E]">{benefit.icon}</div>
                   </div>
@@ -392,7 +386,7 @@ export default function UdyogRegistrationLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {schemeBenefits.map((scheme, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="flex items-start gap-4">
                     <div className="p-2 bg-[#F7C430] rounded-lg">
                       <Banknote className="h-5 w-5 text-[#1E1E1E]" />
@@ -421,7 +415,7 @@ export default function UdyogRegistrationLanding() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {registrationProcess.map((process, index) => (
               <Card key={index} className="border-[#FFF0C3] shadow-lg text-center relative">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto w-12 h-12 bg-[#F7C430] rounded-full flex items-center justify-center mb-4">
                     <span className="text-lg font-bold text-[#1E1E1E]">{index + 1}</span>
                   </div>
@@ -455,7 +449,7 @@ export default function UdyogRegistrationLanding() {
                 key={index}
                 className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
               >
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-start gap-4">
                     <div className={`p-3 rounded-lg ${reason.color.replace("text-", "text-").replace("bg-", "bg-")}`}>
                       {reason.icon}
@@ -483,7 +477,7 @@ export default function UdyogRegistrationLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {complianceFeatures.map((feature, index) => (
               <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="flex items-start gap-4">
                     <div className="p-2 bg-[#F7C430] rounded-lg">
                       <CheckCircle className="h-5 w-5 text-[#1E1E1E]" />
@@ -514,7 +508,7 @@ export default function UdyogRegistrationLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {serviceSteps.map((step, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg">
-                <CardHeader>
+                <CardHeader className="p-6 mt-4">
                   <div className="flex items-center gap-4">
                     <div className="p-3 bg-[#F7C430] rounded-lg text-[#1E1E1E]">{step.icon}</div>
                     <div>
@@ -546,7 +540,7 @@ export default function UdyogRegistrationLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {businessTypes.map((business, index) => (
               <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-6">
                   <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                     <div className="text-[#1E1E1E]">{business.icon}</div>
                   </div>

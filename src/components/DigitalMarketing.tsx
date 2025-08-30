@@ -20,10 +20,11 @@ import {
   MousePointer,
   BarChart3,
   Heart,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 export default function DigitalMarketingLanding() {
   const whyDigitalMarketingCrucial = [
@@ -58,10 +59,11 @@ export default function DigitalMarketingLanding() {
     {
       icon: <Award className="h-6 w-6" />,
       title: "Build Your Brand",
-      description: "Having a strong online presence helps you build trust and a good reputation for your brand.",
+      description:
+        "Having a strong online presence helps you build trust and a good reputation for your brand.",
       color: "bg-red-100 text-red-600",
     },
-  ]
+  ];
 
   const serviceSteps = [
     {
@@ -94,7 +96,7 @@ export default function DigitalMarketingLanding() {
       description:
         "We can help you build a simple, clean, and professional website that works perfectly on phones and computers, giving your customers a great experience.",
     },
-  ]
+  ];
 
   const digitalChannels = [
     {
@@ -129,7 +131,7 @@ export default function DigitalMarketingLanding() {
       investment: "₹8,000 - ₹80,000/month",
       timeline: "1-3 months for traction",
     },
-  ]
+  ];
 
   const businessTypes = [
     {
@@ -156,7 +158,7 @@ export default function DigitalMarketingLanding() {
       description: "Online stores, digital products, apps",
       digitalNeeds: "Performance Marketing, Conversion Optimization",
     },
-  ]
+  ];
 
   const digitalBenefits = [
     {
@@ -179,37 +181,56 @@ export default function DigitalMarketingLanding() {
       title: "Measurable Results",
       description: "Track ROI and optimize performance",
     },
-  ]
+  ];
 
   const stats = [
-    { number: "500+", label: "Businesses Grown", icon: <TrendingUp className="h-5 w-5" /> },
-    { number: "300%", label: "Average ROI", icon: <Target className="h-5 w-5" /> },
-    { number: "50K+", label: "Leads Generated", icon: <Users className="h-5 w-5" /> },
-    { number: "24/7", label: "Campaign Monitoring", icon: <Eye className="h-5 w-5" /> },
-  ]
+    {
+      number: "500+",
+      label: "Businesses Grown",
+      icon: <TrendingUp className="h-5 w-5" />,
+    },
+    {
+      number: "300%",
+      label: "Average ROI",
+      icon: <Target className="h-5 w-5" />,
+    },
+    {
+      number: "50K+",
+      label: "Leads Generated",
+      icon: <Users className="h-5 w-5" />,
+    },
+    {
+      number: "24/7",
+      label: "Campaign Monitoring",
+      icon: <Eye className="h-5 w-5" />,
+    },
+  ];
 
   const marketingProcess = [
     {
       step: "Strategy & Planning",
       duration: "1-2 Weeks",
-      description: "Understand business goals, target audience, and create digital strategy",
+      description:
+        "Understand business goals, target audience, and create digital strategy",
     },
     {
       step: "Setup & Implementation",
       duration: "2-4 Weeks",
-      description: "Set up campaigns, create content, and launch marketing activities",
+      description:
+        "Set up campaigns, create content, and launch marketing activities",
     },
     {
       step: "Optimization & Testing",
       duration: "Ongoing",
-      description: "Monitor performance, A/B test, and optimize for better results",
+      description:
+        "Monitor performance, A/B test, and optimize for better results",
     },
     {
       step: "Reporting & Growth",
       duration: "Monthly",
       description: "Provide detailed reports and scale successful campaigns",
     },
-  ]
+  ];
 
   const digitalTools = [
     {
@@ -236,7 +257,7 @@ export default function DigitalMarketingLanding() {
       benefit: "Organic traffic growth",
       icon: <TrendingUp className="h-4 w-4" />,
     },
-  ]
+  ];
 
   const marketingMetrics = [
     {
@@ -263,7 +284,7 @@ export default function DigitalMarketingLanding() {
       importance: "Measures profitability",
       target: "3:1 to 5:1 ratio",
     },
-  ]
+  ];
 
   const commonChallenges = [
     {
@@ -286,14 +307,30 @@ export default function DigitalMarketingLanding() {
       impact: "Confused customers",
       solution: "Integrated marketing strategy",
     },
-  ]
+  ];
 
   const digitalTrends = [
-    { trend: "Mobile-First Marketing", adoption: "85% of users on mobile", impact: "Critical for success" },
-    { trend: "Video Content", adoption: "80% prefer video content", impact: "Higher engagement rates" },
-    { trend: "Local Search", adoption: "46% of searches are local", impact: "Essential for local businesses" },
-    { trend: "Social Commerce", adoption: "Growing 30% annually", impact: "Direct sales opportunity" },
-  ]
+    {
+      trend: "Mobile-First Marketing",
+      adoption: "85% of users on mobile",
+      impact: "Critical for success",
+    },
+    {
+      trend: "Video Content",
+      adoption: "80% prefer video content",
+      impact: "Higher engagement rates",
+    },
+    {
+      trend: "Local Search",
+      adoption: "46% of searches are local",
+      impact: "Essential for local businesses",
+    },
+    {
+      trend: "Social Commerce",
+      adoption: "Growing 30% annually",
+      impact: "Direct sales opportunity",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-[#FFFFFF]">
@@ -306,32 +343,30 @@ export default function DigitalMarketingLanding() {
                 <Megaphone className="h-12 w-12 text-[#1E1E1E]" />
               </div>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#1E1E1E] mb-4">Digital Marketing</h1>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#1E1E1E] mb-4">
+              Digital Marketing
+            </h1>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#1E1E1E] mb-8">
               Growing Your Business in the Digital World
             </h2>
             <p className="text-lg sm:text-xl text-[#1E1E1E] max-w-4xl mx-auto mb-10 leading-relaxed">
-              In today's world, almost everyone is online, whether they are shopping, looking for information, or
-              connecting with friends. Digital marketing is the simple and smart way to reach these people and grow your
-              business. It's all about meeting your customers where they are: on their phones, on social media, and on
+              In today's world, almost everyone is online, whether they are
+              shopping, looking for information, or connecting with friends.
+              Digital marketing is the simple and smart way to reach these
+              people and grow your business. It's all about meeting your
+              customers where they are: on their phones, on social media, and on
               search engines.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="bg-[#F7C430] hover:bg-[#E6B429] text-[#1E1E1E] font-semibold px-8 py-4 text-lg"
-              >
-                <Megaphone className="mr-2 h-5 w-5" />
-                Start Digital Marketing
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-[#F7C430] text-[#1E1E1E] hover:bg-[#FFF0C3] px-8 py-4 text-lg bg-transparent"
-              >
-                <Calculator className="mr-2 h-5 w-5" />
-                Get Marketing Audit
-              </Button>
+              <Link href="/contact">
+                <Button
+                  size="lg"
+                  className="bg-[#F7C430] hover:bg-[#E6B429] text-[#1E1E1E] font-semibold px-8 py-4 text-lg"
+                >
+                  <Megaphone className="mr-2 h-5 w-5" />
+                  Start Digital Marketing
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -344,10 +379,16 @@ export default function DigitalMarketingLanding() {
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="flex justify-center mb-3">
-                  <div className="p-2 bg-[#F7C430] rounded-lg text-[#1E1E1E]">{stat.icon}</div>
+                  <div className="p-2 bg-[#F7C430] rounded-lg text-[#1E1E1E]">
+                    {stat.icon}
+                  </div>
                 </div>
-                <div className="text-3xl sm:text-4xl font-bold text-[#F7C430] mb-2">{stat.number}</div>
-                <div className="text-sm sm:text-base text-[#FFFFFF] opacity-80">{stat.label}</div>
+                <div className="text-3xl sm:text-4xl font-bold text-[#F7C430] mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-sm sm:text-base text-[#FFFFFF] opacity-80">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
@@ -364,39 +405,54 @@ export default function DigitalMarketingLanding() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <Card className="border-[#FFF0C3] shadow-lg">
-                <CardContent className="p-8">
+                <CardContent className="p-8 m-4">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="p-2 bg-[#F7C430] rounded-lg">
                       <Smartphone className="h-6 w-6 text-[#1E1E1E]" />
                     </div>
-                    <h3 className="text-xl font-semibold text-[#1E1E1E]">Online Business Promotion</h3>
+                    <h3 className="text-xl font-semibold text-[#1E1E1E]">
+                      Online Business Promotion
+                    </h3>
                   </div>
                   <p className="text-lg text-[#1E1E1E] leading-relaxed mb-6">
-                    Digital marketing is the use of digital tools and online channels to promote your products or
-                    services. Instead of using traditional methods like newspaper ads or flyers, you use the internet to
-                    connect with potential customers.
+                    Digital marketing is the use of digital tools and online
+                    channels to promote your products or services. Instead of
+                    using traditional methods like newspaper ads or flyers, you
+                    use the internet to connect with potential customers.
                   </p>
                   <p className="text-lg text-[#1E1E1E] leading-relaxed">
-                    This includes things like having a good website, being active on social media, and showing up when
-                    people search for your services online.
+                    This includes things like having a good website, being
+                    active on social media, and showing up when people search
+                    for your services online.
                   </p>
                 </CardContent>
               </Card>
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-[#1E1E1E] mb-4">Digital Marketing Tools</h3>
+              <h3 className="text-xl font-semibold text-[#1E1E1E] mb-4">
+                Digital Marketing Tools
+              </h3>
               {digitalTools.map((tool, index) => (
-                <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors">
+                <Card
+                  key={index}
+                  className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors"
+                >
                   <CardContent className="p-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-[#F7C430] rounded-full flex items-center justify-center">
                         <div className="text-[#1E1E1E]">{tool.icon}</div>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-[#1E1E1E]">{tool.tool}</h4>
-                        <p className="text-sm text-[#1E1E1E] opacity-80">{tool.purpose}</p>
-                        <p className="text-xs text-green-600 font-medium">{tool.benefit}</p>
+                        <h4 className="font-semibold text-[#1E1E1E]">
+                          {tool.tool}
+                        </h4>
+                        <p className="text-sm text-[#1E1E1E] opacity-80">
+                          {tool.purpose}
+                        </p>
+                        <p className="text-xs text-green-600 font-medium">
+                          {tool.benefit}
+                        </p>
                       </div>
                     </div>
                   </CardContent>
@@ -410,26 +466,39 @@ export default function DigitalMarketingLanding() {
       {/* Digital Channels Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#FFF0C3]">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">Digital Marketing Channels</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">
+            Digital Marketing Channels
+          </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            Different digital channels serve different purposes and deliver varying results. We help you choose the
-            right mix for your business goals.
+            Different digital channels serve different purposes and deliver
+            varying results. We help you choose the right mix for your business
+            goals.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {digitalChannels.map((channel, index) => (
-              <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-8">
+              <Card
+                key={index}
+                className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-start gap-4 mb-6">
                     <div className="p-3 bg-[#F7C430] rounded-lg">
                       <Megaphone className="h-6 w-6 text-[#1E1E1E]" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-[#1E1E1E] mb-2">{channel.channel}</h3>
-                      <p className="text-[#1E1E1E] opacity-80 mb-4">{channel.purpose}</p>
+                      <h3 className="text-xl font-semibold text-[#1E1E1E] mb-2">
+                        {channel.channel}
+                      </h3>
+                      <p className="text-[#1E1E1E] opacity-80 mb-4">
+                        {channel.purpose}
+                      </p>
                       <div className="flex flex-wrap gap-1 mb-4">
                         {channel.platforms.map((platform, idx) => (
-                          <Badge key={idx} className="bg-[#FFF0C3] text-[#1E1E1E] text-xs">
+                          <Badge
+                            key={idx}
+                            className="bg-[#FFF0C3] text-[#1E1E1E] text-xs"
+                          >
                             {platform}
                           </Badge>
                         ))}
@@ -438,16 +507,28 @@ export default function DigitalMarketingLanding() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm font-medium text-[#1E1E1E] mb-1">Expected Results</p>
-                      <p className="text-sm text-[#1E1E1E] opacity-80">{channel.results}</p>
+                      <p className="text-sm font-medium text-[#1E1E1E] mb-1">
+                        Expected Results
+                      </p>
+                      <p className="text-sm text-[#1E1E1E] opacity-80">
+                        {channel.results}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#1E1E1E] mb-1">Timeline</p>
-                      <p className="text-sm text-[#1E1E1E] opacity-80">{channel.timeline}</p>
+                      <p className="text-sm font-medium text-[#1E1E1E] mb-1">
+                        Timeline
+                      </p>
+                      <p className="text-sm text-[#1E1E1E] opacity-80">
+                        {channel.timeline}
+                      </p>
                     </div>
                     <div className="col-span-2">
-                      <p className="text-sm font-medium text-[#1E1E1E] mb-1">Investment Range</p>
-                      <Badge className="bg-[#F7C430] text-[#1E1E1E] text-xs">{channel.investment}</Badge>
+                      <p className="text-sm font-medium text-[#1E1E1E] mb-1">
+                        Investment Range
+                      </p>
+                      <Badge className="bg-[#F7C430] text-[#1E1E1E] text-xs">
+                        {channel.investment}
+                      </Badge>
                     </div>
                   </div>
                 </CardContent>
@@ -460,25 +541,38 @@ export default function DigitalMarketingLanding() {
       {/* Marketing Metrics Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#FFFFFF]">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">Key Marketing Metrics</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">
+            Key Marketing Metrics
+          </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            We track important metrics to measure success and optimize your digital marketing campaigns for better
-            results.
+            We track important metrics to measure success and optimize your
+            digital marketing campaigns for better results.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {marketingMetrics.map((metric, index) => (
-              <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors">
-                <CardContent className="p-6">
+              <Card
+                key={index}
+                className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors"
+              >
+                <CardContent className="p-6 mt-4">
                   <div className="flex items-start gap-4">
                     <div className="p-2 bg-[#F7C430] rounded-lg">
                       <BarChart3 className="h-5 w-5 text-[#1E1E1E]" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-[#1E1E1E] mb-2">{metric.metric}</h3>
-                      <p className="text-sm text-[#1E1E1E] opacity-80 mb-2">{metric.description}</p>
-                      <p className="text-sm text-[#1E1E1E] mb-2">{metric.importance}</p>
-                      <Badge className="bg-[#F7C430] text-[#1E1E1E] text-xs">{metric.target}</Badge>
+                      <h3 className="font-semibold text-[#1E1E1E] mb-2">
+                        {metric.metric}
+                      </h3>
+                      <p className="text-sm text-[#1E1E1E] opacity-80 mb-2">
+                        {metric.description}
+                      </p>
+                      <p className="text-sm text-[#1E1E1E] mb-2">
+                        {metric.importance}
+                      </p>
+                      <Badge className="bg-[#F7C430] text-[#1E1E1E] text-xs">
+                        {metric.target}
+                      </Badge>
                     </div>
                   </div>
                 </CardContent>
@@ -495,22 +589,31 @@ export default function DigitalMarketingLanding() {
             Common Digital Marketing Challenges
           </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            Many businesses face digital marketing challenges that prevent growth. Our expert solutions help overcome
-            these obstacles.
+            Many businesses face digital marketing challenges that prevent
+            growth. Our expert solutions help overcome these obstacles.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {commonChallenges.map((challenge, index) => (
-              <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-6">
+              <Card
+                key={index}
+                className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <CardContent className="p-6 mt-4">
                   <div className="flex items-start gap-4">
                     <div className="p-2 bg-red-100 rounded-lg">
                       <AlertTriangle className="h-5 w-5 text-red-600" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-[#1E1E1E] mb-2">{challenge.challenge}</h3>
-                      <p className="text-sm text-red-600 mb-2 font-medium">Impact: {challenge.impact}</p>
-                      <p className="text-sm text-green-600 font-medium">Solution: {challenge.solution}</p>
+                      <h3 className="font-semibold text-[#1E1E1E] mb-2">
+                        {challenge.challenge}
+                      </h3>
+                      <p className="text-sm text-red-600 mb-2 font-medium">
+                        Impact: {challenge.impact}
+                      </p>
+                      <p className="text-sm text-green-600 font-medium">
+                        Solution: {challenge.solution}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -523,22 +626,35 @@ export default function DigitalMarketingLanding() {
       {/* Marketing Process Timeline */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#FFFFFF]">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">Marketing Process</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">
+            Marketing Process
+          </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            Our systematic approach ensures effective digital marketing campaigns with measurable results and continuous
-            optimization.
+            Our systematic approach ensures effective digital marketing
+            campaigns with measurable results and continuous optimization.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {marketingProcess.map((process, index) => (
-              <Card key={index} className="border-[#FFF0C3] shadow-lg text-center relative">
-                <CardContent className="p-6">
+              <Card
+                key={index}
+                className="border-[#FFF0C3] shadow-lg text-center relative"
+              >
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto w-12 h-12 bg-[#F7C430] rounded-full flex items-center justify-center mb-4">
-                    <span className="text-lg font-bold text-[#1E1E1E]">{index + 1}</span>
+                    <span className="text-lg font-bold text-[#1E1E1E]">
+                      {index + 1}
+                    </span>
                   </div>
-                  <h3 className="font-semibold text-[#1E1E1E] text-lg mb-2">{process.step}</h3>
-                  <Badge className="bg-[#1E1E1E] text-[#FFFFFF] mb-3 text-xs">{process.duration}</Badge>
-                  <p className="text-sm text-[#1E1E1E] opacity-80">{process.description}</p>
+                  <h3 className="font-semibold text-[#1E1E1E] text-lg mb-2">
+                    {process.step}
+                  </h3>
+                  <Badge className="bg-[#1E1E1E] text-[#FFFFFF] mb-3 text-xs">
+                    {process.duration}
+                  </Badge>
+                  <p className="text-sm text-[#1E1E1E] opacity-80">
+                    {process.description}
+                  </p>
                 </CardContent>
                 {index < marketingProcess.length - 1 && (
                   <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-0.5 bg-[#F7C430] transform -translate-y-1/2"></div>
@@ -556,8 +672,9 @@ export default function DigitalMarketingLanding() {
             Why is Digital Marketing So Crucial?
           </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            Digital marketing provides unprecedented opportunities for business growth, customer engagement, and
-            measurable results in today's connected world.
+            Digital marketing provides unprecedented opportunities for business
+            growth, customer engagement, and measurable results in today's
+            connected world.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -566,14 +683,22 @@ export default function DigitalMarketingLanding() {
                 key={index}
                 className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
               >
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-start gap-4">
-                    <div className={`p-3 rounded-lg ${reason.color.replace("text-", "text-").replace("bg-", "bg-")}`}>
+                    <div
+                      className={`p-3 rounded-lg ${reason.color
+                        .replace("text-", "text-")
+                        .replace("bg-", "bg-")}`}
+                    >
                       {reason.icon}
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-[#1E1E1E] mb-3">{reason.title}</h3>
-                      <p className="text-[#1E1E1E] leading-relaxed">{reason.description}</p>
+                      <h3 className="text-xl font-semibold text-[#1E1E1E] mb-3">
+                        {reason.title}
+                      </h3>
+                      <p className="text-[#1E1E1E] leading-relaxed">
+                        {reason.description}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -586,21 +711,30 @@ export default function DigitalMarketingLanding() {
       {/* Digital Benefits Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#FFFFFF]">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">Digital Marketing Benefits</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">
+            Digital Marketing Benefits
+          </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            Professional digital marketing services provide comprehensive benefits that drive business growth and
-            competitive advantage.
+            Professional digital marketing services provide comprehensive
+            benefits that drive business growth and competitive advantage.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {digitalBenefits.map((benefit, index) => (
-              <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center">
-                <CardContent className="p-6">
+              <Card
+                key={index}
+                className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center"
+              >
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                     <div className="text-[#1E1E1E]">{benefit.icon}</div>
                   </div>
-                  <h3 className="font-semibold text-[#1E1E1E] text-lg mb-3">{benefit.title}</h3>
-                  <p className="text-[#1E1E1E] text-sm leading-relaxed">{benefit.description}</p>
+                  <h3 className="font-semibold text-[#1E1E1E] text-lg mb-3">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-[#1E1E1E] text-sm leading-relaxed">
+                    {benefit.description}
+                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -615,23 +749,30 @@ export default function DigitalMarketingLanding() {
             How We Help You Every Step of the Way
           </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            We break down the complexities of digital marketing into simple, effective steps. Our services are designed
-            to help your business stand out and succeed online.
+            We break down the complexities of digital marketing into simple,
+            effective steps. Our services are designed to help your business
+            stand out and succeed online.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {serviceSteps.map((step, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg">
                 <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-[#F7C430] rounded-lg text-[#1E1E1E]">{step.icon}</div>
+                  <div className="flex items-center gap-4 mt-4">
+                    <div className="p-3 bg-[#F7C430] rounded-lg text-[#1E1E1E]">
+                      {step.icon}
+                    </div>
                     <div>
-                      <CardTitle className="text-xl text-[#1E1E1E]">{step.title}</CardTitle>
+                      <CardTitle className="text-xl text-[#1E1E1E]">
+                        {step.title}
+                      </CardTitle>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-[#1E1E1E] leading-relaxed">{step.description}</p>
+                  <p className="text-[#1E1E1E] leading-relaxed">
+                    {step.description}
+                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -646,29 +787,37 @@ export default function DigitalMarketingLanding() {
             Who Needs Digital Marketing?
           </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            Every business, big or small, that wants to grow. Whether you run a small local shop, a home-based business,
-            a clinic, or a large company, digital marketing is essential to reach new customers and stay ahead of the
-            competition.
+            Every business, big or small, that wants to grow. Whether you run a
+            small local shop, a home-based business, a clinic, or a large
+            company, digital marketing is essential to reach new customers and
+            stay ahead of the competition.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {businessTypes.map((business, index) => (
-              <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center">
-                <CardContent className="p-6">
+              <Card
+                key={index}
+                className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center"
+              >
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                     <div className="text-[#1E1E1E]">{business.icon}</div>
                   </div>
-                  <h3 className="font-semibold text-[#1E1E1E] text-lg mb-3">{business.title}</h3>
-                  <p className="text-[#1E1E1E] text-sm mb-3 leading-relaxed">{business.description}</p>
-                  <Badge className="bg-[#F7C430] text-[#1E1E1E] text-xs">{business.digitalNeeds}</Badge>
+                  <h3 className="font-semibold text-[#1E1E1E] text-lg mb-3">
+                    {business.title}
+                  </h3>
+                  <p className="text-[#1E1E1E] text-sm mb-3 leading-relaxed">
+                    {business.description}
+                  </p>
+                  <Badge className="bg-[#F7C430] text-[#1E1E1E] text-xs">
+                    {business.digitalNeeds}
+                  </Badge>
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
       </section>
-
-      
     </div>
-  )
+  );
 }

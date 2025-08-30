@@ -23,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 
 export default function PFESICRegistrationLanding() {
   const whyPFESICCrucial = [
@@ -245,6 +246,7 @@ export default function PFESICRegistrationLanding() {
               them with medical benefits and financial support in case of illness or injury.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+             <Link href='/contact'>
               <Button
                 size="lg"
                 className="bg-[#F7C430] hover:bg-[#E6B429] text-[#1E1E1E] font-semibold px-8 py-4 text-lg"
@@ -252,14 +254,7 @@ export default function PFESICRegistrationLanding() {
                 <Users className="mr-2 h-5 w-5" />
                 Register for PF/ESIC
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-[#F7C430] text-[#1E1E1E] hover:bg-[#FFF0C3] px-8 py-4 text-lg bg-transparent"
-              >
-                <Calculator className="mr-2 h-5 w-5" />
-                Calculate Contributions
-              </Button>
+             </Link>
             </div>
           </div>
         </div>
@@ -292,7 +287,7 @@ export default function PFESICRegistrationLanding() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <Card className="border-[#FFF0C3] shadow-lg">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="p-2 bg-[#F7C430] rounded-lg">
                       <Heart className="h-6 w-6 text-[#1E1E1E]" />
@@ -344,7 +339,7 @@ export default function PFESICRegistrationLanding() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {pfesicSchemes.map((scheme, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-start gap-4 mb-6">
                     <div className="p-3 bg-[#F7C430] rounded-lg">
                       <div className="text-[#1E1E1E]">{scheme.icon}</div>
@@ -386,7 +381,7 @@ export default function PFESICRegistrationLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {penaltyRisks.map((risk, index) => (
               <Card key={index} className="border-red-200 bg-red-50 hover:border-red-300 transition-colors">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="flex items-start gap-4">
                     <div className="p-2 bg-red-100 rounded-lg">
                       <AlertTriangle className="h-5 w-5 text-red-600" />
@@ -414,7 +409,7 @@ export default function PFESICRegistrationLanding() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {registrationProcess.map((process, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg text-center relative">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto w-12 h-12 bg-[#F7C430] rounded-full flex items-center justify-center mb-4">
                     <span className="text-lg font-bold text-[#1E1E1E]">{index + 1}</span>
                   </div>
@@ -448,7 +443,7 @@ export default function PFESICRegistrationLanding() {
                 key={index}
                 className="bg-[#FFFFFF] border-[#FFF0C3] shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
               >
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-start gap-4">
                     <div className={`p-3 rounded-lg ${reason.color.replace("text-", "text-").replace("bg-", "bg-")}`}>
                       {reason.icon}
@@ -477,7 +472,7 @@ export default function PFESICRegistrationLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {employeeBenefits.map((benefit, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg text-center">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                     <div className="text-[#1E1E1E]">{benefit.icon}</div>
                   </div>
@@ -536,7 +531,7 @@ export default function PFESICRegistrationLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {businessTypes.map((business, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg text-center">
-                <CardContent className="p-6">
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                     <div className="text-[#1E1E1E]">{business.icon}</div>
                   </div>
@@ -561,13 +556,7 @@ export default function PFESICRegistrationLanding() {
             and ensure complete compliance.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              className="bg-[#F7C430] hover:bg-[#E6B429] text-[#1E1E1E] font-semibold px-8 py-4 text-lg"
-            >
-              <Users className="mr-2 h-5 w-5" />
-              Start Registration Now
-            </Button>
+<Link href='/contact'>
             <Button
               size="lg"
               variant="outline"
@@ -576,6 +565,8 @@ export default function PFESICRegistrationLanding() {
               <Phone className="mr-2 h-5 w-5" />
               Speak to Expert
             </Button>
+
+            </Link>
           </div>
           <p className="text-sm text-[#FFFFFF] opacity-60 mt-6">
             ✓ Expert guidance ✓ Complete compliance ✓ Ongoing support ✓ Penalty protection

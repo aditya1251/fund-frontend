@@ -14,10 +14,11 @@ import {
   Eye,
   BarChart3,
   DollarSign,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 export default function GoogleMetaAdsLanding() {
   const whyAdsAreCrucial = [
@@ -49,7 +50,7 @@ export default function GoogleMetaAdsLanding() {
         "You can easily track how many people saw your ad, clicked on it, and bought something. This helps you understand what is working best and where to put your money for the best results.",
       color: "bg-orange-100 text-orange-600",
     },
-  ]
+  ];
 
   const serviceSteps = [
     {
@@ -73,7 +74,8 @@ export default function GoogleMetaAdsLanding() {
     {
       icon: <DollarSign className="h-6 w-6" />,
       title: "Budget Management",
-      description: "We will manage your ad spend to make sure you get the most out of every rupee you spend.",
+      description:
+        "We will manage your ad spend to make sure you get the most out of every rupee you spend.",
     },
     {
       icon: <BarChart3 className="h-6 w-6" />,
@@ -81,7 +83,7 @@ export default function GoogleMetaAdsLanding() {
       description:
         "We don't just set up the ads and leave. We continuously monitor their performance, make changes, and provide you with clear reports so you know how well your ads are doing.",
     },
-  ]
+  ];
 
   const adPlatforms = [
     {
@@ -104,7 +106,7 @@ export default function GoogleMetaAdsLanding() {
       conversionRate: "1-3% average",
       timeline: "Results in 3-14 days",
     },
-  ]
+  ];
 
   const businessTypes = [
     {
@@ -131,7 +133,7 @@ export default function GoogleMetaAdsLanding() {
       description: "Growing businesses seeking quick results",
       adStrategy: "Brand awareness, traffic campaigns, conversions",
     },
-  ]
+  ];
 
   const adBenefits = [
     {
@@ -154,14 +156,30 @@ export default function GoogleMetaAdsLanding() {
       title: "Budget Control",
       description: "Set daily/monthly spending limits",
     },
-  ]
+  ];
 
   const stats = [
-    { number: "1000+", label: "Ad Campaigns Managed", icon: <Target className="h-5 w-5" /> },
-    { number: "400%", label: "Average ROAS", icon: <TrendingUp className="h-5 w-5" /> },
-    { number: "₹50L+", label: "Ad Spend Managed", icon: <DollarSign className="h-5 w-5" /> },
-    { number: "24/7", label: "Campaign Monitoring", icon: <Eye className="h-5 w-5" /> },
-  ]
+    {
+      number: "1000+",
+      label: "Ad Campaigns Managed",
+      icon: <Target className="h-5 w-5" />,
+    },
+    {
+      number: "400%",
+      label: "Average ROAS",
+      icon: <TrendingUp className="h-5 w-5" />,
+    },
+    {
+      number: "₹50L+",
+      label: "Ad Spend Managed",
+      icon: <DollarSign className="h-5 w-5" />,
+    },
+    {
+      number: "24/7",
+      label: "Campaign Monitoring",
+      icon: <Eye className="h-5 w-5" />,
+    },
+  ];
 
   const campaignProcess = [
     {
@@ -182,9 +200,10 @@ export default function GoogleMetaAdsLanding() {
     {
       step: "Launch & Optimize",
       duration: "Ongoing",
-      description: "Launch campaigns and continuously optimize for better performance",
+      description:
+        "Launch campaigns and continuously optimize for better performance",
     },
-  ]
+  ];
 
   const adMetrics = [
     {
@@ -211,7 +230,7 @@ export default function GoogleMetaAdsLanding() {
       goodRange: "3:1 to 5:1 ratio",
       importance: "Measures profitability",
     },
-  ]
+  ];
 
   const targetingOptions = [
     {
@@ -234,7 +253,7 @@ export default function GoogleMetaAdsLanding() {
         "Life Events",
       ],
     },
-  ]
+  ];
 
   const campaignTypes = [
     {
@@ -265,7 +284,7 @@ export default function GoogleMetaAdsLanding() {
       bestFor: "Complex products/services",
       avgCost: "₹1-100 per view",
     },
-  ]
+  ];
 
   const commonMistakes = [
     {
@@ -288,18 +307,30 @@ export default function GoogleMetaAdsLanding() {
       impact: "Cannot measure ROI effectively",
       solution: "Proper conversion tracking and analytics setup",
     },
-  ]
+  ];
 
   const budgetGuidelines = [
-    { businessSize: "Small Local Business", suggestedBudget: "₹5,000 - ₹25,000/month", focus: "Local targeting" },
-    { businessSize: "Growing SME", suggestedBudget: "₹25,000 - ₹1,00,000/month", focus: "Expansion campaigns" },
+    {
+      businessSize: "Small Local Business",
+      suggestedBudget: "₹5,000 - ₹25,000/month",
+      focus: "Local targeting",
+    },
+    {
+      businessSize: "Growing SME",
+      suggestedBudget: "₹25,000 - ₹1,00,000/month",
+      focus: "Expansion campaigns",
+    },
     {
       businessSize: "Established Business",
       suggestedBudget: "₹1,00,000 - ₹5,00,000/month",
       focus: "Scale and optimize",
     },
-    { businessSize: "Enterprise", suggestedBudget: "₹5,00,000+/month", focus: "Multi-channel strategy" },
-  ]
+    {
+      businessSize: "Enterprise",
+      suggestedBudget: "₹5,00,000+/month",
+      focus: "Multi-channel strategy",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-[#FFFFFF]">
@@ -312,16 +343,21 @@ export default function GoogleMetaAdsLanding() {
                 <Target className="h-12 w-12 text-[#1E1E1E]" />
               </div>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#1E1E1E] mb-4">Google and Meta Ads</h1>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#1E1E1E] mb-4">
+              Google and Meta Ads
+            </h1>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#1E1E1E] mb-8">
               Grow Your Business with Smart Online Ads
             </h2>
             <p className="text-lg sm:text-xl text-[#1E1E1E] max-w-4xl mx-auto mb-10 leading-relaxed">
-              When you want to reach new customers quickly and efficiently, running online ads is a powerful solution.
-              Google and Meta (Facebook and Instagram) are the two biggest places to do this. Think of it as a way to
-              get your business in front of the right people at the right time.
+              When you want to reach new customers quickly and efficiently,
+              running online ads is a powerful solution. Google and Meta
+              (Facebook and Instagram) are the two biggest places to do this.
+              Think of it as a way to get your business in front of the right
+              people at the right time.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href='/contact'>
               <Button
                 size="lg"
                 className="bg-[#F7C430] hover:bg-[#E6B429] text-[#1E1E1E] font-semibold px-8 py-4 text-lg"
@@ -329,14 +365,7 @@ export default function GoogleMetaAdsLanding() {
                 <Target className="mr-2 h-5 w-5" />
                 Start Ad Campaigns
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-[#F7C430] text-[#1E1E1E] hover:bg-[#FFF0C3] px-8 py-4 text-lg bg-transparent"
-              >
-                <Calculator className="mr-2 h-5 w-5" />
-                Calculate Ad Budget
-              </Button>
+            </Link>
             </div>
           </div>
         </div>
@@ -349,10 +378,16 @@ export default function GoogleMetaAdsLanding() {
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="flex justify-center mb-3">
-                  <div className="p-2 bg-[#F7C430] rounded-lg text-[#1E1E1E]">{stat.icon}</div>
+                  <div className="p-2 bg-[#F7C430] rounded-lg text-[#1E1E1E]">
+                    {stat.icon}
+                  </div>
                 </div>
-                <div className="text-3xl sm:text-4xl font-bold text-[#F7C430] mb-2">{stat.number}</div>
-                <div className="text-sm sm:text-base text-[#FFFFFF] opacity-80">{stat.label}</div>
+                <div className="text-3xl sm:text-4xl font-bold text-[#F7C430] mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-sm sm:text-base text-[#FFFFFF] opacity-80">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
@@ -369,7 +404,7 @@ export default function GoogleMetaAdsLanding() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {adPlatforms.map((platform, index) => (
               <Card key={index} className="border-[#FFF0C3] shadow-lg">
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="p-2 bg-[#F7C430] rounded-lg">
                       {platform.platform === "Google Ads" ? (
@@ -378,19 +413,32 @@ export default function GoogleMetaAdsLanding() {
                         <Share2 className="h-6 w-6 text-[#1E1E1E]" />
                       )}
                     </div>
-                    <h3 className="text-xl font-semibold text-[#1E1E1E]">{platform.platform}</h3>
+                    <h3 className="text-xl font-semibold text-[#1E1E1E]">
+                      {platform.platform}
+                    </h3>
                   </div>
-                  <p className="text-lg text-[#1E1E1E] leading-relaxed mb-6">{platform.description}</p>
+                  <p className="text-lg text-[#1E1E1E] leading-relaxed mb-6">
+                    {platform.description}
+                  </p>
                   <div className="space-y-4">
                     <div>
-                      <p className="font-medium text-[#1E1E1E] mb-2">Target Audience:</p>
-                      <p className="text-sm text-[#1E1E1E] opacity-80">{platform.audience}</p>
+                      <p className="font-medium text-[#1E1E1E] mb-2">
+                        Target Audience:
+                      </p>
+                      <p className="text-sm text-[#1E1E1E] opacity-80">
+                        {platform.audience}
+                      </p>
                     </div>
                     <div>
-                      <p className="font-medium text-[#1E1E1E] mb-2">Ad Types:</p>
+                      <p className="font-medium text-[#1E1E1E] mb-2">
+                        Ad Types:
+                      </p>
                       <div className="flex flex-wrap gap-1">
                         {platform.adTypes.map((type, idx) => (
-                          <Badge key={idx} className="bg-[#FFF0C3] text-[#1E1E1E] text-xs">
+                          <Badge
+                            key={idx}
+                            className="bg-[#FFF0C3] text-[#1E1E1E] text-xs"
+                          >
                             {type}
                           </Badge>
                         ))}
@@ -398,22 +446,38 @@ export default function GoogleMetaAdsLanding() {
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm font-medium text-[#1E1E1E] mb-1">Best For:</p>
-                        <p className="text-sm text-[#1E1E1E] opacity-80">{platform.bestFor}</p>
+                        <p className="text-sm font-medium text-[#1E1E1E] mb-1">
+                          Best For:
+                        </p>
+                        <p className="text-sm text-[#1E1E1E] opacity-80">
+                          {platform.bestFor}
+                        </p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-[#1E1E1E] mb-1">Timeline:</p>
-                        <Badge className="bg-[#F7C430] text-[#1E1E1E] text-xs">{platform.timeline}</Badge>
+                        <p className="text-sm font-medium text-[#1E1E1E] mb-1">
+                          Timeline:
+                        </p>
+                        <Badge className="bg-[#F7C430] text-[#1E1E1E] text-xs">
+                          {platform.timeline}
+                        </Badge>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm font-medium text-[#1E1E1E] mb-1">Avg. CPC:</p>
-                        <p className="text-sm text-[#1E1E1E] opacity-80">{platform.avgCPC}</p>
+                        <p className="text-sm font-medium text-[#1E1E1E] mb-1">
+                          Avg. CPC:
+                        </p>
+                        <p className="text-sm text-[#1E1E1E] opacity-80">
+                          {platform.avgCPC}
+                        </p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-[#1E1E1E] mb-1">Conversion Rate:</p>
-                        <p className="text-sm text-[#1E1E1E] opacity-80">{platform.conversionRate}</p>
+                        <p className="text-sm font-medium text-[#1E1E1E] mb-1">
+                          Conversion Rate:
+                        </p>
+                        <p className="text-sm text-[#1E1E1E] opacity-80">
+                          {platform.conversionRate}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -427,36 +491,55 @@ export default function GoogleMetaAdsLanding() {
       {/* Campaign Types Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#FFF0C3]">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">Campaign Types</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">
+            Campaign Types
+          </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            Different campaign types serve different business objectives. We help you choose the right mix for maximum
-            impact.
+            Different campaign types serve different business objectives. We
+            help you choose the right mix for maximum impact.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {campaignTypes.map((campaign, index) => (
-              <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-8">
+              <Card
+                key={index}
+                className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-start gap-4 mb-6">
                     <div className="p-3 bg-[#F7C430] rounded-lg">
                       <Target className="h-6 w-6 text-[#1E1E1E]" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-xl font-semibold text-[#1E1E1E]">{campaign.type}</h3>
-                        <Badge className="bg-[#1E1E1E] text-[#FFFFFF] text-xs">{campaign.platform}</Badge>
+                        <h3 className="text-xl font-semibold text-[#1E1E1E]">
+                          {campaign.type}
+                        </h3>
+                        <Badge className="bg-[#1E1E1E] text-[#FFFFFF] text-xs">
+                          {campaign.platform}
+                        </Badge>
                       </div>
-                      <p className="text-[#1E1E1E] opacity-80 mb-4">{campaign.purpose}</p>
+                      <p className="text-[#1E1E1E] opacity-80 mb-4">
+                        {campaign.purpose}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm font-medium text-[#1E1E1E] mb-1">Best For:</p>
-                      <p className="text-sm text-[#1E1E1E] opacity-80">{campaign.bestFor}</p>
+                      <p className="text-sm font-medium text-[#1E1E1E] mb-1">
+                        Best For:
+                      </p>
+                      <p className="text-sm text-[#1E1E1E] opacity-80">
+                        {campaign.bestFor}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#1E1E1E] mb-1">Average Cost:</p>
-                      <Badge className="bg-[#F7C430] text-[#1E1E1E] text-xs">{campaign.avgCost}</Badge>
+                      <p className="text-sm font-medium text-[#1E1E1E] mb-1">
+                        Average Cost:
+                      </p>
+                      <Badge className="bg-[#F7C430] text-[#1E1E1E] text-xs">
+                        {campaign.avgCost}
+                      </Badge>
                     </div>
                   </div>
                 </CardContent>
@@ -469,24 +552,38 @@ export default function GoogleMetaAdsLanding() {
       {/* Ad Metrics Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#FFFFFF]">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">Key Ad Metrics</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">
+            Key Ad Metrics
+          </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            We track important metrics to measure campaign success and optimize your ad spend for better results.
+            We track important metrics to measure campaign success and optimize
+            your ad spend for better results.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {adMetrics.map((metric, index) => (
-              <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors">
-                <CardContent className="p-6">
+              <Card
+                key={index}
+                className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors"
+              >
+                <CardContent className="p-6 mt-4">
                   <div className="flex items-start gap-4">
                     <div className="p-2 bg-[#F7C430] rounded-lg">
                       <BarChart3 className="h-5 w-5 text-[#1E1E1E]" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-[#1E1E1E] mb-2">{metric.metric}</h3>
-                      <p className="text-sm text-[#1E1E1E] opacity-80 mb-2">{metric.description}</p>
-                      <p className="text-sm text-[#1E1E1E] mb-2">{metric.importance}</p>
-                      <Badge className="bg-[#F7C430] text-[#1E1E1E] text-xs">{metric.goodRange}</Badge>
+                      <h3 className="font-semibold text-[#1E1E1E] mb-2">
+                        {metric.metric}
+                      </h3>
+                      <p className="text-sm text-[#1E1E1E] opacity-80 mb-2">
+                        {metric.description}
+                      </p>
+                      <p className="text-sm text-[#1E1E1E] mb-2">
+                        {metric.importance}
+                      </p>
+                      <Badge className="bg-[#F7C430] text-[#1E1E1E] text-xs">
+                        {metric.goodRange}
+                      </Badge>
                     </div>
                   </div>
                 </CardContent>
@@ -503,22 +600,31 @@ export default function GoogleMetaAdsLanding() {
             Common Ad Campaign Mistakes
           </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            Many businesses waste money on poorly managed ad campaigns. Our expertise helps you avoid these costly
-            mistakes.
+            Many businesses waste money on poorly managed ad campaigns. Our
+            expertise helps you avoid these costly mistakes.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {commonMistakes.map((mistake, index) => (
-              <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-6">
+              <Card
+                key={index}
+                className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <CardContent className="p-6 mt-4">
                   <div className="flex items-start gap-4">
                     <div className="p-2 bg-red-100 rounded-lg">
                       <AlertTriangle className="h-5 w-5 text-red-600" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-[#1E1E1E] mb-2">{mistake.mistake}</h3>
-                      <p className="text-sm text-red-600 mb-2 font-medium">Impact: {mistake.impact}</p>
-                      <p className="text-sm text-green-600 font-medium">Solution: {mistake.solution}</p>
+                      <h3 className="font-semibold text-[#1E1E1E] mb-2">
+                        {mistake.mistake}
+                      </h3>
+                      <p className="text-sm text-red-600 mb-2 font-medium">
+                        Impact: {mistake.impact}
+                      </p>
+                      <p className="text-sm text-green-600 font-medium">
+                        Solution: {mistake.solution}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -531,22 +637,35 @@ export default function GoogleMetaAdsLanding() {
       {/* Campaign Process Timeline */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#FFFFFF]">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">Campaign Process</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">
+            Campaign Process
+          </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            Our systematic approach ensures effective ad campaigns with quick setup and continuous optimization for
-            maximum ROI.
+            Our systematic approach ensures effective ad campaigns with quick
+            setup and continuous optimization for maximum ROI.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {campaignProcess.map((process, index) => (
-              <Card key={index} className="border-[#FFF0C3] shadow-lg text-center relative">
-                <CardContent className="p-6">
+              <Card
+                key={index}
+                className="border-[#FFF0C3] shadow-lg text-center relative"
+              >
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto w-12 h-12 bg-[#F7C430] rounded-full flex items-center justify-center mb-4">
-                    <span className="text-lg font-bold text-[#1E1E1E]">{index + 1}</span>
+                    <span className="text-lg font-bold text-[#1E1E1E]">
+                      {index + 1}
+                    </span>
                   </div>
-                  <h3 className="font-semibold text-[#1E1E1E] text-lg mb-2">{process.step}</h3>
-                  <Badge className="bg-[#1E1E1E] text-[#FFFFFF] mb-3 text-xs">{process.duration}</Badge>
-                  <p className="text-sm text-[#1E1E1E] opacity-80">{process.description}</p>
+                  <h3 className="font-semibold text-[#1E1E1E] text-lg mb-2">
+                    {process.step}
+                  </h3>
+                  <Badge className="bg-[#1E1E1E] text-[#FFFFFF] mb-3 text-xs">
+                    {process.duration}
+                  </Badge>
+                  <p className="text-sm text-[#1E1E1E] opacity-80">
+                    {process.description}
+                  </p>
                 </CardContent>
                 {index < campaignProcess.length - 1 && (
                   <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-0.5 bg-[#F7C430] transform -translate-y-1/2"></div>
@@ -564,8 +683,9 @@ export default function GoogleMetaAdsLanding() {
             Why are Google and Meta Ads So Crucial?
           </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            Online advertising provides unmatched opportunities for rapid business growth, precise targeting, and
-            measurable results in today's digital marketplace.
+            Online advertising provides unmatched opportunities for rapid
+            business growth, precise targeting, and measurable results in
+            today's digital marketplace.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -574,14 +694,22 @@ export default function GoogleMetaAdsLanding() {
                 key={index}
                 className="bg-[#FFFFFF] border-none shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
               >
-                <CardContent className="p-8">
+                <CardContent className="p-8 mt-4">
                   <div className="flex items-start gap-4">
-                    <div className={`p-3 rounded-lg ${reason.color.replace("text-", "text-").replace("bg-", "bg-")}`}>
+                    <div
+                      className={`p-3 rounded-lg ${reason.color
+                        .replace("text-", "text-")
+                        .replace("bg-", "bg-")}`}
+                    >
                       {reason.icon}
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-[#1E1E1E] mb-3">{reason.title}</h3>
-                      <p className="text-[#1E1E1E] leading-relaxed">{reason.description}</p>
+                      <h3 className="text-xl font-semibold text-[#1E1E1E] mb-3">
+                        {reason.title}
+                      </h3>
+                      <p className="text-[#1E1E1E] leading-relaxed">
+                        {reason.description}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -594,21 +722,30 @@ export default function GoogleMetaAdsLanding() {
       {/* Ad Benefits Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#FFFFFF]">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">Advertising Benefits</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">
+            Advertising Benefits
+          </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            Professional ad management provides comprehensive benefits that drive immediate results and long-term
-            business growth.
+            Professional ad management provides comprehensive benefits that
+            drive immediate results and long-term business growth.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {adBenefits.map((benefit, index) => (
-              <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center">
-                <CardContent className="p-6">
+              <Card
+                key={index}
+                className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center"
+              >
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                     <div className="text-[#1E1E1E]">{benefit.icon}</div>
                   </div>
-                  <h3 className="font-semibold text-[#1E1E1E] text-lg mb-3">{benefit.title}</h3>
-                  <p className="text-[#1E1E1E] text-sm leading-relaxed">{benefit.description}</p>
+                  <h3 className="font-semibold text-[#1E1E1E] text-lg mb-3">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-[#1E1E1E] text-sm leading-relaxed">
+                    {benefit.description}
+                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -623,23 +760,29 @@ export default function GoogleMetaAdsLanding() {
             How We Help You Every Step of the Way
           </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            Navigating these ad platforms can be complex, but we make it simple. We are your partner in running
-            successful ad campaigns.
+            Navigating these ad platforms can be complex, but we make it simple.
+            We are your partner in running successful ad campaigns.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {serviceSteps.map((step, index) => (
               <Card key={index} className="bg-[#FFFFFF] border-none shadow-lg">
-                <CardHeader>
+                <CardHeader className="mt-4">
                   <div className="flex items-center gap-4">
-                    <div className="p-3 bg-[#F7C430] rounded-lg text-[#1E1E1E]">{step.icon}</div>
+                    <div className="p-3 bg-[#F7C430] rounded-lg text-[#1E1E1E]">
+                      {step.icon}
+                    </div>
                     <div>
-                      <CardTitle className="text-xl text-[#1E1E1E]">{step.title}</CardTitle>
+                      <CardTitle className="text-xl text-[#1E1E1E]">
+                        {step.title}
+                      </CardTitle>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-[#1E1E1E] leading-relaxed">{step.description}</p>
+                  <p className="text-[#1E1E1E] leading-relaxed">
+                    {step.description}
+                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -650,23 +793,35 @@ export default function GoogleMetaAdsLanding() {
       {/* Who Needs This Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#FFFFFF]">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">Who Needs This Service?</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E1E1E] mb-8 text-center">
+            Who Needs This Service?
+          </h2>
           <p className="text-lg text-[#1E1E1E] text-center mb-12 max-w-3xl mx-auto">
-            Any business that wants to get fast results. Whether you want to increase sales for your online store, get
-            more calls for your local service, or build brand awareness quickly, Google and Meta Ads can help you
-            achieve your goals.
+            Any business that wants to get fast results. Whether you want to
+            increase sales for your online store, get more calls for your local
+            service, or build brand awareness quickly, Google and Meta Ads can
+            help you achieve your goals.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {businessTypes.map((business, index) => (
-              <Card key={index} className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center">
-                <CardContent className="p-6">
+              <Card
+                key={index}
+                className="border-[#FFF0C3] hover:border-[#F7C430] transition-colors text-center"
+              >
+                <CardContent className="p-6 mt-4">
                   <div className="mx-auto p-3 bg-[#F7C430] rounded-full w-fit mb-4">
                     <div className="text-[#1E1E1E]">{business.icon}</div>
                   </div>
-                  <h3 className="font-semibold text-[#1E1E1E] text-lg mb-3">{business.title}</h3>
-                  <p className="text-[#1E1E1E] text-sm mb-3 leading-relaxed">{business.description}</p>
-                  <Badge className="bg-[#F7C430] text-[#1E1E1E] text-xs">{business.adStrategy}</Badge>
+                  <h3 className="font-semibold text-[#1E1E1E] text-lg mb-3">
+                    {business.title}
+                  </h3>
+                  <p className="text-[#1E1E1E] text-sm mb-3 leading-relaxed">
+                    {business.description}
+                  </p>
+                  <Badge className="bg-[#F7C430] text-[#1E1E1E] text-xs">
+                    {business.adStrategy}
+                  </Badge>
                 </CardContent>
               </Card>
             ))}
@@ -675,7 +830,6 @@ export default function GoogleMetaAdsLanding() {
       </section>
 
       {/* CTA Section */}
-      
     </div>
-  )
+  );
 }
