@@ -20,8 +20,6 @@ export default function CommissionsPage() {
             <tr>
               <th className="p-3 text-left">Loan</th>
               <th className="p-3 text-left">Amount</th>
-              <th className="p-3 text-left">Status</th>
-              <th className="p-3 text-left">Remarks</th>
             </tr>
           </thead>
           <tbody>
@@ -38,8 +36,6 @@ export default function CommissionsPage() {
                 <td className="p-3">
                   ₹ {Number(c.amount ?? 0).toLocaleString("en-IN")}
                 </td>
-                <td className="p-3">{c.status}</td>
-                <td className="p-3">{c.remarks || "-"}</td>
               </tr>
             ))}
           </tbody>
