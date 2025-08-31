@@ -27,6 +27,11 @@ export const withdrawalApi = createApi({
       query: () => "withdrawals",
       providesTags: [{ type: "Withdrawals", id: "LIST" }],
     }),
+    // get withdrawals for DSAs assigned to an RM
+    getWithdrawalsByRm: builder.query<any[], void>({
+      query: () => `withdrawals/rm`,
+      providesTags: [{ type: "Withdrawals", id: "RM-LIST" }],
+    }),
     // update withdraw status (approve/reject/process)
     updateWithdraw: builder.mutation<any, { id: string; data: any }>({
       query: ({ id, data }) => ({
@@ -53,6 +58,7 @@ export const {
   useCreateWithdrawMutation,
   useGetMyWithdrawalsQuery,
   useGetWithdrawalsQuery,
+  useGetWithdrawalsByRmQuery,
   useUpdateWithdrawMutation,
   useCompleteWithdrawMutation,
 } = withdrawalApi;

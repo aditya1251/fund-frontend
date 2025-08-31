@@ -81,6 +81,14 @@ const Menuitems: MenuitemsType[] = [
 	},
 	{
 		id: uniqueId(),
+		title: "Withdrawal Requests",
+		chip: "0",
+		chipColor: "primary",
+		icon: "money-line-duotone",
+		href: "/rm/withdrawreq",
+	},
+	{
+		id: uniqueId(),
 		title: "Taxation",
 		chip: "0",
 		chipColor: "primary",
