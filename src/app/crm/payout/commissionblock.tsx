@@ -1,16 +1,11 @@
 // src/app/crm/commissions/page.tsx
 "use client";
 import React from "react";
-import Loading from "@/components/Loading";
 import {
-  useGetMyCommissionsQuery,
+  Commission
 } from "@/redux/services/commissionApi";
 
-export default function CommissionsPage() {
-  const { data = [], isLoading } = useGetMyCommissionsQuery();
-
-  if (isLoading) return <Loading />;
-
+export default function CommissionsPage({commissions}) {
   return (
     <div className="container mx-auto py-6 px-4">
       <h2 className="text-2xl font-semibold mb-4">My Commissions</h2>
@@ -23,14 +18,14 @@ export default function CommissionsPage() {
             </tr>
           </thead>
           <tbody>
-            {data.length === 0 && (
+            {commissions.length === 0 && (
               <tr>
                 <td className="p-4" colSpan={5}>
                   No commissions found.
                 </td>
               </tr>
             )}
-            {data.map((c: any) => (
+            {commissions.map((c: Commission) => (
               <tr key={c._id} className="border-t">
                 <td className="p-3">{c.loanId ?? c.loanRef ?? c._id}</td>
                 <td className="p-3">
