@@ -4,9 +4,9 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const images = [
-  { src: "/banner/banner1.png", alt: "Banner 1" },
-  { src: "/banner/banner2.png", alt: "Banner 2" },
-  { src: "/banner/banner3.png", alt: "Banner 3" },
+  { src: "/banner/banner11.png", alt: "Banner 1" },
+  { src: "/banner/banner12.png", alt: "Banner 2" },
+  { src: "/banner/banner13.png", alt: "Banner 3" },
 ];
 
 const DESKTOP_VISIBLE = 3; // how many images shown at once on desktop
@@ -65,7 +65,7 @@ export default function Banner() {
                   src={img.src}
                   alt={img.alt}
                   fill
-                  className="object-cover rounded-xl"
+                  className=" rounded-xl"
                   sizes="33vw"
                   priority={i < 3}
                 />

@@ -25,12 +25,12 @@ export default function Footer() {
               <div className="flex items-center gap-3 mb-4">
                 <Image src={logo} alt="Logo" width={40} height={40} />
                 <span className="text-black text-xl font-semibold">
-                  Fund Raizer
+                  Navi Mudra
                 </span>
               </div>
 
               <div className="text-[#141212] text-sm leading-relaxed mb-8">
-                <p>Fund Raizer Pvt. Ltd.</p>
+                <p>Navi Mudra Pvt. Ltd.</p>
                 <p>A-27, 2nd Floor, Sector 63,</p>
                 <p>Noida, Uttar Pradesh – 201301</p>
                 <p>India</p>

@@ -5,7 +5,8 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image"; // Import Next.js Image component
 import Link from "next/link"; // Import Link component for navigation
 import home from "../../public/assets/home.png";
-import govt from "../../public/assets/govt.png";
+import govt from "../../public/assets/govt.jpg";
+import panIndia from "../../public/assets/panIndia.png";
 import dsa from "../../public/assets/become.png";
 import business from "../../public/assets/business.png"; // Assuming you have a business image
 

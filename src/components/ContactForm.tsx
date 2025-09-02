@@ -125,7 +125,7 @@ export default function ContactForm() {
               </div>
               <div className="flex items-center gap-2 md:gap-4 text-sm md:text-base">
                 <Mail className="w-5 h-5 md:w-6 md:h-6" />
-                <span>info@fundsraize.com</span>
+                <span>info@Navi Mudra.com</span>
               </div>
               <div className="flex items-center gap-2 md:gap-4 text-sm md:text-base">
                 <MapPin className="w-5 h-5 md:w-6 md:h-6" />

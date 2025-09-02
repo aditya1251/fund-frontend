@@ -159,8 +159,8 @@ const ContactPage = () => {
               </div>
               <h3 className="font-bold text-lg mb-2 text-neutral-900">Email Us</h3>
               <p className="text-gray-600 mb-3">We'll respond within 24hrs</p>
-              <a href="mailto:info@fundsraize.com" className="text-yellow-600 font-semibold hover:underline">
-                info@fundsraize.com
+              <a href="mailto:info@Navi Mudra.com" className="text-yellow-600 font-semibold hover:underline">
+                info@Navi Mudra.com
               </a>
             </div>
 
@@ -328,7 +328,7 @@ const ContactPage = () => {
               {/* Why Choose Us */}
               <div className="bg-yellow-50 rounded-3xl border-4 border-black shadow-[8px_8px_0_0_#000] p-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                  Why Choose <span className="text-[#FFD439]">FundsRaize</span>?
+                  Why Choose <span className="text-[#FFD439]">Navi Mudra</span>?
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-start gap-4">

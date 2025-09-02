@@ -24,7 +24,7 @@ export default function Page() {
           <LeadOverview data={data} />
           <Statistics data={data} />
           <Banks />
-          <Testimonials />
+          {/* <Testimonials /> */}
           <Footer />
         </>
       )}

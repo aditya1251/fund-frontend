@@ -6,42 +6,42 @@ import { useRouter } from "next/navigation";
 const testimonials = [
 	{
 		id: 1,
-		text: "FundsRaize transformed our business! Their loan application process is incredibly smooth and transparent. The team provided exceptional support throughout our funding journey.",
+		text: "Navi Mudra transformed our business! Their loan application process is incredibly smooth and transparent. The team provided exceptional support throughout our funding journey.",
 		author: "Mrs. Gautami Bisht",
 		role: "Senior Business Strategist",
 		avatar: "/placeholder.svg?height=40&width=40",
 	},
 	{
 		id: 2,
-		text: "I can't imagine managing our financial needs without FundsRaize. Their platform makes accessing funding so much easier and more transparent than traditional methods.",
+		text: "I can't imagine managing our financial needs without Navi Mudra. Their platform makes accessing funding so much easier and more transparent than traditional methods.",
 		author: "Mrs. Lavanya Singh",
 		role: "Operations Manager",
 		avatar: "/placeholder.svg?height=40&width=40",
 	},
 	{
 		id: 3,
-		text: "FundsRaize saved our business! They have everything we needed for our expansion. We were treated with utmost professionalism and care. Truly wonderful service!",
+		text: "Navi Mudra saved our business! They have everything we needed for our expansion. We were treated with utmost professionalism and care. Truly wonderful service!",
 		author: "Siddeshwar Singh",
 		role: "District Business Officer",
 		avatar: "/placeholder.svg?height=40&width=40",
 	},
 	{
 		id: 4,
-		text: "FundsRaize is incredibly user-friendly and has streamlined our loan application process. The quick approval and competitive rates are unmatched. Highly recommended!",
+		text: "Navi Mudra is incredibly user-friendly and has streamlined our loan application process. The quick approval and competitive rates are unmatched. Highly recommended!",
 		author: "Rahul Sharma",
 		role: "Financial Consultant",
 		avatar: "/placeholder.svg?height=40&width=40",
 	},
 	{
 		id: 5,
-		text: "The support team at FundsRaize is fantastic! They helped us navigate complex government funding schemes with ease. Their expertise made all the difference.",
+		text: "The support team at Navi Mudra is fantastic! They helped us navigate complex government funding schemes with ease. Their expertise made all the difference.",
 		author: "Priya Verma",
 		role: "Startup Founder",
 		avatar: "/placeholder.svg?height=40&width=40",
 	},
 	{
 		id: 6,
-		text: "A truly transformative service. FundsRaize connected us with the perfect loan for our business expansion. Their personalized approach exceeded our expectations!",
+		text: "A truly transformative service. Navi Mudra connected us with the perfect loan for our business expansion. Their personalized approach exceeded our expectations!",
 		author: "Amit Patel",
 		role: "Small Business Owner",
 		avatar: "/placeholder.svg?height=40&width=40",
@@ -142,7 +142,7 @@ export default function Testimonials() {
 					</h2>
 					<p className="text-gray-600 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
 						Join thousands of satisfied customers who have transformed their
-						financial future with FundsRaize. Here's what they have to say about
+						financial future with Navi Mudra. Here's what they have to say about
 						their experience.
 					</p>
 				</div>

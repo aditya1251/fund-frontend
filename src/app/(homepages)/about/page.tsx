@@ -19,7 +19,7 @@ const AboutPage = () => {
       <section className="bg-gradient-to-br from-yellow-50 to-yellow-100 py-20 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8">
-            About <span className="text-[#FFD439]">FundsRaize</span>
+            About <span className="text-[#FFD439]">Navi Mudra</span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto mb-12 leading-relaxed">
             Empowering dreams through innovative financial solutions. We're not just a lending platform - 
@@ -118,7 +118,7 @@ const AboutPage = () => {
             Ready to Start Your <span className="text-white">Financial Journey?</span>
           </h2>
           <p className="text-xl text-gray-800 mb-8 max-w-2xl mx-auto">
-            Join thousands of satisfied customers who have transformed their financial future with FundsRaize.
+            Join thousands of satisfied customers who have transformed their financial future with Navi Mudra.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link href="/login" className="bg-black hover:bg-gray-800 text-white font-bold py-4 px-8 rounded-xl shadow-[4px_4px_0_0_#fff] hover:shadow-[2px_2px_0_0_#fff] transition-all">

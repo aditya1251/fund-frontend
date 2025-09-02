@@ -14,7 +14,7 @@ export default function Journey() {
             OUR JOURNEY IN <span className="text-[#f7c430]">NUMBERS</span>
           </h2>
           <p className="text-[#141212] text-lg md:text-xl max-w-4xl mx-auto leading-relaxed">
-            Fund Raizer Helps Individuals And Businesses Access Trusted Loans
+            Navi Mudra Helps Individuals And Businesses Access Trusted Loans
             And Government-Backed Funding With Ease. We Simplify The Process,
             Offering Quick Tools And Expert Support To Fuel Your Financial
             Growth.

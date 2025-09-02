@@ -189,7 +189,7 @@ const SidebarItems = () => {
 			>
 				<Box sx={{ margin: "0 -24px" }}>
 					<Typography variant="h6" sx={{ padding: "16px 24px 8px 24px" }}>
-						Fund Raizer
+						Navi Mudra
 					</Typography>
 				</Box>
 				{renderMenuItems(Menuitems, pathDirect)}

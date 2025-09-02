@@ -10,7 +10,7 @@ export default function Fund() {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-black mb-4">
-            WHAT MAKES <span className="text-yellow-400">FUNDSRAIZE</span>{" "}
+            WHAT MAKES <span className="text-yellow-400">Navi Mudra</span>{" "}
             UNIQUE
           </h2>
         </div>

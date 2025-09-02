@@ -95,21 +95,7 @@ export default function Page() {
 						</div>
 					</div>
 
-					{/* Plan Usage Metrics */}
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-						<MetricCard
-							title="Leads Submitted"
-							value={dsaData?.leadsSubmitted || 0}
-						/>
-						<MetricCard
-							title="Loans Processed"
-							value={dsaData?.loansProcessed || 0}
-						/>
-						<MetricCard
-							title="Commission Earned"
-							value={`₹${dsaData?.commissionsEarned || 0}`}
-						/>
-					</div>
+				
 				</>
 			)}
 		</div>

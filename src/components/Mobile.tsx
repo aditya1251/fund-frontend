@@ -14,7 +14,7 @@ export default function Mobile() {
             <div className="space-y-6">
               <div className="flex items-start gap-2">
                 <h1 className="text-4xl lg:text-5xl text-black leading-tight font-space-grotesk">
-                  FundsRaize Simplifies Finance With Smart Solutions And
+                  Navi Mudra Simplifies Finance With Smart Solutions And
                   Growth-Driven Partnerships.
                 </h1>
                 <div className="flex-shrink-0 mt-2">
