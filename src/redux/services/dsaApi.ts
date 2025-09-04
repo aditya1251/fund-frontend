@@ -19,7 +19,13 @@ export const DsaApi = createApi({
 				body: data,
 			}),
 		}),
+
+		getBankInfo: builder.query<any, string>({
+			query: (id) => ({
+				url: `dsa/bankInfo/${id}`,
+			}),
+		}),
 	}),
 });
 
-export const { useGetDsaDetailsQuery, useUpdateDsaDetailsMutation } = DsaApi;
+export const { useGetDsaDetailsQuery, useUpdateDsaDetailsMutation, useGetBankInfoQuery } = DsaApi;

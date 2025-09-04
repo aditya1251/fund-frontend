@@ -3,6 +3,7 @@ import {
   PresentationIcon as PresentationChart,
   Trophy,
 } from "lucide-react";
+import CountUp from "./animations/CountUp";
 
 export default function Journey() {
   return (
@@ -28,9 +29,11 @@ export default function Journey() {
             <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6">
               <User className="w-8 h-8 text-black" />
             </div>
+            <CountUp delay={0} duration={1500}>
             <h3 className="text-2xl md:text-3xl font-bold text-black mb-4">
               1800+ Active Clients
             </h3>
+            </CountUp>
             <p className="text-[#141212] text-base md:text-lg">
               Egestas elit dui scelerisque ut eu purus aliquam vitae.
             </p>
@@ -41,9 +44,11 @@ export default function Journey() {
             <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6">
               <PresentationChart className="w-8 h-8 text-black" />
             </div>
+            <CountUp delay={0} duration={1500}>
             <h3 className="text-2xl md:text-3xl font-bold text-black mb-4">
               850+ Project Completed
             </h3>
+            </CountUp>
             <p className="text-[#141212] text-base md:text-lg">
               Reports customized to your metrics.
             </p>
@@ -54,9 +59,11 @@ export default function Journey() {
             <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6">
               <Trophy className="w-8 h-8 text-black" />
             </div>
+            <CountUp delay={0} duration={500}>
             <h3 className="text-2xl md:text-3xl font-bold text-black mb-4">
               2 Glorious Years
             </h3>
+            </CountUp>
             <p className="text-[#141212] text-base md:text-lg">
               Egestas elit dui scelerisque ut eu purus aliquam vitae.
             </p>

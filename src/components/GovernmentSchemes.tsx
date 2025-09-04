@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import govtScheme from "../../public/assets/ui1.png";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+const CountUp = dynamic(() => import("./animations/CountUp"), { ssr: false });
+
 
 export default function GovernmentSchemes() {
   // Small helper component for the rings
@@ -45,7 +48,9 @@ export default function GovernmentSchemes() {
             { val: "340+", name: "MSME Loans" },
           ].map((s) => (
             <div key={s.name} className="bg-[#f7c430] rounded-2xl p-4 md:p-6 text-center">
+              <CountUp delay={0} duration={1500}>
               <div className="text-2xl md:text-4xl font-bold text-black mb-1 md:mb-2">{s.val}</div>
+              </CountUp>
               <div className="text-xs md:text-base font-medium text-black">{s.name}</div>
             </div>
           ))}

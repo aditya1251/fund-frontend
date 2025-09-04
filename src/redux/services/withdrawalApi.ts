@@ -32,6 +32,15 @@ export const withdrawalApi = createApi({
       query: () => `withdrawals/rm`,
       providesTags: [{ type: "Withdrawals", id: "RM-LIST" }],
     }),
+    getWithdrawalsByAdmin: builder.query<
+      { data: any[]; total: number; page: number; limit: number; totalPages: number },
+      { page?: number; limit?: number }
+    >({
+      query: ({ page = 1, limit = 10 } = {}) =>
+        `withdrawals/superadmin?page=${page}&limit=${limit}`,
+      providesTags: [{ type: "Withdrawals", id: "SUPERADMIN-LIST" }],
+    }),
+
     // update withdraw status (approve/reject/process)
     updateWithdraw: builder.mutation<any, { id: string; data: any }>({
       query: ({ id, data }) => ({
@@ -51,6 +60,7 @@ export const withdrawalApi = createApi({
         invalidatesTags: [{ type: "Withdrawals", id: "LIST" }],
       }
     ),
+
   }),
 });
 
@@ -60,5 +70,6 @@ export const {
   useGetWithdrawalsQuery,
   useGetWithdrawalsByRmQuery,
   useUpdateWithdrawMutation,
+  useGetWithdrawalsByAdminQuery,
   useCompleteWithdrawMutation,
 } = withdrawalApi;

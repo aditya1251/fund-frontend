@@ -1,5 +1,8 @@
 "use client";
 import React from "react";
+// In a client component, or:
+import dynamic from "next/dynamic";
+const CountUp = dynamic(() => import("./animations/CountUp"), { ssr: false });
 
 /* ---------- Icons ---------- */
 const CityIcon = () => (
@@ -37,7 +40,9 @@ interface StatCardProps { icon: React.ReactNode; value: string; label: string }
 const StatCard: React.FC<StatCardProps> = ({ icon, value, label }) => (
   <div className="w-[140px] h-[140px] md:w-[200px] md:h-[200px] bg-white/10 rounded-2xl flex flex-col items-center justify-center p-2 md:p-3">
     <div className="w-10 h-10 md:w-14 md:h-14 text-black mb-1 md:mb-2">{icon}</div>
+    <CountUp delay={0} duration={1500}>
     <span className="font-['Space_Grotesk'] text-3xl md:text-5xl leading-none text-black">{value}</span>
+    </CountUp>
     <span className="font-['Space_Grotesk'] text-xs md:text-lg uppercase text-black text-center mt-1 md:mt-2 whitespace-nowrap">{label}</span>
   </div>
 );

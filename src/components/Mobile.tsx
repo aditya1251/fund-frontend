@@ -3,6 +3,7 @@ import mobileMockup from "../../public/assets/Group.png";
 import Image from "next/image";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
+import CountUp from "./animations/CountUp";
 
 export default function Mobile() {
   return (
@@ -30,13 +31,17 @@ export default function Mobile() {
 
             <div className="flex gap-16">
               <div>
+                <CountUp delay={0} duration={1500}>
                 <div className="text-3xl font-bold text-black">700+</div>
+                </CountUp>
                 <div className="text-[#141212] opacity-70">
                   Financial Advisors
                 </div>
               </div>
               <div>
+                <CountUp delay={0} duration={1500}>
                 <div className="text-3xl font-bold text-black">125+</div>
+                </CountUp>
                 <div className="text-[#141212] opacity-70">
                   Lending Partners
                 </div>

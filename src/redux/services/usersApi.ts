@@ -26,5 +26,5 @@ export const usersApi = createApi({
 
 export const {
   useAssignDsaToRmMutation,
-  useUnassignDsaFromRmMutation
+  useUnassignDsaFromRmMutation,
 } = usersApi;

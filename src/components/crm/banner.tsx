@@ -65,7 +65,7 @@ export default function Banner() {
                   src={img.src}
                   alt={img.alt}
                   fill
-                  className=" rounded-xl"
+                  className=" object-contain rounded-xl"
                   sizes="33vw"
                   priority={i < 3}
                 />

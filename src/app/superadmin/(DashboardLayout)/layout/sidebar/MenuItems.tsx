@@ -110,6 +110,16 @@ const Menuitems: MenuitemsType[] = [
 	},
 	{
 		navlabel: true,
+		subheader: "Withdraw Requests",
+	},
+	{
+		id: uniqueId(),
+		title: "Withdraw Requests",
+		icon: "card-line-duotone",
+		href: "/superadmin/withdrawreq",
+	},
+	{
+		navlabel: true,
 		subheader: "CONTACTS",
 	},
 	{

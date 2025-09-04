@@ -109,6 +109,30 @@ const MobileDots = ({
         </>
       ),
     },
+    {
+      id: 5,
+      backgroundImage: panIndia,
+      headline: (
+        <>
+         <span className="text-[#533b02] text-xl">
+          NO MATTER, WHERE YOU ARE IN INDIA
+          <br />
+         </span>
+         <span className=" text-5xl md:text-8xl">
+            PAN INDIA
+          </span>
+          <br />
+          <span className="text-[#533b02] text-xl">LOAN AVAIABLE</span>
+        </>
+      ),
+      paragraph: (
+        <>
+          BUSINESS LOAN | PERSONAL LOAN | QUICK LOAN
+          <br />
+          HOME LOAN | LAP | USED CAR LOAN
+        </>
+      ),
+    }
   ];
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
