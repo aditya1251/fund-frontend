@@ -43,7 +43,6 @@ export default function Price() {
         "Taxation (20%OFF)",
         "Marketing (50 Lead/Month)",
         "Website Designing",
-        "Home / Property Loan"
       ]
     },
     {

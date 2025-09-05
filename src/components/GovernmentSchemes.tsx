@@ -44,7 +44,7 @@ export default function GovernmentSchemes() {
           {[
             { val: "730+", name: "Mudra Loans" },
             { val: "60+", name: "CGTMSE Loan" },
-            { val: "230+", name: "PMGP Loans" },
+            { val: "230+", name: "PMEGP Loans" },
             { val: "340+", name: "MSME Loans" },
           ].map((s) => (
             <div key={s.name} className="bg-[#f7c430] rounded-2xl p-4 md:p-6 text-center">

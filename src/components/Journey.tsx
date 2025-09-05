@@ -61,7 +61,7 @@ export default function Journey() {
             </div>
             <CountUp delay={0} duration={500}>
             <h3 className="text-2xl md:text-3xl font-bold text-black mb-4">
-              2 Glorious Years
+              6 Glorious Years
             </h3>
             </CountUp>
             <p className="text-[#141212] text-base md:text-lg">
