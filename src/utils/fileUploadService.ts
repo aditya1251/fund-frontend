@@ -2,6 +2,8 @@
  * Service for handling file uploads to the backend
  */
 
+// @utils/fileUploadService.ts
+
 /**
  * Uploads a file to the server and returns the filename stored in S3
  * @param file The file to upload

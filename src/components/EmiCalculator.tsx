@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import vector from "../../public/assets/vector.png"
+import vector from "../../public/assets/vecto101.png"
 
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "./ui/card";
@@ -98,7 +98,7 @@ export default function EmiCalculator() {
               <Image
                 src={vector}
                 alt="Financial planning illustration"
-                className="w-full max-w-lg h-auto"
+                className="w-full max-w-lg h-auto mix-blend-multiply"
               />{" "}
               {/* Slightly larger max-width for image */}
             </div>

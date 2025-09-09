@@ -4,9 +4,11 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const images = [
-  { src: "/banner/banner11.png", alt: "Banner 1" },
-  { src: "/banner/banner12.png", alt: "Banner 2" },
-  { src: "/banner/banner13.png", alt: "Banner 3" },
+  { src: "/banner/banner21.png", alt: "Banner 1" },
+  { src: "/banner/banner22.png", alt: "Banner 2" },
+  { src: "/banner/banner23.png", alt: "Banner 3" },
+  { src: "/banner/banner24.png", alt: "Banner 4" },
+  { src: "/banner/banner25.png", alt: "Banner 5" },
 ];
 
 const DESKTOP_VISIBLE = 3; // how many images shown at once on desktop
@@ -109,7 +111,7 @@ export default function Banner() {
         {images.map((img, idx) => (
           <div
             key={idx}
-            className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
+            className={`absolute rounded-3xl inset-0 transition-opacity duration-500 ease-in-out ${
               idx === mobileIdx ? "opacity-100 z-10" : "opacity-0"
             }`}
           >
@@ -117,7 +119,7 @@ export default function Banner() {
               src={img.src}
               alt={img.alt}
               fill
-              className="object-cover"
+              className="object-contain rounded-2xl"
               sizes="100vw"
               priority={idx === 0}
             />

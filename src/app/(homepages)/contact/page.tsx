@@ -386,10 +386,9 @@ const ContactPage = () => {
                   <div className="flex items-center justify-between p-4 rounded-xl bg-yellow-500 text-black transition-colors group">
                     <span className="font-semibold">Follow Us</span>
                     <div className="flex gap-3">
-                      <Facebook className="w-5 h-5 text-black cursor-pointer transition-all hover:scale-125" />
-                      <Instagram className="w-5 h-5 text-black cursor-pointer transition-all hover:scale-125" />
-                      <Linkedin className="w-5 h-5 text-black cursor-pointer transition-all hover:scale-125" />
-                      <Twitter className="w-5 h-5 text-black cursor-pointer transition-all hover:scale-125" />
+                      <Facebook onClick={() => window.open("https://www.facebook.com/profile.php?id=61580471006144", "_blank")} className="w-5 h-5 text-black cursor-pointer transition-all hover:scale-125" />
+                      <Instagram onClick={() => window.open("https://www.instagram.com/navimudra/", "_blank")} className="w-5 h-5 text-black cursor-pointer transition-all hover:scale-125" />
+                      <Twitter onClick={() => window.open("https://x.com/Navimudra", "_blank")} className="w-5 h-5 text-black cursor-pointer transition-all hover:scale-125" />
                     </div>
                   </div>
                 </div>

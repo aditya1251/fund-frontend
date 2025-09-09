@@ -17,17 +17,17 @@ import {
   TableRow,
   EmailCell,
   StatusBadge,
-  ViewAllButton,
 } from "@/components/ui/data-table";
 import Link from "next/link";
 import { useGetLoansByDsaIdQuery } from "@/redux/services/loanApi";
 import { RequireFeature } from "@/components/RequireFeature";
 import { useGetLoanTemplatesByTypeQuery } from "@/redux/services/loanTemplateApi";
-import { Building, Car, House, LandPlot, User, History } from "lucide-react";
+import { Building, Car, House, LandPlot, User, History, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import Loading from "@/components/Loading";
 import { MobileCard, MobileCardList } from "@/components/ui/mobile-card";
+import { getFileUrl } from "@/utils/fileUploadService";
 
 export default function Page() {
   const session = useSession();
@@ -40,11 +40,23 @@ export default function Page() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [sortBy, setSortBy] = useState("date-desc");
-  
-  // Mobile pagination state
+
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const itemsPerPage = 10;
+
+  // Modal state
+  const [selectedLoan, setSelectedLoan] = useState<any | null>(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = (loan: any) => {
+    setSelectedLoan(loan);
+    setShowModal(true);
+  };
+  const closeModal = () => {
+    setSelectedLoan(null);
+    setShowModal(false);
+  };
 
   const loansData = useMemo(() => {
     return data?.filter((loan: any) => loan.loanType === "insurance") || [];
@@ -74,17 +86,13 @@ export default function Page() {
       if (sortBy === "date-desc") {
         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
         const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        if (dateA === dateB) {
-          return (b._id || "").localeCompare(a._id || "");
-        }
+        if (dateA === dateB) return (b._id || "").localeCompare(a._id || "");
         return dateB - dateA;
       }
       if (sortBy === "date-asc") {
         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
         const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        if (dateA === dateB) {
-          return (a._id || "").localeCompare(b._id || "");
-        }
+        if (dateA === dateB) return (a._id || "").localeCompare(b._id || "");
         return dateA - dateB;
       }
       if (sortBy === "name-asc") {
@@ -102,16 +110,15 @@ export default function Page() {
     return leads;
   }, [loansData, search, statusFilter, sortBy]);
 
-  // Mobile pagination logic
   const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
   const paginatedLeads = filteredLeads.slice(0, currentPage * itemsPerPage);
 
   const handleLoadMore = () => {
     setIsLoadingMore(true);
     setTimeout(() => {
-      setCurrentPage(prev => prev + 1);
+      setCurrentPage((prev) => prev + 1);
       setIsLoadingMore(false);
-    }, 500); // Simulate loading delay
+    }, 500);
   };
 
   if (loansLoading || templatesLoading) {
@@ -120,15 +127,13 @@ export default function Page() {
 
   return (
     <RequireFeature feature="Insurance">
-      {/* Added responsive horizontal padding for the main container */}
       <div className="max-w-full overflow-hidden px-4 sm:px-6 lg:px-8 py-6">
-        {/* Loan Types header and Saved Drafts button */}
-        {/* Changed to flex-col on mobile, flex-row on sm+ */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-          {/* Added margin-bottom for mobile */}
-          <h4 className="font-semibold text-black mb-4 sm:mb-0">Insurance Types</h4>
+          <h4 className="font-semibold text-black mb-4 sm:mb-0">
+            Insurance Types
+          </h4>
           <Link href="/crm/drafts">
-            <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm w-full sm:w-auto justify-center"> {/* Added w-full sm:w-auto justify-center for responsiveness */}
+            <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm w-full sm:w-auto justify-center">
               <History className="w-4 h-4" />
               Saved Drafts
             </button>
@@ -136,10 +141,7 @@ export default function Page() {
         </div>
 
         <Tabs defaultValue="Health Insurance">
-          {/* TabsList no longer needs explicit grid classes here if it's updated internally.
-              If not, uncomment the className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" below.
-          */}
-          <TabsList> {/* Assuming TabsList is already responsive internally or will be from tab.tsx */}
+          <TabsList>
             {loansTemplates.map((template: any) => (
               <Link key={template.id} href={`/crm/loan-form?id=${template.id}`}>
                 <TabsTrigger value={template.id}>
@@ -173,27 +175,22 @@ export default function Page() {
         {/* Insurance Leads Table */}
         <div className="mt-6">
           <div className="py-4">
-            {/* Flex container for "Insurance Leads" title and controls: stacks on mobile, row on md+ */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
               <h4 className="text-lg font-semibold text-black mb-4 md:mb-0">
                 Insurance Leads
               </h4>
-              {/* Controls: flex-col on mobile, sm:flex-row on small mobile to allow side-by-side if space,
-                  md:flex-row and no-wrap for desktop. Added gap-2 for spacing.
-                  w-full on mobile, md:w-auto for desktop.
-              */}
               <div className="flex flex-col sm:flex-row md:flex-row md:flex-nowrap justify-end gap-2 mb-4 mt-0 md:mt-4 w-full md:w-auto">
                 <Input
                   type="text"
                   placeholder="Search by name or email"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="border bg-white px-2 py-1 rounded w-full sm:w-auto" // w-full on mobile, w-auto on sm+
+                  className="border bg-white px-2 py-1 rounded w-full sm:w-auto"
                 />
                 <Select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="border bg-white px-2 py-1 rounded w-full sm:w-auto" // w-full on mobile, w-auto on sm+
+                  className="border bg-white px-2 py-1 rounded w-full sm:w-auto"
                 >
                   <option value="">All Statuses</option>
                   <option value="pending">Pending</option>
@@ -203,7 +200,7 @@ export default function Page() {
                 <Select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="border bg-white px-2 py-1 rounded w-full sm:w-auto" // w-full on mobile, w-auto on sm+
+                  className="border bg-white px-2 py-1 rounded w-full sm:w-auto"
                 >
                   <option value="date-desc">Sort by Latest</option>
                   <option value="date-asc">Sort by Oldest</option>
@@ -216,14 +213,13 @@ export default function Page() {
             {/* Desktop Table View */}
             <div className="hidden md:block">
               <TableWrapper className="overflow-x-auto">
-                <table className="w-full bg-white text-sm whitespace-nowrap"> {/* Added whitespace-nowrap to prevent cell content wrapping */}
+                <table className="w-full bg-white text-sm whitespace-nowrap">
                   <TableHeadings
                     columns={[
                       "File No.",
                       "Insurance Type",
                       "Insurance Mode",
                       "Applicant",
-                      "Subscriber",
                       "Email",
                       "Phone",
                       "Review",
@@ -231,7 +227,6 @@ export default function Page() {
                     ]}
                   />
                   <tbody>
-                    {/* Ensure filteredLeads is always an array before mapping */}
                     {filteredLeads.map((lead: any, index: number) => (
                       <TableRow
                         key={index}
@@ -240,10 +235,17 @@ export default function Page() {
                           lead.loanSubType,
                           lead.mode ? lead.mode : "Online",
                           lead.values[0].fields[0].value,
-                          <EmailCell key={`sub-${index}`} email={lead.subscriber} />,
-                          <EmailCell key={`email-${index}`} email={lead.values[0].fields[1].value} />,
+                          <EmailCell
+                            key={`email-${index}`}
+                            email={lead.values[0].fields[1].value}
+                          />,
                           lead.values[0].fields[2].value,
-                          lead.rejectionMessage,
+                          <button
+                            onClick={() => openModal(lead)}
+                            className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs"
+                          >
+                            Review
+                          </button>,
                           <StatusBadge
                             key={`status-${index}`}
                             status={
@@ -272,11 +274,20 @@ export default function Page() {
                     type: lead.loanSubType,
                     mode: lead.mode,
                     applicant: lead.values[0].fields[0].value,
-                    subscriber: lead.subscriber,
                     email: lead.values[0].fields[1].value,
                     phone: lead.values[0].fields[2].value,
-                    review: lead.rejectionMessage,
-                    status: lead.status.toLowerCase() as "approved" | "pending" | "rejected",
+                    review: (
+                      <button
+                        onClick={() => openModal(lead)}
+                        className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs"
+                      >
+                        Review
+                      </button>
+                    ),
+                    status: lead.status.toLowerCase() as
+                      | "approved"
+                      | "pending"
+                      | "rejected",
                     createdAt: lead.createdAt,
                   }}
                 />
@@ -290,7 +301,76 @@ export default function Page() {
             />
           </div>
         </div>
+
+        {/* Modal */}
+        {showModal && selectedLoan && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex justify-center items-center p-2">
+            <div className="bg-white w-full max-w-3xl max-h-[75vh] overflow-y-auto p-6 rounded-xl border-2 border-black shadow-lg relative">
+              <button
+                onClick={closeModal}
+                className="absolute top-2 right-2 text-black p-2 rounded-full hover:bg-gray-200"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <h3 className="text-xl font-bold mb-4">Insurance Details</h3>
+
+              <div className="space-y-6">
+                {selectedLoan.values.map((page: any) => (
+                  <div key={page.pageNumber}>
+                    <h4 className="text-lg font-semibold mb-2">{page.title}</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {page.fields.map((field: any, index: number) => (
+                        <div
+                          key={index}
+                          className="bg-gray-100 p-3 rounded border"
+                        >
+                          <label className="block text-sm font-medium mb-1">
+                            {field.label}
+                          </label>
+                          {field.isDocument ? (
+                            <FileViewer fileKey={field.value} />
+                          ) : (
+                            <p className="text-sm text-gray-800 break-words">
+                              {field.value || "N/A"}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </RequireFeature>
   );
 }
+
+const FileViewer = ({ fileKey }: { fileKey: string }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleViewFile = async () => {
+    setLoading(true);
+    try {
+      const url = await getFileUrl(fileKey);
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (err) {
+      console.error("Error fetching file:", err);
+      alert("Failed to open file");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleViewFile}
+      className="text-blue-600 hover:underline hover:cursor-pointer text-sm break-all"
+      disabled={loading}
+    >
+      {loading ? "Loading..." : "View Document"}
+    </button>
+  );
+};

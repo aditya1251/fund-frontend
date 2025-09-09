@@ -9,10 +9,9 @@ interface MobileCardProps {
     type: string;
     mode?: string;
     applicant: string;
-    subscriber: string;
     email: string;
     phone: string;
-    review?: string;
+    review?: any;
     status: "approved" | "pending" | "rejected";
     createdAt?: string;
   };
@@ -84,12 +83,7 @@ export function MobileCard({ data }: MobileCardProps) {
               {formatDate(data.createdAt)}
             </div>
           )}
-        </div>
-
-        {/* Subscriber */}
-        <div className="text-xs text-gray-500">
-          Subscriber: <span className="text-gray-700">{data.subscriber}</span>
-        </div>
+        </div>       
 
         {/* Review/Rejection Message */}
         {data.review && data.review !== "undefined" && data.review !== "-" && (

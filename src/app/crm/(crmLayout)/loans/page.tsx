@@ -7,7 +7,7 @@ import {
   TabsIcon,
   TabsLabel,
   TabsDescription,
-} from "@/components/ui/tab"; // This import now pulls the responsive TabsList
+} from "@/components/ui/tab";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 
@@ -17,9 +17,8 @@ import {
   TableRow,
   EmailCell,
   StatusBadge,
-  ViewAllButton,
 } from "@/components/ui/data-table";
-import { House, User, Car, Building, LandPlot, History } from "lucide-react";
+import { House, User, Car, Building, LandPlot, History, X } from "lucide-react";
 import Link from "next/link";
 import { useGetLoansByDsaIdQuery } from "@/redux/services/loanApi";
 import { RequireFeature } from "@/components/RequireFeature";
@@ -28,6 +27,9 @@ import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import Loading from "@/components/Loading";
 import { MobileCard, MobileCardList } from "@/components/ui/mobile-card";
+import { getFileUrl } from "@/utils/fileUploadService";
+import LoanChatModal from "@/components/LoanChatModal";
+import { MessageCircle } from "lucide-react";
 
 export default function Page() {
   const session = useSession();
@@ -38,20 +40,29 @@ export default function Page() {
   const { data: loansTemplates = [], isLoading: isTemplatesLoading } =
     useGetLoanTemplatesByTypeQuery("private");
 
-  // New state for search/filter/sort
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [sortBy, setSortBy] = useState("date-desc"); // default to latest
-  
-  // Mobile pagination state
+  const [sortBy, setSortBy] = useState("date-desc");
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const itemsPerPage = 10;
+  const [chatLoanId, setChatLoanId] = useState<string | null>(null);
 
-  // Filtered and sorted data
+  // Modal state
+  const [selectedLoan, setSelectedLoan] = useState<any | null>(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = (loan: any) => {
+    setSelectedLoan(loan);
+    setShowModal(true);
+  };
+  const closeModal = () => {
+    setSelectedLoan(null);
+    setShowModal(false);
+  };
+
   const filteredLeads = useMemo(() => {
     let leads = loansData;
-    // Search
     if (search) {
       leads = leads.filter(
         (lead: any) =>
@@ -63,30 +74,24 @@ export default function Page() {
             .includes(search.toLowerCase())
       );
     }
-    // Status filter (case-insensitive)
     if (statusFilter) {
       leads = leads.filter(
         (lead: any) =>
           (lead.status || "").toLowerCase() === statusFilter.toLowerCase()
       );
     }
-    // Sort
     leads = leads.slice().sort((a: any, b: any) => {
       if (sortBy === "date-desc") {
         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
         const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        if (dateA === dateB) {
-          return (b._id || "").localeCompare(a._id || "");
-        }
-        return dateB - dateA; // latest first
+        if (dateA === dateB) return (b._id || "").localeCompare(a._id || "");
+        return dateB - dateA;
       }
       if (sortBy === "date-asc") {
         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
         const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        if (dateA === dateB) {
-          return (a._id || "").localeCompare(b._id || "");
-        }
-        return dateA - dateB; // oldest first
+        if (dateA === dateB) return (a._id || "").localeCompare(b._id || "");
+        return dateA - dateB;
       }
       if (sortBy === "name-asc") {
         const nameA = (a.values?.[0]?.fields?.[0]?.value || "").toLowerCase();
@@ -103,16 +108,15 @@ export default function Page() {
     return leads;
   }, [loansData, search, statusFilter, sortBy]);
 
-  // Mobile pagination logic
   const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
   const paginatedLeads = filteredLeads.slice(0, currentPage * itemsPerPage);
 
   const handleLoadMore = () => {
     setIsLoadingMore(true);
     setTimeout(() => {
-      setCurrentPage(prev => prev + 1);
+      setCurrentPage((prev) => prev + 1);
       setIsLoadingMore(false);
-    }, 500); // Simulate loading delay
+    }, 500);
   };
 
   return (
@@ -122,14 +126,11 @@ export default function Page() {
       ) : (
         <div className="max-w-full overflow-hidden sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-            {/* Added margin-bottom for mobile */}
             <h4 className="font-semibold text-black mb-4 sm:mb-0">
               Loan Types
             </h4>
             <Link href="/crm/drafts">
               <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm w-full sm:w-auto justify-center">
-                {" "}
-                {/* Added w-full sm:w-auto justify-center for responsiveness */}
                 <History className="w-4 h-4" />
                 Saved Drafts
               </button>
@@ -137,9 +138,6 @@ export default function Page() {
           </div>
 
           <Tabs defaultValue="personal">
-            {/* Removed className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" from here
-              because it's now handled internally by TabsList component itself for robustness.
-          */}
             <TabsList>
               {loansTemplates.map((template: any) => (
                 <Link
@@ -176,28 +174,22 @@ export default function Page() {
           {/* Loan Leads Table */}
           <div className="mt-6">
             <div className="py-4">
-              {/* Flex container for "All Leads" title and controls: stacks on mobile, row on md+ */}
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
                 <h4 className="text-lg font-semibold text-black mb-4 md:mb-0">
                   All Leads
                 </h4>
-                {/* Controls: flex-col on mobile, sm:flex-row on small mobile to allow side-by-side if space,
-                  md:flex-row and no-wrap for desktop. Added gap-2 for spacing.
-                  w-full on mobile, md:w-auto for desktop.
-              */}
                 <div className="flex flex-col sm:flex-row md:flex-row md:flex-nowrap justify-end gap-2 mb-4 mt-0 md:mt-4 w-full md:w-auto">
                   <Input
                     type="text"
                     placeholder="Search by name or email"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="bg-white px-2 py-1 rounded w-full sm:w-auto" // w-full on mobile, w-auto on sm+
+                    className="bg-white px-2 py-1 rounded w-full sm:w-auto"
                   />
                   <Select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="border bg-white px-2 py-1 rounded w-full sm:w-auto" // w-full on mobile, w-auto on sm+
-                  >
+                    className="border bg-white px-2 py-1 rounded w-full sm:w-auto">
                     <option value="">All Statuses</option>
                     <option value="pending">Pending</option>
                     <option value="approved">Approved</option>
@@ -206,8 +198,7 @@ export default function Page() {
                   <Select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="border bg-white px-2 py-1 rounded w-full sm:w-auto" // w-full on mobile, w-auto on sm+
-                  >
+                    className="border bg-white px-2 py-1 rounded w-full sm:w-auto">
                     <option value="date-desc">Sort by Latest</option>
                     <option value="date-asc">Sort by Oldest</option>
                     <option value="name-asc">Sort by Name (A-Z)</option>
@@ -216,85 +207,188 @@ export default function Page() {
                 </div>
               </div>
 
-            {/* Desktop Table View */}
-            <div className="hidden md:block">
-              {/* TableWrapper with horizontal scrolling for overflow */}
-              <TableWrapper className="overflow-x-auto">
-                <table className="w-full bg-white text-sm whitespace-nowrap"> {/* Added whitespace-nowrap to prevent cell content wrapping */}
-                  <TableHeadings
-                    columns={[
-                      "File No.",
-                      "Loan",
-                      "Loan Mode",
-                      "Applicant",
-                      "Subscriber",
-                      "Email",
-                      "Phone",
-                      "Review",
-                      "Status",
-                    ]}
-                  />
-                  <tbody>
-                    {filteredLeads.map((lead: any, index: number) => (
-                      <TableRow
-                        key={index}
-                        row={[
-                          lead._id,
-                          lead.loanSubType,
-                          lead.mode ? lead.mode : "Online",
-                          lead.values[0].fields[0].value,
-                          <EmailCell key={`sub-${index}`} email={lead.subscriber} />,
-                          <EmailCell key={`email-${index}`} email={lead.values[0].fields[1].value} />,
-                          lead.values[0].fields[2].value,
-                          lead.rejectionMessage,
-                          <StatusBadge
-                            key={`status-${index}`}
-                            status={
-                              lead.status.toLowerCase() as
-                                | "approved"
-                                | "pending"
-                                | "rejected"
-                            }
-                          />,
-                        ]}
-                      />
-                    ))}
-                  </tbody>
-                </table>
-              </TableWrapper>
-            </div>
+              {/* Desktop Table View */}
+              <div className="hidden md:block">
+                <TableWrapper className="overflow-x-auto">
+                  <table className="w-full bg-white text-sm whitespace-nowrap">
+                    <TableHeadings
+                      columns={[
+                        "File No.",
+                        "Loan",
+                        "Loan Mode",
+                        "Applicant",
+                        "Email",
+                        "Phone",
+                        "Review",
+                        "Status",
+                      ]}
+                    />
+                    <tbody>
+                      {filteredLeads.map((lead: any, index: number) => (
+                        <TableRow
+                          key={index}
+                          row={[
+                            lead._id,
+                            lead.loanSubType,
+                            lead.mode ? lead.mode : "Online",
+                            lead.values[0].fields[0].value,
 
-            {/* Mobile Card View */}
-            <MobileCardList
-              items={paginatedLeads}
-              renderCard={(lead: any, index: number) => (
-                <MobileCard
-                  key={index}
-                  data={{
-                    id: lead._id,
-                    type: lead.loanSubType,
-                    mode: lead.mode,
-                    applicant: lead.values[0].fields[0].value,
-                    subscriber: lead.subscriber,
-                    email: lead.values[0].fields[1].value,
-                    phone: lead.values[0].fields[2].value,
-                    review: lead.rejectionMessage,
-                    status: lead.status.toLowerCase() as "approved" | "pending" | "rejected",
-                    createdAt: lead.createdAt,
-                  }}
-                />
-              )}
-              emptyMessage="No loan leads found"
-              showLoadMore={true}
-              onLoadMore={handleLoadMore}
-              isLoadingMore={isLoadingMore}
-              currentPage={currentPage}
-              totalPages={totalPages}
-            />
+                            <EmailCell
+                              key={`email-${index}`}
+                              email={lead.values[0].fields[1].value}
+                            />,
+                            lead.values[0].fields[2].value,
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => openModal(lead)}
+                                className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs">
+                                Review
+                              </button>
+                              <button
+                                onClick={() => setChatLoanId(lead._id)}
+                                className="bg-green-100 text-green-800 p-2 rounded hover:bg-green-200">
+                                <MessageCircle className="w-4 h-4" />
+                              </button>
+                            </div>,
+                            <StatusBadge
+                              key={`status-${index}`}
+                              status={
+                                lead.status.toLowerCase() as
+                                  | "approved"
+                                  | "pending"
+                                  | "rejected"
+                              }
+                            />,
+                          ]}
+                        />
+                      ))}
+                    </tbody>
+                  </table>
+                </TableWrapper>
+              </div>
+
+              {/* Mobile Card View */}
+              <MobileCardList
+                items={paginatedLeads}
+                renderCard={(lead: any, index: number) => (
+                  <MobileCard
+                    key={index}
+                    data={{
+                      id: lead._id,
+                      type: lead.loanSubType,
+                      mode: lead.mode,
+                      applicant: lead.values[0].fields[0].value,
+                      email: lead.values[0].fields[1].value,
+                      phone: lead.values[0].fields[2].value,
+                      review: (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => openModal(lead)}
+                            className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs">
+                            Review
+                          </button>
+                          <button
+                            onClick={() => setChatLoanId(lead._id)}
+                            className="bg-green-100 text-green-800 p-2 rounded hover:bg-green-200">
+                            <MessageCircle className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ),
+                      status: lead.status.toLowerCase() as
+                        | "approved"
+                        | "pending"
+                        | "rejected",
+                      createdAt: lead.createdAt,
+                    }}
+                  />
+                )}
+                emptyMessage="No loan leads found"
+                showLoadMore={true}
+                onLoadMore={handleLoadMore}
+                isLoadingMore={isLoadingMore}
+                currentPage={currentPage}
+                totalPages={totalPages}
+              />
+            </div>
           </div>
+
+          {/* Modal */}
+          {showModal && selectedLoan && (
+            <div className="fixed inset-0 bg-opacity-80 text-black backdrop-blur-sm flex justify-center items-center p-2">
+              <div className="bg-white w-full max-w-3xl max-h-[75vh] overflow-y-auto p-6 rounded-xl border-2 border-black shadow-lg relative">
+                <button
+                  onClick={closeModal}
+                  className="absolute top-2 right-2 text-black p-2 rounded-full hover:bg-gray-200">
+                  <X className="w-5 h-5" />
+                </button>
+                <h3 className="text-xl font-bold mb-4">Loan Details</h3>
+
+                <div className="space-y-6">
+                  {selectedLoan.values.map((page: any) => (
+                    <div key={page.pageNumber}>
+                      <h4 className="text-lg font-semibold mb-2">
+                        {page.title}
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {page.fields.map((field: any, index: number) => (
+                          <div
+                            key={index}
+                            className="bg-gray-100 p-3 rounded border">
+                            <label className="block text-sm font-medium mb-1">
+                              {field.label}
+                            </label>
+                            {field.isDocument ? (
+                              <FileViewer fileKey={field.value} />
+                            ) : (
+                              <p className="text-sm text-gray-800 break-words">
+                                {field.value || "N/A"}
+                              </p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      </div>
+      )}
+
+      {chatLoanId && (
+        <LoanChatModal
+          loanId={chatLoanId}
+          isOpen={!!chatLoanId}
+          onClose={() => setChatLoanId(null)}
+        />
       )}
     </RequireFeature>
   );
 }
+
+const FileViewer = ({ fileKey }: { fileKey: string }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleViewFile = async () => {
+    setLoading(true);
+    try {
+      const url = await getFileUrl(fileKey);
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (err) {
+      console.error("Error fetching file:", err);
+      alert("Failed to open file");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleViewFile}
+      className="text-blue-600 hover:underline hover:cursor-pointer text-sm break-all"
+      disabled={loading}>
+      {loading ? "Loading..." : "View Document"}
+    </button>
+  );
+};
