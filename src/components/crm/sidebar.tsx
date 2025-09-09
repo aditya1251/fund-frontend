@@ -20,8 +20,10 @@ import {
 	Timer,
 	Users,
 	BookOpenText,
+	ArrowLeftToLine,
+	ChevronLeft,
 } from "lucide-react";
-import logo from "../../../public/assets/logo.png"; // Adjust the path as necessary
+import logo from "../../../public/logo1000.png"; // Adjust the path as necessary
 import { signOut } from "next-auth/react";
 
 interface NavItem {
@@ -124,9 +126,9 @@ const Sidebar = () => {
 							<Image
 								src={logo}
 								alt="Logo"
-								width={40}
+								width={150}
 								height={40}
-								className={`transition-all duration-300 ${!open && !isMobile ? 'w-0 h-0 opacity-0' : 'w-10 h-10 opacity-100'}`}
+								className={`transition-all duration-300 ${!open && !isMobile ? 'w-0 h-0 opacity-0' : 'h-10 opacity-100'}`}
 								quality={100}
 								placeholder="blur"
 								blurDataURL="/placeholder.svg" // Placeholder image for blur effect
@@ -142,7 +144,7 @@ const Sidebar = () => {
 							{isMobile ? (
 								<X size={20} className="cursor-pointer" />
 							) : (
-								<PanelLeftClose className={`cursor-pointer ${!open ? 'rotate-180' : ''}`} />
+								<ChevronLeft className={`cursor-pointer ${!open ? 'rotate-180' : ''}`} />
 							)}
 						</button>
 					</div>

@@ -3,7 +3,7 @@
 import { Button } from "./ui/button";
 import { Star, Instagram, Twitter, Facebook, Youtube } from "lucide-react";
 import Image from "next/image";
-import logo from "../../public/assets/logo.png"; // Adjust the path as necessary
+import logo from "../../public/logo512.png"; // Adjust the path as necessary
 import hdfc from "../../public/assets/hdfc.png"; // Adjust the path as necessary
 import bajaj from "../../public/assets/bajaj.png"; // Adjust the path as necessary
 import axis from "../../public/assets/axis.png"; // Adjust the path as necessary
@@ -206,10 +206,9 @@ export default function Footer() {
                   Follow us on
                 </span>
                 <div className="flex items-center gap-2">
-                  <Instagram className="w-5 h-5 text-black hover:text-[#141212] cursor-pointer" />
-                  <Twitter className="w-5 h-5 text-black hover:text-[#141212] cursor-pointer" />
-                  <Facebook className="w-5 h-5 text-black hover:text-[#141212] cursor-pointer" />
-                  <Youtube className="w-5 h-5 text-black hover:text-[#141212] cursor-pointer" />
+                  <Instagram onClick={() => window.open("https://www.instagram.com/navimudra/", "_blank")} className="w-5 h-5 text-black hover:text-[#141212] cursor-pointer" />
+                  <Twitter onClick={() => window.open("https://x.com/Navimudra", "_blank")} className="w-5 h-5 text-black hover:text-[#141212] cursor-pointer" />
+                  <Facebook onClick={() => window.open("https://www.facebook.com/profile.php?id=61580471006144", "_blank")} className="w-5 h-5 text-black hover:text-[#141212] cursor-pointer" />
                 </div>
               </div>
             </div>

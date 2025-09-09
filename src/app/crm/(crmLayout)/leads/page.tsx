@@ -312,7 +312,6 @@ const LeadActivityStatus: React.FC = () => {
                       "Loan",
                       "Loan Mode",
                       "Applicant",
-                      "Subscriber",
                       "Email",
                       "Phone",
                       "Review",
@@ -329,10 +328,7 @@ const LeadActivityStatus: React.FC = () => {
                           lead.mode ? lead.mode : "Online",
                           lead.values[0].fields[0].value,
 
-                          <EmailCell
-                            key={`sub-${index}`}
-                            email={lead.subscriber}
-                          />,
+                      
                           <EmailCell
                             key={`email-${index}`}
                             email={lead.values[0].fields[1].value}
@@ -367,7 +363,6 @@ const LeadActivityStatus: React.FC = () => {
                     type: lead.loanSubType,
                     mode: lead.mode,
                     applicant: lead.values[0].fields[0].value,
-                    subscriber: lead.subscriber,
                     email: lead.values[0].fields[1].value,
                     phone: lead.values[0].fields[2].value,
                     review: lead.rejectionMessage,

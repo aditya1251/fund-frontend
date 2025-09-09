@@ -11,7 +11,7 @@ import {
   MapPin,
   Facebook,
   Instagram,
-  Linkedin,
+  Twitter,
   Loader2,
 } from "lucide-react";
 import { useAddApplicationMutation } from "@/redux/services/applicationApi";
@@ -134,13 +134,13 @@ export default function ContactForm() {
             </div>
             <div className="flex gap-4 mt-4 md:mt-6">
               <div className="hover:text-[#F7C430] cursor-pointer transition-colors">
-                <Facebook className="w-5 h-5" />
+                <Facebook onClick={() => window.open("https://www.facebook.com/profile.php?id=61580471006144", "_blank")} className="w-5 h-5" />
               </div>
               <div className="hover:text-[#F7C430] cursor-pointer transition-colors">
-                <Instagram className="w-5 h-5" />
+                <Instagram onClick={() => window.open("https://www.instagram.com/navimudra/", "_blank")} className="w-5 h-5" />
               </div>
               <div className="hover:text-[#F7C430] cursor-pointer transition-colors">
-                <Linkedin className="w-5 h-5" />
+                <Twitter onClick={() => window.open("https://x.com/Navimudra", "_blank")} className="w-5 h-5" />
               </div>
             </div>
           </div>

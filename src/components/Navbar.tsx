@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import logo from "../../public/assets/logo.png";
+import logo from "../../public/logo1000.png";
 import { useSession, signOut } from "next-auth/react";
 
 /* -------------  Mobile accordion ------------- */
@@ -160,9 +160,9 @@ export default function NavigationHeader() {
   /* ---- Mobile drawer (unchanged) ---- */
   const mobileDrawer = (
     <div className="md:hidden fixed inset-0 z-40 bg-white flex flex-col">
-      <div className="flex items-center justify-between h-16 px-4 border-b">
+      <div className="flex items-center justify-between px-4 border-b">
         <Link href="/" onClick={toggle}>
-          <Image src={logo} alt="Logo" width={48} height={48} className="rounded-full" />
+          <Image src={logo} alt="Logo" width={150} height={48} className="rounded-full" />
         </Link>
         <button onClick={toggle}>
           <X className="w-6 h-6" />
@@ -256,7 +256,7 @@ export default function NavigationHeader() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2">
-              <Image src={logo} alt="Logo" width={48} height={48} className="rounded-full" />
+              <Image src={logo} alt="Logo" width={150} height={48} className="" />
             </Link>
 
             {/* Desktop / Tablet nav */}

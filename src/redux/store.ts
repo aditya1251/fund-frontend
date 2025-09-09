@@ -11,6 +11,7 @@ import { AnalyticsApi } from "./services/analyticsApi";
 import { IssueApi } from "./services/issueApi";
 import { commissionApi } from "./services/commissionApi";
 import { withdrawalApi } from "./services/withdrawalApi";
+import { LoanChatApi } from "./services/loanchatApi";
 
 export const store = configureStore({
 	reducer: {
@@ -26,6 +27,7 @@ export const store = configureStore({
 		[IssueApi.reducerPath]: IssueApi.reducer,
 		[commissionApi.reducerPath]: commissionApi.reducer,
 		[withdrawalApi.reducerPath]: withdrawalApi.reducer,
+		[LoanChatApi.reducerPath]: LoanChatApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware().concat(
@@ -41,6 +43,7 @@ export const store = configureStore({
 			IssueApi.middleware,
 			commissionApi.middleware,
 			withdrawalApi.middleware,
+			LoanChatApi.middleware
 		),
 });
 

@@ -9,18 +9,23 @@ import {
   TabsDescription,
 } from "@/components/ui/tab";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
 
 import {
-  // TableHeader, // Removed TableHeader import as its functionality is moved inline
   TableWrapper,
   TableHeadings,
   TableRow,
   EmailCell,
   StatusBadge,
-  ViewAllButton,
 } from "@/components/ui/data-table";
-import { BriefcaseBusiness, FileText, History, Search, Filter, SlidersHorizontal } from "lucide-react"; // Import necessary icons for inline controls
+import {
+  BriefcaseBusiness,
+  FileText,
+  History,
+  Search,
+  Filter,
+  SlidersHorizontal,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { RequireFeature } from "@/components/RequireFeature";
 import { useGetLoansByDsaIdQuery } from "@/redux/services/loanApi";
@@ -29,34 +34,42 @@ import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import Loading from "@/components/Loading";
 import { MobileCard, MobileCardList } from "@/components/ui/mobile-card";
+import { getFileUrl } from "@/utils/fileUploadService";
 
 export default function Page() {
-  // --- ALL HOOKS AND DEPENDENT LOGIC MUST BE AT THE TOP ---
   const session = useSession();
   const dsaId = session.data?.user?.id || "";
 
-  // State hooks
+  // State
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [sortBy, setSortBy] = useState("date-desc");
-  
-  // Mobile pagination state
+
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const itemsPerPage = 10;
 
-  // Data fetching hooks
+  // Modal state
+  const [selectedLead, setSelectedLead] = useState<any | null>(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = (lead: any) => {
+    setSelectedLead(lead);
+    setShowModal(true);
+  };
+  const closeModal = () => {
+    setSelectedLead(null);
+    setShowModal(false);
+  };
+
   const { data, isLoading: loansLoading } = useGetLoansByDsaIdQuery(dsaId);
   const { data: taxTemplates = [], isLoading: templatesLoading } =
     useGetLoanTemplatesByTypeQuery("taxation");
 
-  // Data transformation logic and memoization hook
-  const taxData =
-    data?.filter((loan: any) => loan.loanType === "taxation") || [];
+  const taxData = data?.filter((loan: any) => loan.loanType === "taxation") || [];
 
   const filteredData = useMemo(() => {
     let leads = taxData;
-    // Search
     if (search) {
       leads = leads.filter((lead: any) => {
         const fields = lead.values[0]?.fields || [];
@@ -64,12 +77,10 @@ export default function Page() {
           const field = fields.find((f: any) => f.label === label);
           return field?.value || "";
         };
-
         const name = getFieldValue("Name").toLowerCase();
         const email = getFieldValue("Email").toLowerCase();
-        const service = getFieldValue("Services").toLowerCase(); // Assuming "Services" is a field
+        const service = getFieldValue("Services").toLowerCase();
         const searchLower = search.toLowerCase();
-
         return (
           name.includes(searchLower) ||
           email.includes(searchLower) ||
@@ -77,45 +88,32 @@ export default function Page() {
         );
       });
     }
-
-    // Status filter (case-insensitive)
     if (statusFilter) {
       leads = leads.filter(
         (lead: any) =>
           (lead.status || "").toLowerCase() === statusFilter.toLowerCase()
       );
     }
-
-    // Sort
     leads = leads.slice().sort((a: any, b: any) => {
       if (sortBy === "date-desc") {
-        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        if (dateA === dateB) {
-          return (b._id || "").localeCompare(a._id || "");
-        }
-        return dateB - dateA;
+        return (
+          (new Date(b.createdAt).getTime() || 0) -
+          (new Date(a.createdAt).getTime() || 0)
+        );
       }
       if (sortBy === "date-asc") {
-        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        if (dateA === dateB) {
-          return (a._id || "").localeCompare(b._id || "");
-        }
-        return dateA - dateB;
+        return (
+          (new Date(a.createdAt).getTime() || 0) -
+          (new Date(b.createdAt).getTime() || 0)
+        );
       }
       if (sortBy === "name-asc" || sortBy === "name-desc") {
-        const fieldsA = a.values[0]?.fields || [];
-        const fieldsB = b.values[0]?.fields || [];
-
-        const getFieldValue = (fieldsArray: any[], label: string) => {
-          const field = fieldsArray.find((f: any) => f.label === label);
-          return (field?.value || "").toLowerCase();
-        };
-
-        const nameA = getFieldValue(fieldsA, "Name");
-        const nameB = getFieldValue(fieldsB, "Name");
-
+        const getName = (lead: any) =>
+          (lead.values[0]?.fields.find((f: any) => f.label === "Name")?.value ||
+            ""
+          ).toLowerCase();
+        const nameA = getName(a);
+        const nameB = getName(b);
         return sortBy === "name-asc"
           ? nameA.localeCompare(nameB)
           : nameB.localeCompare(nameA);
@@ -125,48 +123,43 @@ export default function Page() {
     return leads;
   }, [taxData, search, statusFilter, sortBy]);
 
-  // Mobile pagination logic
+  // Pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginatedData = filteredData.slice(0, currentPage * itemsPerPage);
 
   const handleLoadMore = () => {
     setIsLoadingMore(true);
     setTimeout(() => {
-      setCurrentPage(prev => prev + 1);
+      setCurrentPage((prev) => prev + 1);
       setIsLoadingMore(false);
-    }, 500); // Simulate loading delay
+    }, 500);
   };
 
-  // --- CONDITIONAL RETURN IS NOW AFTER ALL HOOKS ---
   if (loansLoading || templatesLoading) {
     return <Loading />;
   }
 
   return (
     <RequireFeature feature="Taxation">
-      {/* Overall page container with responsive horizontal padding */}
       <div className="max-w-full overflow-hidden px-4 sm:px-6 lg:px-8 py-6">
-        {/* Header section: Title and Saved Drafts button */}
-        {/* Stacks on mobile (flex-col), becomes row on small screens and up (sm:flex-row) */}
+        {/* Header */}
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
-          {/* Added mb-4 sm:mb-0 for spacing when stacked */}
           <h4 className="font-semibold text-black mb-4 sm:mb-0">
             Providing Taxation Services At Affordable Prices
           </h4>
           <Link href="/crm/drafts">
-            <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm w-full sm:w-auto justify-center mt-4 sm:mt-0"> {/* w-full on mobile, sm:w-auto, justify-center, mt-4 sm:mt-0 */}
+            <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm w-full sm:w-auto justify-center mt-4 sm:mt-0">
               <History className="w-4 h-4" />
               Saved Drafts
             </button>
           </Link>
         </div>
 
-        <Tabs defaultValue="6885fc055d73e6b0d50b5b24">
-          {/* TabsList is now inherently responsive based on its updated definition in components/ui/tab.tsx */}
+        {/* Tabs */}
+        <Tabs defaultValue="taxation">
           <TabsList>
             {taxTemplates.map((template: any) => (
               <Link key={template.id} href={`/crm/loan-form?id=${template.id}`}>
-                {/* TabsTrigger and its children (Icon, Label, Description) are responsive and maintain height consistency due to updates in components/ui/tab.tsx */}
                 <TabsTrigger value={template.id}>
                   <TabsIcon>
                     {template.icon === "service" ? (
@@ -187,48 +180,43 @@ export default function Page() {
           </TabsList>
         </Tabs>
 
-        {/* Requests Table Section */}
+        {/* Requests Table */}
         <div className="mt-6">
           <div className="py-4">
-            {/* NEW: Table Header (Title and Controls) - Made responsive */}
+            {/* Table Header */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4">
-              <h4 className="text-lg font-semibold text-black mb-4 md:mb-0">Taxation Requests</h4>
-              <div className="flex flex-col sm:flex-row md:flex-row md:flex-nowrap gap-2 items-stretch sm:items-center w-full md:w-auto"> {/* Added w-full md:w-auto, items-stretch/center */}
-                {/* Search Input */}
-                <div className="relative w-full sm:w-auto"> {/* Added w-full sm:w-auto for input */}
+              <h4 className="text-lg font-semibold text-black mb-4 md:mb-0">
+                Taxation Requests
+              </h4>
+              <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                <div className="relative w-full sm:w-auto">
                   <input
                     type="text"
                     placeholder="Search by name, email or service"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="pl-8 pr-3 py-1.5 text-sm text-black rounded border border-gray-300 focus:outline-none w-full" // w-full inside relative div
+                    className="pl-8 pr-3 py-1.5 text-sm text-black rounded border border-gray-300 focus:outline-none w-full"
                   />
                   <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                 </div>
-                {/* Filters Button */}
-                <button className="flex items-center gap-1 text-sm border border-gray-300 px-3 py-1.5 rounded text-gray-700 hover:bg-gray-200 w-full sm:w-auto"> {/* Added w-full sm:w-auto */}
-                  <Filter className="w-4 h-4" />
-                  Filters
+                <button className="flex items-center gap-1 text-sm border border-gray-300 px-3 py-1.5 rounded text-gray-700 hover:bg-gray-200">
+                  <Filter className="w-4 h-4" /> Filters
                 </button>
-                {/* Sort Button */}
-                <button className="flex items-center gap-1 text-sm border border-gray-300 px-3 py-1.5 rounded text-gray-700 hover:bg-gray-200 w-full sm:w-auto"> {/* Added w-full sm:w-auto */}
-                  <SlidersHorizontal className="w-4 h-4" />
-                  Sort
+                <button className="flex items-center gap-1 text-sm border border-gray-300 px-3 py-1.5 rounded text-gray-700 hover:bg-gray-200">
+                  <SlidersHorizontal className="w-4 h-4" /> Sort
                 </button>
               </div>
             </div>
 
-            {/* Desktop Table View */}
+            {/* Desktop Table */}
             <div className="hidden md:block">
-              {/* Table wrapper with horizontal overflow for responsiveness */}
               <TableWrapper className="overflow-x-auto">
-                <table className="w-full whitespace-nowrap bg-white text-sm"> {/* whitespace-nowrap to prevent cell content wrapping */}
+                <table className="w-full whitespace-nowrap bg-white text-sm">
                   <TableHeadings
                     columns={[
                       "File No.",
                       "Service",
                       "Applicant name",
-                      "Subscriber",
                       "Email",
                       "Phone",
                       "Review",
@@ -238,11 +226,8 @@ export default function Page() {
                   <tbody>
                     {filteredData.map((lead: any, index: number) => {
                       const fields = lead.values[0]?.fields || [];
-
-                      const getFieldValue = (label: string) => {
-                        const field = fields.find((f: any) => f.label === label);
-                        return field?.value || "-";
-                      };
+                      const getFieldValue = (label: string) =>
+                        fields.find((f: any) => f.label === label)?.value || "-";
                       return (
                         <TableRow
                           key={index}
@@ -250,10 +235,17 @@ export default function Page() {
                             lead._id,
                             getFieldValue("Services"),
                             getFieldValue("Name"),
-                            <EmailCell key={`email-sub-${index}`} email={lead.subscriber} />,
-                            <EmailCell key={`email-val-${index}`} email={getFieldValue("Email")} />,
+                            <EmailCell
+                              key={`email-val-${index}`}
+                              email={getFieldValue("Email")}
+                            />,
                             getFieldValue("Phone"),
-                            lead.rejectionMessage,
+                            <button
+                              onClick={() => openModal(lead)}
+                              className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs"
+                            >
+                              Review
+                            </button>,
                             <StatusBadge
                               key={`status-${index}`}
                               status={
@@ -272,29 +264,35 @@ export default function Page() {
               </TableWrapper>
             </div>
 
-            {/* Mobile Card View */}
+            {/* Mobile Card */}
             <MobileCardList
               items={paginatedData}
               renderCard={(lead: any, index: number) => {
                 const fields = lead.values[0]?.fields || [];
-                const getFieldValue = (label: string) => {
-                  const field = fields.find((f: any) => f.label === label);
-                  return field?.value || "-";
-                };
-                
+                const getFieldValue = (label: string) =>
+                  fields.find((f: any) => f.label === label)?.value || "-";
                 return (
                   <MobileCard
                     key={index}
                     data={{
                       id: lead._id,
                       type: getFieldValue("Services"),
-                      mode: "Online", // Taxation services are typically online
+                      mode: "Online",
                       applicant: getFieldValue("Name"),
-                      subscriber: lead.subscriber,
                       email: getFieldValue("Email"),
                       phone: getFieldValue("Phone"),
-                      review: lead.rejectionMessage,
-                      status: lead.status.toLowerCase() as "approved" | "pending" | "rejected",
+                      review: (
+                        <button
+                          onClick={() => openModal(lead)}
+                          className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs"
+                        >
+                          Review
+                        </button>
+                      ),
+                      status: lead.status.toLowerCase() as
+                        | "approved"
+                        | "pending"
+                        | "rejected",
                       createdAt: lead.createdAt,
                     }}
                   />
@@ -309,7 +307,76 @@ export default function Page() {
             />
           </div>
         </div>
+
+        {/* Review Modal */}
+        {showModal && selectedLead && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex justify-center items-center p-2">
+            <div className="bg-white w-full max-w-3xl max-h-[75vh] overflow-y-auto p-6 rounded-xl border-2 border-black shadow-lg relative">
+              <button
+                onClick={closeModal}
+                className="absolute top-2 right-2 text-black p-2 rounded-full hover:bg-gray-200"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <h3 className="text-xl font-bold mb-4">Taxation Request Details</h3>
+
+              <div className="space-y-6">
+                {selectedLead.values.map((page: any) => (
+                  <div key={page.pageNumber}>
+                    <h4 className="text-lg font-semibold mb-2">{page.title}</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {page.fields.map((field: any, index: number) => (
+                        <div
+                          key={index}
+                          className="bg-gray-100 p-3 rounded border"
+                        >
+                          <label className="block text-sm font-medium mb-1">
+                            {field.label}
+                          </label>
+                          {field.isDocument ? (
+                            <FileViewer fileKey={field.value} />
+                          ) : (
+                            <p className="text-sm text-gray-800 break-words">
+                              {field.value || "N/A"}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </RequireFeature>
   );
 }
+
+const FileViewer = ({ fileKey }: { fileKey: string }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleViewFile = async () => {
+    setLoading(true);
+    try {
+      const url = await getFileUrl(fileKey);
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (err) {
+      console.error("Error fetching file:", err);
+      alert("Failed to open file");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleViewFile}
+      className="text-blue-600 hover:underline hover:cursor-pointer text-sm break-all"
+      disabled={loading}
+    >
+      {loading ? "Loading..." : "View Document"}
+    </button>
+  );
+};

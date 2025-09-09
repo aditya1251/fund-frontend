@@ -17,9 +17,8 @@ import {
   TableRow,
   EmailCell,
   StatusBadge,
-  ViewAllButton,
 } from "@/components/ui/data-table";
-import { House, User, Car, Building, LandPlot, History } from "lucide-react";
+import { House, User, Car, Building, LandPlot, History, X } from "lucide-react";
 import Link from "next/link";
 import { useGetLoansByDsaIdQuery } from "@/redux/services/loanApi";
 import { RequireFeature } from "@/components/RequireFeature";
@@ -28,33 +27,42 @@ import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import Loading from "@/components/Loading";
 import { MobileCard, MobileCardList } from "@/components/ui/mobile-card";
+import { getFileUrl } from "@/utils/fileUploadService";
 
 export default function Page() {
   const session = useSession();
   const dsaId = session.data?.user?.id || "";
 
-  // ALL HOOKS MUST BE CALLED UNCONDITIONALLY AT THE TOP LEVEL
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [sortBy, setSortBy] = useState("date-desc"); // default to latest
-  
-  // Mobile pagination state
+  const [sortBy, setSortBy] = useState("date-desc");
+
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const itemsPerPage = 10;
+
+  // Modal state
+  const [selectedLoan, setSelectedLoan] = useState<any | null>(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = (loan: any) => {
+    setSelectedLoan(loan);
+    setShowModal(true);
+  };
+  const closeModal = () => {
+    setSelectedLoan(null);
+    setShowModal(false);
+  };
 
   const { data, isLoading: loansLoading } = useGetLoansByDsaIdQuery(dsaId);
   const { data: loansTemplates = [], isLoading: templatesLoading } =
     useGetLoanTemplatesByTypeQuery("quick");
 
-  // Data processing based on fetched data
   const loansData =
     data?.filter((loan: any) => loan.loanType === "quick") || [];
 
-  // This useMemo is now called unconditionally
   const filteredLeads = useMemo(() => {
     let leads = loansData;
-    // Search
     if (search) {
       leads = leads.filter(
         (lead: any) =>
@@ -66,96 +74,74 @@ export default function Page() {
             .includes(search.toLowerCase())
       );
     }
-    // Status filter (case-insensitive)
     if (statusFilter) {
       leads = leads.filter(
         (lead: any) =>
           (lead.status || "").toLowerCase() === statusFilter.toLowerCase()
       );
     }
-    // Sort
     leads = leads.slice().sort((a: any, b: any) => {
       if (sortBy === "date-desc") {
-        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        if (dateA === dateB) {
-          return (b._id || "").localeCompare(a._id || "");
-        }
-        return dateB - dateA; // latest first
+        return (
+          (new Date(b.createdAt).getTime() || 0) -
+          (new Date(a.createdAt).getTime() || 0)
+        );
       }
       if (sortBy === "date-asc") {
-        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        if (dateA === dateB) {
-          return (a._id || "").localeCompare(b._id || "");
-        }
-        return dateA - dateB; // oldest first
+        return (
+          (new Date(a.createdAt).getTime() || 0) -
+          (new Date(b.createdAt).getTime() || 0)
+        );
       }
       if (sortBy === "name-asc") {
-        const nameA = (a.values?.[0]?.fields?.[0]?.value || "").toLowerCase();
-        const nameB = (b.values?.[0]?.fields?.[0]?.value || "").toLowerCase();
-        return nameA.localeCompare(nameB);
+        return (a.values?.[0]?.fields?.[0]?.value || "").localeCompare(
+          b.values?.[0]?.fields?.[0]?.value || ""
+        );
       }
       if (sortBy === "name-desc") {
-        const nameA = (a.values?.[0]?.fields?.[0]?.value || "").toLowerCase();
-        const nameB = (b.values?.[0]?.fields?.[0]?.value || "").toLowerCase();
-        return nameB.localeCompare(nameA);
+        return (b.values?.[0]?.fields?.[0]?.value || "").localeCompare(
+          a.values?.[0]?.fields?.[0]?.value || ""
+        );
       }
       return 0;
     });
     return leads;
   }, [loansData, search, statusFilter, sortBy]);
 
-  // Mobile pagination logic
   const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
   const paginatedLeads = filteredLeads.slice(0, currentPage * itemsPerPage);
 
   const handleLoadMore = () => {
     setIsLoadingMore(true);
     setTimeout(() => {
-      setCurrentPage(prev => prev + 1);
+      setCurrentPage((prev) => prev + 1);
       setIsLoadingMore(false);
-    }, 500); // Simulate loading delay
+    }, 500);
   };
 
-
-  // Now, you can conditionally return, as all hooks have been called
   if (loansLoading || templatesLoading) {
     return <Loading />;
   }
 
   return (
     <RequireFeature feature="Loans">
-      {/* Overall page container with responsive horizontal padding */}
       <div className="max-w-full overflow-hidden px-4 sm:px-6 lg:px-8 py-6">
-        {/* Header section: "Loan Types" title and "Saved Drafts" button */}
-        {/* Stacks on mobile (flex-col), becomes row on small screens and up (sm:flex-row) */}
+        {/* Header */}
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
-          <h4 className="font-semibold text-black mb-4 sm:mb-0">Loan Types</h4> {/* Added mb-4 sm:mb-0 for spacing */}
+          <h4 className="font-semibold text-black mb-4 sm:mb-0">Loan Types</h4>
           <Link href="/crm/drafts">
-            <button className="flex items-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm text-gray-800 hover:bg-gray-200 w-full sm:w-auto justify-center"> {/* w-full on mobile, w-auto on sm+, justify-center for centering */}
+            <button className="flex items-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm text-gray-800 hover:bg-gray-200 w-full sm:w-auto justify-center">
               <History className="h-4 w-4" />
               Saved Drafts
             </button>
           </Link>
         </div>
 
-        <Tabs defaultValue="6885355c8298919446610fbb">
-          {/* TabsList with responsive grid columns.
-              This will override any hardcoded grid-cols-4 in the TabsList component's definition
-              for smaller screens.
-              grid-cols-1 for very small screens (default).
-              sm:grid-cols-2 for small screens (e.g., larger phones, portrait tablets).
-              lg:grid-cols-4 for large screens (desktop).
-          */}
+        {/* Loan Templates Tabs */}
+        <Tabs defaultValue="quick">
           <TabsList className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             {loansTemplates.map((template: any) => (
               <Link key={template.id} href={`/crm/loan-form?id=${template.id}`}>
-                {/* Assuming TabsTrigger is designed to receive 'isActive' prop for styling.
-                    Also assuming TabsTrigger, TabsIcon, TabsLabel, TabsDescription are
-                    designed to be responsive and handle their internal height consistency
-                    (e.g., using min-height on Trigger, fixed height/overflow on Description).
-                */}
                 <TabsTrigger value={template.id}>
                   <TabsIcon>
                     {template.icon === "user" ? (
@@ -169,7 +155,7 @@ export default function Page() {
                     ) : template.icon === "landplot" ? (
                       <LandPlot />
                     ) : (
-                      <User className="text-black" />
+                      <User />
                     )}
                   </TabsIcon>
                   <TabsLabel>
@@ -184,31 +170,25 @@ export default function Page() {
           </TabsList>
         </Tabs>
 
-        {/* Loan Leads Table Section */}
+        {/* Quick Loan Leads Table */}
         <div className="mt-6">
           <div className="py-4">
-            {/* Flex container for "Quick Loan Leads" title and filter/sort controls */}
-            {/* Stacks on mobile (flex-col), becomes row on medium screens and up (md:flex-row) */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
-              <h4 className="text-lg font-semibold text-black mb-4 md:mb-0"> {/* Added mb-4 sm:mb-0 for spacing */}
+              <h4 className="text-lg font-semibold text-black mb-4 md:mb-0">
                 Quick Loan Leads
               </h4>
-              {/* Filter/Sort controls: stack on mobile (flex-col), become row on small screens (sm:flex-row),
-                  prevent wrapping on medium screens and up (md:flex-nowrap).
-                  Full width on mobile, auto width on sm+ to allow them to sit side-by-side.
-              */}
               <div className="mb-4 mt-0 md:mt-4 flex flex-col sm:flex-row md:flex-row md:flex-nowrap gap-2 w-full md:w-auto justify-end">
                 <Input
                   type="text"
                   placeholder="Search by name or email"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="rounded border bg-white px-2 py-1 w-full sm:w-auto" // w-full on mobile, w-auto on sm+
+                  className="rounded border bg-white px-2 py-1 w-full sm:w-auto"
                 />
                 <Select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="rounded border bg-white px-2 py-1 w-full sm:w-auto" // w-full on mobile, w-auto on sm+
+                  className="rounded border bg-white px-2 py-1 w-full sm:w-auto"
                 >
                   <option value="">All Statuses</option>
                   <option value="pending">Pending</option>
@@ -218,7 +198,7 @@ export default function Page() {
                 <Select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="rounded border bg-white px-2 py-1 w-full sm:w-auto" // w-full on mobile, w-auto on sm+
+                  className="rounded border bg-white px-2 py-1 w-full sm:w-auto"
                 >
                   <option value="date-desc">Sort by Latest</option>
                   <option value="date-asc">Sort by Oldest</option>
@@ -228,18 +208,16 @@ export default function Page() {
               </div>
             </div>
 
-            {/* Desktop Table View */}
+            {/* Desktop Table */}
             <div className="hidden md:block">
-              {/* Table wrapper with horizontal overflow for responsiveness */}
               <TableWrapper className="overflow-x-auto">
-                <table className="w-full whitespace-nowrap bg-white text-sm"> {/* whitespace-nowrap to prevent cell content wrapping */}
+                <table className="w-full whitespace-nowrap bg-white text-sm">
                   <TableHeadings
                     columns={[
                       "File No.",
                       "Loan",
                       "Loan Mode",
                       "Applicant",
-                      "Subscriber",
                       "Email",
                       "Phone",
                       "Review",
@@ -255,10 +233,17 @@ export default function Page() {
                           lead.loanSubType,
                           lead.mode ? lead.mode : "Online",
                           lead.values[0].fields[0].value,
-                          <EmailCell key={`email-sub-${index}`} email={lead.subscriber} />,
-                          <EmailCell key={`email-val-${index}`} email={lead.values[0].fields[1].value} />,
+                          <EmailCell
+                            key={`email-val-${index}`}
+                            email={lead.values[0].fields[1].value}
+                          />,
                           lead.values[0].fields[2].value,
-                          lead.rejectionMessage,
+                          <button
+                            onClick={() => openModal(lead)}
+                            className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs"
+                          >
+                            Review
+                          </button>,
                           <StatusBadge
                             key={`status-${index}`}
                             status={
@@ -287,11 +272,20 @@ export default function Page() {
                     type: lead.loanSubType,
                     mode: lead.mode,
                     applicant: lead.values[0].fields[0].value,
-                    subscriber: lead.subscriber,
                     email: lead.values[0].fields[1].value,
                     phone: lead.values[0].fields[2].value,
-                    review: lead.rejectionMessage,
-                    status: lead.status.toLowerCase() as "approved" | "pending" | "rejected",
+                    review: (
+                      <button
+                        onClick={() => openModal(lead)}
+                        className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs"
+                      >
+                        Review
+                      </button>
+                    ),
+                    status: lead.status.toLowerCase() as
+                      | "approved"
+                      | "pending"
+                      | "rejected",
                     createdAt: lead.createdAt,
                   }}
                 />
@@ -305,7 +299,76 @@ export default function Page() {
             />
           </div>
         </div>
+
+        {/* Review Modal */}
+        {showModal && selectedLoan && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex justify-center items-center p-2">
+            <div className="bg-white w-full max-w-3xl max-h-[75vh] overflow-y-auto p-6 rounded-xl border-2 border-black shadow-lg relative">
+              <button
+                onClick={closeModal}
+                className="absolute top-2 right-2 text-black p-2 rounded-full hover:bg-gray-200"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <h3 className="text-xl font-bold mb-4">Quick Loan Details</h3>
+
+              <div className="space-y-6">
+                {selectedLoan.values.map((page: any) => (
+                  <div key={page.pageNumber}>
+                    <h4 className="text-lg font-semibold mb-2">{page.title}</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {page.fields.map((field: any, index: number) => (
+                        <div
+                          key={index}
+                          className="bg-gray-100 p-3 rounded border"
+                        >
+                          <label className="block text-sm font-medium mb-1">
+                            {field.label}
+                          </label>
+                          {field.isDocument ? (
+                            <FileViewer fileKey={field.value} />
+                          ) : (
+                            <p className="text-sm text-gray-800 break-words">
+                              {field.value || "N/A"}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </RequireFeature>
   );
 }
+
+const FileViewer = ({ fileKey }: { fileKey: string }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleViewFile = async () => {
+    setLoading(true);
+    try {
+      const url = await getFileUrl(fileKey);
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (err) {
+      console.error("Error fetching file:", err);
+      alert("Failed to open file");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleViewFile}
+      className="text-blue-600 hover:underline hover:cursor-pointer text-sm break-all"
+      disabled={loading}
+    >
+      {loading ? "Loading..." : "View Document"}
+    </button>
+  );
+};
