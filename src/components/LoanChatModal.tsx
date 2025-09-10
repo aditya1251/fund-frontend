@@ -171,7 +171,7 @@ const handleMarkMessagesRead = async () => {
         </div>
 
         {/* Input */}
-        <div className="border-t-2 border-black p-3 flex gap-2 items-center bg-gray-50">
+        <div className="border-t-2 border-black rounded-b-xl p-3 flex gap-2 items-center bg-gray-50">
           {/* Attachment type dropdown */}
           <select
             value={attachmentType}

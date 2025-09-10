@@ -92,7 +92,7 @@ export default function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-black">
+                  <a href="/about" className="hover:text-black">
                     About Us
                   </a>
                 </li>
@@ -107,7 +107,7 @@ export default function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-black">
+                  <a href="/contact" className="hover:text-black">
                     Contact Us
                   </a>
                 </li>
@@ -220,14 +220,14 @@ export default function Footer() {
       <div className="bg-black px-8 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex gap-8">
-            <a href="#" className="text-white text-sm hover:text-gray-300">
+            <a href="/privacy-policy" className="text-white text-sm hover:text-gray-300">
               Privacy & Policy
             </a>
-            <a href="#" className="text-white text-sm hover:text-gray-300">
+            <a href="/terms-and-conditions" className="text-white text-sm hover:text-gray-300">
               Term & Condition
             </a>
           </div>
-          <div className="text-white text-sm">Copyright @2024</div>
+          <div className="text-white text-sm">Copyright @2025</div>
         </div>
       </div>
     </div>

@@ -148,8 +148,8 @@ const ContactPage = () => {
               <h3 className="font-bold text-lg mb-2 text-neutral-900">Call Us</h3>
               <p className="text-gray-600 mb-1">Monday - Friday</p>
               <p className="text-gray-700 font-medium mb-3">9:00 AM - 6:00 PM</p>
-              <a href="tel:+917098662830" className="text-yellow-600 font-semibold hover:underline">
-                +91 7098 66230
+              <a href="tel:+918851866741" className="text-yellow-600 font-semibold hover:underline">
+                +91 88518 66741
               </a>
             </div>
 
@@ -159,8 +159,8 @@ const ContactPage = () => {
               </div>
               <h3 className="font-bold text-lg mb-2 text-neutral-900">Email Us</h3>
               <p className="text-gray-600 mb-3">We'll respond within 24hrs</p>
-              <a href="mailto:info@Navi Mudra.com" className="text-yellow-600 font-semibold hover:underline">
-                info@Navi Mudra.com
+              <a href="mailto:navimudra2@gmail.com" className="text-yellow-600 font-semibold hover:underline">
+                navimudra2@gmail.com
               </a>
             </div>
 
@@ -171,7 +171,7 @@ const ContactPage = () => {
               <h3 className="font-bold text-lg mb-2 text-neutral-900">Visit Us</h3>
               <p className="text-gray-600 mb-3">Our headquarters</p>
               <p className="text-gray-700 font-medium">
-                Harital village, Uttam Nagar, New Delhi
+                Hastsal, Uttam Nagar, New Delhi - 110059
               </p>
             </div>
 
