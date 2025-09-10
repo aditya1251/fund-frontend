@@ -35,7 +35,7 @@ export default function Journey() {
             </h3>
             </CountUp>
             <p className="text-[#141212] text-base md:text-lg">
-              Egestas elit dui scelerisque ut eu purus aliquam vitae.
+              Growing with us by bringing quality loan files and earning consistent & hiher commissions.
             </p>
           </div>
 
@@ -65,7 +65,7 @@ export default function Journey() {
             </h3>
             </CountUp>
             <p className="text-[#141212] text-base md:text-lg">
-              Egestas elit dui scelerisque ut eu purus aliquam vitae.
+              More than  half a decade of empowering  DSAs and clients with reliable financial solutions and sustainable growth.
             </p>
           </div>
         </div>
