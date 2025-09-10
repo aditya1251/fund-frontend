@@ -77,7 +77,7 @@ export default function NavigationHeader() {
             <Link href="/mudra-loan" className="w-full text-black">Mudra Loan</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="/startup-loan" className="w-full text-black">Startup Loan</Link>
+            <Link href="/startup-loan" className="w-full text-black">CGTMSE Loan</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Link href="/msme-loan" className="w-full text-black">MSME Loan</Link>
@@ -181,7 +181,7 @@ export default function NavigationHeader() {
 
         <MobileAccordion title="Govt. Loan">
           <div><Link href="/mudra-loan" onClick={toggle} className="text-black">Mudra Loan</Link></div>
-          <div><Link href="/startup-loan" onClick={toggle} className="text-black">Startup Loan</Link></div>
+          <div><Link href="/startup-loan" onClick={toggle} className="text-black">CGTMSE Loan</Link></div>
           <div><Link href="/msme-loan" onClick={toggle} className="text-black">MSME Loan</Link></div>
           <div><Link href="/pmegp-loan" onClick={toggle} className="text-black">PMEGP Loan</Link></div>
         </MobileAccordion>

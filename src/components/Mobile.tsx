@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import mobileMockup from "../../public/assets/Group.png";
+import mobileMockup from "../../public/assets/mobile.png";
 import Image from "next/image";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
