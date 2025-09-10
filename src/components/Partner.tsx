@@ -38,7 +38,7 @@ export default function TrustedPartners() {
         {/* Header */}
         <h2 className="text-4xl md:text-5xl font-bold mb-6">
           <span className="text-[#111111]">Our Trusted </span>
-          <span className="text-[#f7c430]">Partners</span>
+          <span className="text-[#f7c430]">Banks</span>
         </h2>
 
         {/* Description */}
