@@ -318,7 +318,7 @@ export default function DsaApplicationsPage({
                       onClick={() => setChatLoanId(loan._id)}
                       className="bg-blue-100 text-blue-800 px-4 py-2 rounded hover:bg-blue-200 text-sm font-medium"
                     >
-                      Chat
+                      Chat {loan.unreadCount> 0 ? loan.unreadCount : ""}
                     </button>
                   </div>
                 </div>

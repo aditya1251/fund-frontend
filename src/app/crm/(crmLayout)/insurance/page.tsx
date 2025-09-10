@@ -250,8 +250,9 @@ export default function Page() {
                               </button>
                               <button
                                 onClick={() => setChatLoanId(lead._id)}
-                                className="bg-green-100 text-green-800 p-2 rounded hover:bg-green-200">
+                                className="bg-green-100 flex justify-center gap-2 items-center text-green-800 p-2 rounded hover:bg-green-200">
                                 <MessageCircle className="w-4 h-4" />
+                                {lead.unreadCount > 0 ? lead.unreadCount : ""}
                               </button>
                             </div>,
                           <StatusBadge
@@ -293,8 +294,9 @@ export default function Page() {
                               </button>
                               <button
                                 onClick={() => setChatLoanId(lead._id)}
-                                className="bg-green-100 text-green-800 p-2 rounded hover:bg-green-200">
+                                className="bg-green-100 flex gap-2 items-center justify-center text-green-800 p-2 rounded hover:bg-green-200">
                                 <MessageCircle className="w-4 h-4" />
+                                {lead.unreadCount > 0 ? lead.unreadCount : ""}
                               </button>
                             </div>
                     ),

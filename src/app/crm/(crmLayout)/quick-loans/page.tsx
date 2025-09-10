@@ -199,8 +199,7 @@ export default function Page() {
                 <Select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="rounded border bg-white px-2 py-1 w-full sm:w-auto"
-                >
+                  className="rounded border bg-white px-2 py-1 w-full sm:w-auto">
                   <option value="">All Statuses</option>
                   <option value="pending">Pending</option>
                   <option value="approved">Approved</option>
@@ -209,8 +208,7 @@ export default function Page() {
                 <Select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="rounded border bg-white px-2 py-1 w-full sm:w-auto"
-                >
+                  className="rounded border bg-white px-2 py-1 w-full sm:w-auto">
                   <option value="date-desc">Sort by Latest</option>
                   <option value="date-asc">Sort by Oldest</option>
                   <option value="name-asc">Sort by Name (A-Z)</option>
@@ -252,15 +250,14 @@ export default function Page() {
                           <div className="flex gap-2">
                             <button
                               onClick={() => openModal(lead)}
-                              className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs"
-                            >
+                              className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs">
                               Review
                             </button>
-                            <button
+                             <button
                               onClick={() => setChatLoanId(lead._id)}
-                              className="bg-green-100 text-green-800 p-2 rounded hover:bg-green-200"
-                            >
+                              className="bg-green-100 text-green-800 flex gap-2 justify-center items-center p-2 rounded hover:bg-green-200">
                               <MessageCircle className="w-4 h-4" />
+                              {lead.unreadCount > 0 ? lead.unreadCount : ""}
                             </button>
                           </div>,
                           <StatusBadge
@@ -297,15 +294,14 @@ export default function Page() {
                       <div className="flex gap-2">
                         <button
                           onClick={() => openModal(lead)}
-                          className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs"
-                        >
+                          className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs">
                           Review
                         </button>
                         <button
                           onClick={() => setChatLoanId(lead._id)}
-                          className="bg-green-100 text-green-800 p-2 rounded hover:bg-green-200"
-                        >
+                          className="bg-green-100 text-green-800 flex gap-2 justify-center items-center p-2 rounded hover:bg-green-200">
                           <MessageCircle className="w-4 h-4" />
+                          {lead.unreadCount > 0 ? lead.unreadCount : ""}
                         </button>
                       </div>
                     ),
@@ -333,8 +329,7 @@ export default function Page() {
             <div className="bg-white w-full max-w-3xl max-h-[75vh] overflow-y-auto p-6 rounded-xl border-2 border-black shadow-lg relative">
               <button
                 onClick={closeModal}
-                className="absolute top-2 right-2 text-black p-2 rounded-full hover:bg-gray-200"
-              >
+                className="absolute top-2 right-2 text-black p-2 rounded-full hover:bg-gray-200">
                 <X className="w-5 h-5" />
               </button>
               <h3 className="text-xl font-bold mb-4">Quick Loan Details</h3>
@@ -347,8 +342,7 @@ export default function Page() {
                       {page.fields.map((field: any, index: number) => (
                         <div
                           key={index}
-                          className="bg-gray-100 p-3 rounded border"
-                        >
+                          className="bg-gray-100 p-3 rounded border">
                           <label className="block text-sm font-medium mb-1">
                             {field.label}
                           </label>
@@ -400,8 +394,7 @@ const FileViewer = ({ fileKey }: { fileKey: string }) => {
     <button
       onClick={handleViewFile}
       className="text-blue-600 hover:underline hover:cursor-pointer text-sm break-all"
-      disabled={loading}
-    >
+      disabled={loading}>
       {loading ? "Loading..." : "View Document"}
     </button>
   );

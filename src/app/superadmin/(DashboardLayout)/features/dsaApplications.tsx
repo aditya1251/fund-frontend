@@ -342,7 +342,7 @@ export default function DSAApplications({
                         onClick={() => setChatLoanId(loan._id)}
                         className="bg-green-100 text-green-800 px-6 py-3 rounded-lg hover:bg-green-200 text-sm transition-all"
                       >
-                        Chat
+                        Chat {loan.unreadCount > 0 ? loan.unreadCount : ""}
                       </button>
                       <button
                         onClick={() => openModal(loan)}

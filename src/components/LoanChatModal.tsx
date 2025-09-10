@@ -5,8 +5,10 @@ import { X, Send, Paperclip } from "lucide-react";
 import {
   useGetLoanMessagesQuery,
   useSendLoanMessageMutation,
+  useMarkLoanMessagesReadMutation,
 } from "@/redux/services/loanchatApi";
 import { uploadFile, getFileUrl } from "@/utils/fileUploadService";
+import { useSession } from "next-auth/react";
 
 interface LoanChatModalProps {
   loanId: string;
@@ -23,6 +25,9 @@ export default function LoanChatModal({
   const [attachmentType, setAttachmentType] = useState<"text" | "photo" | "document">("text");
   const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
 
+  const { data: session } = useSession();
+  const currentUserId = session?.user?.id;
+
   const { data, isLoading, refetch } = useGetLoanMessagesQuery(
     { loanId, page: 1, limit: 100 },
     { skip: !isOpen }
@@ -31,10 +36,23 @@ export default function LoanChatModal({
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
+
+  const [markLoanRead] = useMarkLoanMessagesReadMutation();
+
+const handleMarkMessagesRead = async () => {
+  try {
+    await markLoanRead({ loanId }).unwrap();
+  } catch (err) {
+    console.error("Failed to mark messages as read", err);
+  }
+};
+
+
   // Auto scroll when new messages appear
   useEffect(() => {
     if (isOpen && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      handleMarkMessagesRead();
     }
   }, [data?.messages, isOpen]);
 
@@ -82,43 +100,70 @@ export default function LoanChatModal({
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {isLoading ? (
             <p className="text-gray-500">Loading messages...</p>
           ) : data?.messages?.length ? (
-            data.messages.map((msg: any, idx: number) => (
-              <div
-                key={idx}
-                className={`flex ${
-                  msg.senderRole === "USER" ? "justify-start" : "justify-end"
-                }`}
-              >
+            data.messages.map((msg: any, idx: number) => {
+              const isMe = msg.senderId ? msg.senderId._id === currentUserId : false;
+              return (
                 <div
-                  className={`px-3 py-2 rounded-lg text-sm max-w-[75%] ${
-                    msg.senderRole === "USER"
-                      ? "bg-gray-100 text-black border border-gray-300"
-                      : "bg-[#ffb700] text-black border border-black shadow-[2px_2px_0_0_#000]"
+                  key={idx}
+                  className={`flex items-end gap-2 ${
+                    isMe ? "justify-end" : "justify-start"
                   }`}
                 >
-                  {/* Text */}
-                  {msg.message && <p>{msg.message}</p>}
-
-                  {/* Attachments */}
-                  {msg.attachments?.length > 0 && (
-                    <div className="mt-2 space-y-1">
-                      {msg.attachments.map((file: string, i: number) => (
-                        <AttachmentPreview key={i} fileKey={file} />
-                      ))}
+                  {/* Avatar (initials) */}
+                  {!isMe && (
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-xs font-bold">
+                      {msg.senderName
+                        ? msg.senderName.charAt(0).toUpperCase()
+                        : "U"}
                     </div>
                   )}
 
-                  {/* Timestamp */}
-                  <span className="block mt-1 text-[10px] opacity-70">
-                    {new Date(msg.createdAt).toLocaleString()}
-                  </span>
+                  {/* Message bubble */}
+                  <div
+                    className={`px-3 py-2 rounded-lg text-sm max-w-[70%] border ${
+                      isMe
+                        ? "bg-[#FFD439] text-black border-black shadow-[2px_2px_0_0_#000]"
+                        : "bg-gray-100 text-black border-gray-300"
+                    }`}
+                  >
+                    {/* Sender name */}
+                    {!isMe && (
+                      <p className="text-xs font-semibold mb-1 text-gray-700">
+                        {msg.senderName || msg.senderRole || "User"}
+                      </p>
+                    )}
+
+                    {/* Text */}
+                    {msg.message && <p>{msg.message}</p>}
+
+                    {/* Attachments */}
+                    {msg.attachments?.length > 0 && (
+                      <div className="mt-2 space-y-1">
+                        {msg.attachments.map((file: string, i: number) => (
+                          <AttachmentPreview key={i} fileKey={file} />
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Timestamp */}
+                    <span className="block mt-1 text-[10px] opacity-70 text-right">
+                      {new Date(msg.createdAt).toLocaleTimeString()}
+                    </span>
+                  </div>
+
+                  {/* Avatar for me */}
+                  {isMe && (
+                    <div className="w-8 h-8 rounded-full bg-[#FFD439] flex items-center justify-center text-xs font-bold border border-black">
+                      Me
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <p className="text-gray-400">No messages yet</p>
           )}

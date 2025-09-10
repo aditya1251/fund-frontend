@@ -244,11 +244,12 @@ export default function Page() {
                                 className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs">
                                 Review
                               </button>
-                              <button
-                                onClick={() => setChatLoanId(lead._id)}
-                                className="bg-green-100 text-green-800 p-2 rounded hover:bg-green-200">
-                                <MessageCircle className="w-4 h-4" />
-                              </button>
+                               <button
+                              onClick={() => setChatLoanId(lead._id)}
+                              className="bg-green-100 text-green-800 flex gap-2 justify-center items-center p-2 rounded hover:bg-green-200">
+                              <MessageCircle className="w-4 h-4" />
+                              {lead.unreadCount > 0 ? lead.unreadCount : ""}
+                            </button>
                             </div>,
                             <StatusBadge
                               key={`status-${index}`}
@@ -289,8 +290,9 @@ export default function Page() {
                           </button>
                           <button
                             onClick={() => setChatLoanId(lead._id)}
-                            className="bg-green-100 text-green-800 p-2 rounded hover:bg-green-200">
+                            className="bg-green-100 text-green-800 flex gap-2 justify-center items-center p-2 rounded hover:bg-green-200">
                             <MessageCircle className="w-4 h-4" />
+                            {lead.unreadCount > 0 ? lead.unreadCount : ""}
                           </button>
                         </div>
                       ),
