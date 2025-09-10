@@ -43,7 +43,7 @@ const usePendingCounts = () => {
 					if (loan.loanType === "quick") {
 						acc.quickApplications += 1;
 					}
-					if (loan.loanType === "tax") {
+					if (loan.loanType === "taxation") {
 						acc.taxApplications += 1;
 					}
 				}

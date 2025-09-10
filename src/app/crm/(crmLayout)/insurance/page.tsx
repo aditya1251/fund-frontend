@@ -22,16 +22,18 @@ import Link from "next/link";
 import { useGetLoansByDsaIdQuery } from "@/redux/services/loanApi";
 import { RequireFeature } from "@/components/RequireFeature";
 import { useGetLoanTemplatesByTypeQuery } from "@/redux/services/loanTemplateApi";
-import { Building, Car, House, LandPlot, User, History, X } from "lucide-react";
+import { Building, Car, House, LandPlot, User, History, X, MessageCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import Loading from "@/components/Loading";
 import { MobileCard, MobileCardList } from "@/components/ui/mobile-card";
 import { getFileUrl } from "@/utils/fileUploadService";
+import LoanChatModal from "@/components/LoanChatModal";
 
 export default function Page() {
   const session = useSession();
   const dsaId = session.data?.user?.id || "";
+  const [chatLoanId, setChatLoanId] = useState<string | null>(null);
 
   const { data, isLoading: loansLoading } = useGetLoansByDsaIdQuery(dsaId);
   const { data: loansTemplates = [], isLoading: templatesLoading } =
@@ -240,12 +242,18 @@ export default function Page() {
                             email={lead.values[0].fields[1].value}
                           />,
                           lead.values[0].fields[2].value,
-                          <button
-                            onClick={() => openModal(lead)}
-                            className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs"
-                          >
-                            Review
-                          </button>,
+                          <div className="flex gap-2">
+                              <button
+                                onClick={() => openModal(lead)}
+                                className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs">
+                                Review
+                              </button>
+                              <button
+                                onClick={() => setChatLoanId(lead._id)}
+                                className="bg-green-100 text-green-800 p-2 rounded hover:bg-green-200">
+                                <MessageCircle className="w-4 h-4" />
+                              </button>
+                            </div>,
                           <StatusBadge
                             key={`status-${index}`}
                             status={
@@ -277,12 +285,18 @@ export default function Page() {
                     email: lead.values[0].fields[1].value,
                     phone: lead.values[0].fields[2].value,
                     review: (
-                      <button
-                        onClick={() => openModal(lead)}
-                        className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs"
-                      >
-                        Review
-                      </button>
+                      <div className="flex gap-2">
+                              <button
+                                onClick={() => openModal(lead)}
+                                className="bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200 text-xs">
+                                Review
+                              </button>
+                              <button
+                                onClick={() => setChatLoanId(lead._id)}
+                                className="bg-green-100 text-green-800 p-2 rounded hover:bg-green-200">
+                                <MessageCircle className="w-4 h-4" />
+                              </button>
+                            </div>
                     ),
                     status: lead.status.toLowerCase() as
                       | "approved"
@@ -344,6 +358,13 @@ export default function Page() {
           </div>
         )}
       </div>
+      {chatLoanId && (
+              <LoanChatModal
+                loanId={chatLoanId}
+                isOpen={!!chatLoanId}
+                onClose={() => setChatLoanId(null)}
+              />
+            )}
     </RequireFeature>
   );
 }
