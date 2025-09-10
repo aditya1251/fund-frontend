@@ -121,15 +121,15 @@ export default function ContactForm() {
             <div className="space-y-3 md:space-y-4">
               <div className="flex items-center gap-2 md:gap-4 text-sm md:text-base">
                 <Phone className="w-5 h-5 md:w-6 md:h-6" />
-                <span>+91 7098 66230</span>
+                <span>+91 8851866741</span>
               </div>
               <div className="flex items-center gap-2 md:gap-4 text-sm md:text-base">
                 <Mail className="w-5 h-5 md:w-6 md:h-6" />
-                <span>info@Navi Mudra.com</span>
+                <span>navimudra2@gmail.com</span>
               </div>
               <div className="flex items-center gap-2 md:gap-4 text-sm md:text-base">
                 <MapPin className="w-5 h-5 md:w-6 md:h-6" />
-                <span>Harital village, Uttam Nagar, New Delhi</span>
+                <span>Hastsal, Uttam Nagar, New Delhi - 110059</span>
               </div>
             </div>
             <div className="flex gap-4 mt-4 md:mt-6">

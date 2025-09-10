@@ -31,8 +31,8 @@ export default function Footer() {
 
               <div className="text-[#141212] text-sm leading-relaxed mb-8">
                 <p>Navi Mudra Pvt. Ltd.</p>
-                <p>A-27, 2nd Floor, Sector 63,</p>
-                <p>Noida, Uttar Pradesh – 201301</p>
+                <p>Hastsal, Uttam Nagar,</p>
+                <p> New Delhi - 110059</p>
                 <p>India</p>
               </div>
 

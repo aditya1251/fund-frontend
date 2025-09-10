@@ -20,6 +20,7 @@ import {
   useCreateCommissionMutation,
   useGetCommissionByLoanQuery,
 } from "@/redux/services/commissionApi";
+import LoanChatModal from "@/components/LoanChatModal";
 
 export default function DsaApplicationsPage({
   applicationType,
@@ -51,6 +52,8 @@ export default function DsaApplicationsPage({
   const [showReasonInputId, setShowReasonInputId] = useState<string | null>(
     null
   );
+
+  const [chatLoanId, setChatLoanId] = useState<string | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -66,9 +69,9 @@ export default function DsaApplicationsPage({
         case "Loan":
           return ["private", "government", "insurance"].includes(loan.loanType);
         case "Quick Loan":
-          return loan.loanType === "Quick Loan";
+          return loan.loanType === "quick";
         case "Taxation":
-          return loan.loanType === "Taxation";
+          return loan.loanType === "taxation";
         default:
           return false;
       }
@@ -202,7 +205,8 @@ export default function DsaApplicationsPage({
             notification.type === "success"
               ? "bg-green-100 text-green-800"
               : "bg-red-100 text-red-800"
-          }`}>
+          }`}
+        >
           {notification.type === "success" ? (
             <CheckCircle size={20} />
           ) : (
@@ -240,7 +244,8 @@ export default function DsaApplicationsPage({
                   filter === tab
                     ? "bg-[#FFD439] text-black shadow-[4px_4px_0_0_#000]"
                     : "text-gray-600 hover:text-black"
-                }`}>
+                }`}
+              >
                 {tab}
               </button>
             ))}
@@ -270,7 +275,8 @@ export default function DsaApplicationsPage({
               return (
                 <div
                   key={loan._id}
-                  className="bg-white border border-black shadow-[6px_6px_0_0_#000] rounded-lg p-6">
+                  className="bg-white border border-black shadow-[6px_6px_0_0_#000] rounded-lg p-6"
+                >
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <h3 className="font-bold text-lg">{name || "N/A"}</h3>
@@ -295,7 +301,8 @@ export default function DsaApplicationsPage({
                   <div className="flex gap-2 mt-4">
                     <button
                       onClick={() => openModal(loan)}
-                      className="bg-blue-100 text-blue-800 px-4 py-2 rounded hover:bg-blue-200 text-sm font-medium">
+                      className="bg-blue-100 text-blue-800 px-4 py-2 rounded hover:bg-blue-200 text-sm font-medium"
+                    >
                       View Details
                     </button>
 
@@ -307,6 +314,12 @@ export default function DsaApplicationsPage({
                         (loan as any).commissionRefetch = refetch;
                       }}
                     />
+                    <button
+                      onClick={() => setChatLoanId(loan._id)}
+                      className="bg-blue-100 text-blue-800 px-4 py-2 rounded hover:bg-blue-200 text-sm font-medium"
+                    >
+                      Chat
+                    </button>
                   </div>
                 </div>
               );
@@ -329,7 +342,8 @@ export default function DsaApplicationsPage({
                 onChange={(e) =>
                   handleItemsPerPageChange(Number(e.target.value))
                 }
-                className="px-3 py-1 border border-gray-300 rounded text-sm cursor-pointer hover:ring-2 focus:outline-none focus:ring-2 focus:ring-[#FFD439]">
+                className="px-3 py-1 border border-gray-300 rounded text-sm cursor-pointer hover:ring-2 focus:outline-none focus:ring-2 focus:ring-[#FFD439]"
+              >
                 <option value={5}>5 per page</option>
                 <option value={10}>10 per page</option>
                 <option value={20}>20 per page</option>
@@ -341,7 +355,8 @@ export default function DsaApplicationsPage({
               <button
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
-                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <ChevronLeft className="w-4 h-4" />
                 Previous
               </button>
@@ -360,7 +375,8 @@ export default function DsaApplicationsPage({
                         currentPage === pageNum
                           ? "bg-[#FFD439] text-black shadow-[2px_2px_0_0_#000]"
                           : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
-                      }`}>
+                      }`}
+                    >
                       {pageNum}
                     </button>
                   );
@@ -372,7 +388,8 @@ export default function DsaApplicationsPage({
                   setCurrentPage(Math.min(totalPages, currentPage + 1))
                 }
                 disabled={currentPage === totalPages}
-                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 Next
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -386,7 +403,8 @@ export default function DsaApplicationsPage({
           <div className="bg-white w-full max-w-3xl max-h-[75vh] overflow-y-auto p-6 rounded-xl border-2 border-black shadow-[8px_8px_0_0_#000] relative">
             <button
               onClick={closeModal}
-              className="absolute top-3 right-3 p-2 rounded-full text-black hover:bg-gray-200">
+              className="absolute top-3 right-3 p-2 rounded-full text-black hover:bg-gray-200"
+            >
               <X className="w-5 h-5" />
             </button>
             <h3 className="text-2xl font-bold mb-6 text-black">
@@ -403,7 +421,8 @@ export default function DsaApplicationsPage({
                     {page.fields.map((field: any, index: number) => (
                       <div
                         key={index}
-                        className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                        className="bg-gray-100 p-4 rounded-lg border border-gray-300"
+                      >
                         <label className="block text-sm font-medium text-black mb-1">
                           {field.label}
                         </label>
@@ -423,12 +442,20 @@ export default function DsaApplicationsPage({
           </div>
         </div>
       )}
+      {chatLoanId && (
+              <LoanChatModal
+                loanId={chatLoanId}
+                isOpen={!!chatLoanId}
+                onClose={() => setChatLoanId(null)}
+              />
+            )}
       {commissionLoan && (
         <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/40 backdrop-blur-sm">
           <div className="bg-white w-full max-w-md p-6 rounded-xl border-2 border-black shadow-[6px_6px_0_0_#000] relative">
             <button
               onClick={() => setCommissionLoan(null)}
-              className="absolute top-3 right-3 p-2 rounded-full text-black hover:bg-gray-200">
+              className="absolute top-3 right-3 p-2 rounded-full text-black hover:bg-gray-200"
+            >
               <X className="w-5 h-5" />
             </button>
 
@@ -445,7 +472,8 @@ export default function DsaApplicationsPage({
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setCommissionLoan(null)}
-                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+              >
                 Cancel
               </button>
               <button
@@ -467,7 +495,8 @@ export default function DsaApplicationsPage({
                     alert("Failed to create commission");
                   }
                 }}
-                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              >
                 Save
               </button>
             </div>
@@ -498,7 +527,8 @@ const CommissionButton = ({
     return (
       <button
         disabled
-        className="px-4 py-2 rounded text-sm font-medium bg-gray-200 text-gray-700 cursor-not-allowed">
+        className="px-4 py-2 rounded text-sm font-medium bg-gray-200 text-gray-700 cursor-not-allowed"
+      >
         Commission: {commission.amount}
       </button>
     );
@@ -507,7 +537,8 @@ const CommissionButton = ({
   return (
     <button
       onClick={() => onAdd(refetch)}
-      className="px-4 py-2 rounded text-sm font-medium bg-green-100 text-green-800 hover:bg-green-200">
+      className="px-4 py-2 rounded text-sm font-medium bg-green-100 text-green-800 hover:bg-green-200"
+    >
       Add Commission
     </button>
   );
@@ -533,7 +564,8 @@ export const FileViewer = ({ fileKey }: { fileKey: string }) => {
     <button
       onClick={handleViewFile}
       className="text-blue-600 underline text-sm break-all"
-      disabled={loading}>
+      disabled={loading}
+    >
       {loading ? "Loading..." : "View Document"}
     </button>
   );

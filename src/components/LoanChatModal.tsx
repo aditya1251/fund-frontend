@@ -69,13 +69,13 @@ export default function LoanChatModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center text-black justify-center bg-black/40 backdrop-blur-sm">
-      <div className="bg-white w-full max-w-lg rounded-2xl shadow-lg flex flex-col max-h-[80vh]">
+      <div className="bg-white w-full max-w-lg rounded-2xl shadow-[6px_6px_0_0_#000] border-2 border-black flex flex-col max-h-[80vh]">
         {/* Header */}
-        <div className="flex justify-between items-center px-4 py-3 border-b">
-          <h3 className="font-semibold text-lg">Loan Chat</h3>
+        <div className="flex justify-between items-center px-4 py-3 bg-[#FFD439] rounded-t-xl border-b-2 border-black">
+          <h3 className="font-semibold text-lg text-black">Loan Chat</h3>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full"
+            className="p-2 hover:bg-black hover:text-white rounded-full transition-colors duration-200"
           >
             <X className="w-5 h-5" />
           </button>
@@ -96,8 +96,8 @@ export default function LoanChatModal({
                 <div
                   className={`px-3 py-2 rounded-lg text-sm max-w-[75%] ${
                     msg.senderRole === "USER"
-                      ? "bg-gray-200 text-black"
-                      : "bg-blue-600 text-white"
+                      ? "bg-gray-100 text-black border border-gray-300"
+                      : "bg-[#ffb700] text-black border border-black shadow-[2px_2px_0_0_#000]"
                   }`}
                 >
                   {/* Text */}
@@ -126,14 +126,14 @@ export default function LoanChatModal({
         </div>
 
         {/* Input */}
-        <div className="border-t p-3 flex gap-2 items-center">
+        <div className="border-t-2 border-black p-3 flex gap-2 items-center bg-gray-50">
           {/* Attachment type dropdown */}
           <select
             value={attachmentType}
             onChange={(e) =>
               setAttachmentType(e.target.value as "text" | "photo" | "document")
             }
-            className="border rounded px-2 py-1 text-sm"
+            className="border-2 border-gray-300 rounded px-2 py-1 text-sm hover:border-[#FFD439] focus:border-[#FFD439] focus:outline-none"
           >
             <option value="text">Text</option>
             <option value="photo">Photo</option>
@@ -142,7 +142,7 @@ export default function LoanChatModal({
 
           {/* File input if not text */}
           {attachmentType !== "text" && (
-            <label className="cursor-pointer flex items-center gap-1 text-sm bg-gray-100 px-2 py-1 rounded hover:bg-gray-200">
+            <label className="cursor-pointer flex items-center gap-1 text-sm bg-[#FFD439] hover:bg-[#ffb700] px-2 py-1 rounded border-2 border-black hover:shadow-[2px_2px_0_0_#000] transition-all duration-200">
               <Paperclip className="w-4 h-4" />
               {attachmentFile ? attachmentFile.name : "Attach File"}
               <input
@@ -159,7 +159,7 @@ export default function LoanChatModal({
           {attachmentType === "text" && (
             <input
               type="text"
-              className="flex-1 border rounded-lg px-3 py-2 text-sm"
+              className="flex-1 border-2 border-gray-300 rounded-lg px-3 py-2 text-sm hover:border-[#FFD439] focus:border-[#FFD439] focus:outline-none"
               placeholder="Type a message..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -171,7 +171,7 @@ export default function LoanChatModal({
           <button
             onClick={handleSend}
             disabled={isSending}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-1 hover:bg-blue-700"
+            className="bg-[#FFD439] hover:bg-[#ffb700] text-black px-4 py-2 rounded-lg flex items-center gap-1 border-2 border-black shadow-[2px_2px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Send className="w-4 h-4" />
           </button>
@@ -212,7 +212,7 @@ function AttachmentPreview({ fileKey }: { fileKey: string }) {
       href={url}
       target="_blank"
       rel="noreferrer"
-      className="text-xs underline text-blue-200"
+      className="text-xs underline text-[#ffb700] hover:text-black transition-colors duration-200"
     >
       {fileKey}
     </a>
