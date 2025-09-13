@@ -14,7 +14,7 @@ export const features = [
   "Govt-Loans",
   "Insurance",
   "Quick-Loans",
-  "Campaign-Marketing",
+  "Marketing-Materials",
   "Taxation",
   "Emi-Calculator",
   "Training-Support",

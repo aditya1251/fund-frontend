@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -11,8 +11,9 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [checked, setChecked] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -25,13 +26,17 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
+
     const res = await signIn("credentials", {
       redirect: false,
       email,
       password,
     });
+
     if (res?.error) {
       setError("Invalid email or password");
+      setLoading(false);
     } else {
       router.replace("/");
     }
@@ -97,14 +102,25 @@ export default function LoginPage() {
                 </button>
               </div>
             </div>
-            <Link href="/reset-pass" className="text-sm underline text-black float-right">
+            <Link
+              href="/reset-pass"
+              className="text-sm underline text-black float-right"
+            >
               Forgot Password ?
             </Link>{" "}
             <button
               type="submit"
-              className="w-full bg-[#f7c430] py-3 px-4 rounded-md font-medium text-black cursor-pointer hover:bg-[#f7c430]/90 transition-colors duration-200"
+              disabled={loading}
+              className="w-full bg-[#f7c430] py-3 px-4 rounded-md font-medium text-black cursor-pointer hover:bg-[#f7c430]/90 transition-colors duration-200 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
             >
-              Log In
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                  Logging in...
+                </>
+              ) : (
+                "Log In"
+              )}
             </button>
             {error && (
               <div className="text-red-600 text-sm text-center mt-2">
@@ -121,8 +137,8 @@ export default function LoginPage() {
             </div>
             <div className="text-center text-sm text-black">
               Don't have an account?{" "}
-              <Link href="#" className="font-semibold">
-                sign up
+              <Link href="/contact" className="font-semibold">
+                contact us
               </Link>
             </div>
           </form>
