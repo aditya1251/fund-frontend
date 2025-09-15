@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Price() {
   const [activeTab, setActiveTab] = useState("Premium");
@@ -94,6 +95,8 @@ export default function Price() {
     setActiveTab(tabName);
   };
 
+  const router = useRouter();
+
   useEffect(() => {
     if (cardContainerRef.current) {
       const activeCardElement = cardContainerRef.current.querySelector(
@@ -171,7 +174,7 @@ export default function Price() {
                   <div className="text-3xl font-bold text-black mb-2">{plan.price}</div>
                 </div>
                 
-                <button className={getCardButtonClasses(plan.id)}>
+                <button onClick={() => router.push("/contact")} className={getCardButtonClasses(plan.id)}>
                   Get Started
                 </button>
 

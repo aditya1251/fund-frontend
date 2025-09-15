@@ -22,6 +22,8 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "sonner";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+
 
 interface Field {
   label: string;
@@ -169,8 +171,7 @@ export default function LoanTemplateBuilder() {
         return (
           <select
             className="w-full border border-gray-300 px-3 py-2 rounded bg-gray-50"
-            disabled
-          >
+            disabled>
             <option>{field.placeholder || "Select an option"}</option>
             {field.options?.map((option, idx) => (
               <option key={idx} value={option}>
@@ -310,10 +311,20 @@ export default function LoanTemplateBuilder() {
   };
 
   const removeFieldFromPage = (pi: number, fi: number) => {
-    const pages = [...template.pages];
-    pages[pi].fields.splice(fi, 1);
-    setTemplate({ ...template, pages });
-  };
+  const pages = template.pages.map((page, index) => {
+    if (index === pi) {
+      return {
+        ...page,
+        fields: page.fields.filter((_, idx) => idx !== fi),
+      };
+    }
+    return page;
+  });
+
+  setTemplate({ ...template, pages });
+  toast.success("🗑️ Field removed!");
+};
+
 
   const saveTemplate = async () => {
     try {
@@ -351,6 +362,32 @@ export default function LoanTemplateBuilder() {
       toast.error(
         `❌ Error deleting template: ${error.message || "Unknown error"}`
       );
+    }
+  };
+
+  const handleFieldDragEnd = async (result: any, pi: number) => {
+    if (!result.destination) return;
+
+    const fields = Array.from(template.pages[pi].fields);
+    const [moved] = fields.splice(result.source.index, 1);
+    fields.splice(result.destination.index, 0, moved);
+
+    const newPages = [...template.pages];
+    newPages[pi] = { ...newPages[pi], fields };
+
+    const updatedTemplate = { ...template, pages: newPages };
+    setTemplate(updatedTemplate);
+
+    try {
+      if (updatedTemplate._id) {
+        await updateLoanTemplate({
+          id: updatedTemplate._id,
+          data: updatedTemplate,
+        }).unwrap();
+        toast.success("✅ Field order saved!");
+      }
+    } catch (err: any) {
+      toast.error("❌ Failed to save order");
     }
   };
 
@@ -410,8 +447,7 @@ export default function LoanTemplateBuilder() {
                 />
                 <Button
                   onClick={addPage}
-                  className="flex items-center gap-2 bg-black text-white px-3 py-1.5 md:px-4 md:py-2 text-sm shadow hover:bg-gray-800 cursor-pointer"
-                >
+                  className="flex items-center gap-2 bg-black text-white px-3 py-1.5 md:px-4 md:py-2 text-sm shadow hover:bg-gray-800 cursor-pointer">
                   <Plus className="w-4 h-4" /> Add Page
                 </Button>
               </div>
@@ -422,14 +458,12 @@ export default function LoanTemplateBuilder() {
               {template.pages.map((page, pi) => (
                 <div
                   key={pi}
-                  className="bg-[#f9f9f9] rounded p-3 md:p-4 shadow-sm"
-                >
+                  className="bg-[#f9f9f9] rounded p-3 md:p-4 shadow-sm">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => togglePageCollapse(pi)}
-                        className="p-1 hover:bg-gray-200 rounded transition-colors cursor-pointer"
-                      >
+                        className="p-1 hover:bg-gray-200 rounded transition-colors cursor-pointer">
                         {collapsedPages[pi] ? (
                           <ChevronRight className="w-4 h-4" />
                         ) : (
@@ -449,22 +483,19 @@ export default function LoanTemplateBuilder() {
                         <Button
                           onClick={() => movePage(pi, "up")}
                           variant="ghost"
-                          className="hover:bg-gray-100 p-1.5 cursor-pointer"
-                        >
+                          className="hover:bg-gray-100 p-1.5 cursor-pointer">
                           <ArrowUp className="w-4 h-4" />
                         </Button>
                         <Button
                           onClick={() => movePage(pi, "down")}
                           variant="ghost"
-                          className="hover:bg-gray-100 p-1.5 cursor-pointer"
-                        >
+                          className="hover:bg-gray-100 p-1.5 cursor-pointer">
                           <ArrowDown className="w-4 h-4" />
                         </Button>
                         <Button
                           onClick={() => removePage(pi)}
                           variant="ghost"
-                          className="text-red-600 hover:bg-gray-100 p-1.5 cursor-pointer"
-                        >
+                          className="text-red-600 hover:bg-gray-100 p-1.5 cursor-pointer">
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
@@ -489,8 +520,7 @@ export default function LoanTemplateBuilder() {
                             value={fieldDrafts[pi]?.type || "text"}
                             onChange={(e) =>
                               updateFieldDraft(pi, "type", e.target.value)
-                            }
-                          >
+                            }>
                             {[
                               "text",
                               "number",
@@ -596,8 +626,7 @@ export default function LoanTemplateBuilder() {
                                 {fieldDrafts[pi].options.map((option, idx) => (
                                   <div
                                     key={idx}
-                                    className="flex items-center gap-1 bg-black text-white text-xs px-2 py-0.5 rounded-full shadow"
-                                  >
+                                    className="flex items-center gap-1 bg-black text-white text-xs px-2 py-0.5 rounded-full shadow">
                                     {option}
                                     <button
                                       onClick={() => {
@@ -610,8 +639,7 @@ export default function LoanTemplateBuilder() {
                                           updated
                                         );
                                       }}
-                                      className="text-xs hover:text-red-400 cursor-pointer"
-                                    >
+                                      className="text-xs hover:text-red-400 cursor-pointer">
                                       ✕
                                     </button>
                                   </div>
@@ -623,37 +651,61 @@ export default function LoanTemplateBuilder() {
 
                         <Button
                           onClick={() => addFieldToPage(pi)}
-                          className="flex items-center gap-2 bg-black text-white px-3 py-1 text-sm shadow hover:bg-gray-800 cursor-pointer"
-                        >
+                          className="flex items-center gap-2 bg-black text-white px-3 py-1 text-sm shadow hover:bg-gray-800 cursor-pointer">
                           <Plus className="w-4 h-4" /> Add Field
                         </Button>
                       </div>
 
                       {/* Existing Fields */}
-                      {page.fields.map((field, fi) => (
-                        <div
-                          key={fi}
-                          className="flex justify-between items-center bg-white px-2 py-1.5 rounded shadow-sm mb-1 text-sm"
-                        >
-                          <span>
-                            {field.label} ({field.type})
-                            {field.required && (
-                              <span className="ml-2 text-xs text-red-600">
-                                *required
-                              </span>
-                            )}
-                          </span>
-                          {!field.fixed && (
-                            <Button
-                              onClick={() => removeFieldFromPage(pi, fi)}
-                              variant="ghost"
-                              className="text-red-600 hover:bg-gray-100 p-1 cursor-pointer"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
+                      <DragDropContext
+                        onDragEnd={(result) => handleFieldDragEnd(result, pi)}>
+                        <Droppable droppableId={`droppable-${pi}`}>
+                          {(provided) => (
+                            <div
+                              {...provided.droppableProps}
+                              ref={provided.innerRef}>
+                              {page.fields.map((field, fi) => (
+                                <Draggable
+                                  key={fi.toString()}
+                                  draggableId={`${pi}-${fi}`}
+                                  index={fi}>
+                                  {(provided, snapshot) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      className={`flex justify-between items-center bg-white px-2 py-1.5 rounded shadow-sm mb-1 text-sm transition ${
+                                        snapshot.isDragging
+                                          ? "bg-yellow-50 shadow-md"
+                                          : ""
+                                      }`}>
+                                      <span>
+                                        {field.label} ({field.type})
+                                        {field.required && (
+                                          <span className="ml-2 text-xs text-red-600">
+                                            *required
+                                          </span>
+                                        )}
+                                      </span>
+                                      {!field.fixed && (
+                                        <Button
+                                          onClick={() =>
+                                            removeFieldFromPage(pi, fi)
+                                          }
+                                          variant="ghost"
+                                          className="text-red-600 hover:bg-gray-100 p-1 cursor-pointer">
+                                          <Trash2 className="w-4 h-4" />
+                                        </Button>
+                                      )}
+                                    </div>
+                                  )}
+                                </Draggable>
+                              ))}
+                              {provided.placeholder}
+                            </div>
                           )}
-                        </div>
-                      ))}
+                        </Droppable>
+                      </DragDropContext>
                     </>
                   )}
                 </div>
@@ -667,8 +719,7 @@ export default function LoanTemplateBuilder() {
                   setPreviewCurrentPage(0);
                   setShowPreview(true);
                 }}
-                className="flex items-center gap-2 bg-black text-white px-4 py-2 text-sm shadow hover:bg-gray-800 cursor-pointer"
-              >
+                className="flex items-center gap-2 bg-black text-white px-4 py-2 text-sm shadow hover:bg-gray-800 cursor-pointer">
                 <Eye className="w-4 h-4" />
                 Preview
               </Button>
@@ -679,8 +730,7 @@ export default function LoanTemplateBuilder() {
                   isCreating || isUpdating
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-[#ffd439] hover:bg-yellow-300 cursor-pointer"
-                } text-black`}
-              >
+                } text-black`}>
                 {isCreating || isUpdating ? (
                   <>
                     <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
@@ -701,8 +751,7 @@ export default function LoanTemplateBuilder() {
                     isDeleting
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-red-600 hover:bg-red-700 cursor-pointer"
-                  } text-white`}
-                >
+                  } text-white`}>
                   {isDeleting ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -737,8 +786,7 @@ export default function LoanTemplateBuilder() {
                 </div>
                 <button
                   onClick={() => setShowPreview(false)}
-                  className="p-1.5 md:p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
-                >
+                  className="p-1.5 md:p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
                   <X className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
               </div>
@@ -763,8 +811,7 @@ export default function LoanTemplateBuilder() {
                                   index <= previewCurrentPage
                                     ? "bg-yellow-400 text-black"
                                     : "bg-gray-200 text-gray-600"
-                                }`}
-                              >
+                                }`}>
                                 {index + 1}
                               </div>
 
@@ -775,8 +822,7 @@ export default function LoanTemplateBuilder() {
                                     index < previewCurrentPage
                                       ? "bg-yellow-400"
                                       : "bg-gray-200"
-                                  }`}
-                                ></div>
+                                  }`}></div>
                               )}
                             </div>
                           )
@@ -823,8 +869,7 @@ export default function LoanTemplateBuilder() {
                           )
                         }
                         className="bg-gray-200 hover:bg-gray-300 text-black font-medium px-4 py-2 text-sm flex items-center gap-2 cursor-pointer"
-                        disabled={previewCurrentPage === 0}
-                      >
+                        disabled={previewCurrentPage === 0}>
                         <ArrowUp className="h-4 w-4 rotate-[-90deg]" /> Prev
                       </Button>
 
@@ -839,16 +884,14 @@ export default function LoanTemplateBuilder() {
                               )
                             )
                           }
-                          className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-4 py-2 text-sm flex items-center gap-2 cursor-pointer"
-                        >
+                          className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-4 py-2 text-sm flex items-center gap-2 cursor-pointer">
                           Next <ArrowDown className="h-4 w-4 rotate-[-90deg]" />
                         </Button>
                       ) : (
                         <Button
                           type="button"
                           className="bg-yellow-400 text-black font-medium px-6 py-2 text-sm flex items-center gap-2 cursor-not-allowed"
-                          disabled
-                        >
+                          disabled>
                           Submit <Eye className="h-4 w-4" />
                         </Button>
                       )}
