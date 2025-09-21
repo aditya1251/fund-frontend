@@ -12,9 +12,10 @@ import {
 import { Icon } from "@iconify/react";
 import { useEffect, useState, useContext } from "react";
 import { DashboardContext } from "@/app/superadmin/context/DashboardContext";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import NotificationPanel from "@/components/crm/notificationPanel";
 import SearchCommand from "./SearchCommand";
+import { LogOut } from "lucide-react";
 
 const Header = () => {
   const [_height, setHeight] = useState("0px");
@@ -73,8 +74,7 @@ const Header = () => {
               color="inherit"
               aria-label="menu"
               onClick={() => setIsMobileSidebar(!isMobileSidebar)}
-              sx={{ display: { lg: "none", xs: "inline" } }}
-            >
+              sx={{ display: { lg: "none", xs: "inline" } }}>
               <Icon icon="solar:list-bold" height={24} />
             </IconButton>
             <Typography variant="h6" fontWeight="bold">
@@ -100,8 +100,7 @@ const Header = () => {
                 backgroundColor: "rgba(0,0,0,0.1)",
               },
             }}
-            onClick={() => setSearchOpen(true)}
-          >
+            onClick={() => setSearchOpen(true)}>
             <Icon icon="material-symbols:search" height={20} />
             <InputBase
               placeholder="Search (Ctrl + K)"
@@ -116,8 +115,7 @@ const Header = () => {
                 backgroundColor: "rgba(0,0,0,0.07)",
                 fontSize: "0.75rem",
                 ml: 1,
-              }}
-            >
+              }}>
               Ctrl + K
             </Box>
           </Box>
@@ -125,6 +123,7 @@ const Header = () => {
           {/* Right: Notification and user */}
           <Stack direction="row" alignItems="center" spacing={2}>
             <NotificationPanel userId={userId} pane="left" />
+            <LogOut className="cursor-pointer" onClick={() => signOut()} />
           </Stack>
         </ToolbarStyled>
       </AppBarStyled>

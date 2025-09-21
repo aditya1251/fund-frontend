@@ -329,7 +329,7 @@ export default function Page() {
 
         {/* Review Modal */}
         {showModal && selectedLead && (
-          <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex justify-center items-center p-2">
+          <div className="fixed inset-0 bg-opacity-40 backdrop-blur-sm flex justify-center items-center p-2">
             <div className="bg-white w-full max-w-3xl max-h-[75vh] overflow-y-auto p-6 rounded-xl border-2 border-black shadow-lg relative">
               <button
                 onClick={closeModal}

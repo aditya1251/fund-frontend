@@ -73,6 +73,10 @@ export default function LoanDashboardPage() {
         return "Government Loan";
       case "insurance":
         return "Insurance";
+      case "quick":
+        return "Quick Loan";
+      case "taxation":
+        return "Taxation";
       default:
         return "Private Loan";
     }

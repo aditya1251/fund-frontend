@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { X, Send, Paperclip } from "lucide-react";
+import { X, Send, Paperclip, Download } from "lucide-react";
 import {
   useGetLoanMessagesQuery,
   useSendLoanMessageMutation,
@@ -22,7 +22,9 @@ export default function LoanChatModal({
   onClose,
 }: LoanChatModalProps) {
   const [message, setMessage] = useState("");
-  const [attachmentType, setAttachmentType] = useState<"text" | "photo" | "document">("text");
+  const [attachmentType, setAttachmentType] = useState<
+    "text" | "photo" | "document"
+  >("text");
   const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
 
   const { data: session } = useSession();
@@ -36,17 +38,15 @@ export default function LoanChatModal({
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-
   const [markLoanRead] = useMarkLoanMessagesReadMutation();
 
-const handleMarkMessagesRead = async () => {
-  try {
-    await markLoanRead({ loanId }).unwrap();
-  } catch (err) {
-    console.error("Failed to mark messages as read", err);
-  }
-};
-
+  const handleMarkMessagesRead = async () => {
+    try {
+      await markLoanRead({ loanId }).unwrap();
+    } catch (err) {
+      console.error("Failed to mark messages as read", err);
+    }
+  };
 
   // Auto scroll when new messages appear
   useEffect(() => {
@@ -93,8 +93,7 @@ const handleMarkMessagesRead = async () => {
           <h3 className="font-semibold text-lg text-black">Loan Chat</h3>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-black hover:text-white rounded-full transition-colors duration-200"
-          >
+            className="p-2 hover:bg-black hover:text-white rounded-full transition-colors duration-200">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -105,14 +104,15 @@ const handleMarkMessagesRead = async () => {
             <p className="text-gray-500">Loading messages...</p>
           ) : data?.messages?.length ? (
             data.messages.map((msg: any, idx: number) => {
-              const isMe = msg.senderId ? msg.senderId._id === currentUserId : false;
+              const isMe = msg.senderId
+                ? msg.senderId._id === currentUserId
+                : false;
               return (
                 <div
                   key={idx}
                   className={`flex items-end gap-2 ${
                     isMe ? "justify-end" : "justify-start"
-                  }`}
-                >
+                  }`}>
                   {/* Avatar (initials) */}
                   {!isMe && (
                     <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-xs font-bold">
@@ -128,8 +128,7 @@ const handleMarkMessagesRead = async () => {
                       isMe
                         ? "bg-[#FFD439] text-black border-black shadow-[2px_2px_0_0_#000]"
                         : "bg-gray-100 text-black border-gray-300"
-                    }`}
-                  >
+                    }`}>
                     {/* Sender name */}
                     {!isMe && (
                       <p className="text-xs font-semibold mb-1 text-gray-700">
@@ -178,8 +177,7 @@ const handleMarkMessagesRead = async () => {
             onChange={(e) =>
               setAttachmentType(e.target.value as "text" | "photo" | "document")
             }
-            className="border-2 border-gray-300 rounded px-2 py-1 text-sm hover:border-[#FFD439] focus:border-[#FFD439] focus:outline-none"
-          >
+            className="border-2 border-gray-300 rounded px-2 py-1 text-sm hover:border-[#FFD439] focus:border-[#FFD439] focus:outline-none">
             <option value="text">Text</option>
             <option value="photo">Photo</option>
             <option value="document">Document</option>
@@ -216,8 +214,7 @@ const handleMarkMessagesRead = async () => {
           <button
             onClick={handleSend}
             disabled={isSending}
-            className="bg-[#FFD439] hover:bg-[#ffb700] text-black px-4 py-2 rounded-lg flex items-center gap-1 border-2 border-black shadow-[2px_2px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+            className="bg-[#FFD439] hover:bg-[#ffb700] text-black px-4 py-2 rounded-lg flex items-center gap-1 border-2 border-black shadow-[2px_2px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
             <Send className="w-4 h-4" />
           </button>
         </div>
@@ -226,8 +223,40 @@ const handleMarkMessagesRead = async () => {
   );
 }
 
+const handleDownload = async (
+  url: string,
+  filename: string,
+  setDownloading: (state: boolean) => void,
+  setError: (err: string | null) => void
+) => {
+  try {
+    setDownloading(true);
+    setError(null);
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Network response was not ok");
+    const blob = await res.blob();
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } catch (err: any) {
+    console.error("Download failed:", err);
+    setError(err.message || "Download failed");
+  } finally {
+    setDownloading(false);
+  }
+};
+
 function AttachmentPreview({ fileKey }: { fileKey: string }) {
   const [url, setUrl] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
+  const [loadingPreview, setLoadingPreview] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -240,26 +269,87 @@ function AttachmentPreview({ fileKey }: { fileKey: string }) {
     })();
   }, [fileKey]);
 
-  if (!url) return <p className="text-xs italic text-gray-400">Loading file…</p>;
+  const isImage = /\.(jpg|jpeg|png|gif)$/i.test(fileKey);
+  const isPdf = /\.pdf$/i.test(fileKey);
 
-  if (/\.(jpg|jpeg|png|gif)$/i.test(fileKey)) {
-    return (
-      <img
-        src={url}
-        alt="attachment"
-        className="w-32 h-32 object-cover rounded-lg border"
-      />
-    );
-  }
+  if (!url)
+    return <p className="text-xs italic text-gray-400">Loading file…</p>;
 
   return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noreferrer"
-      className="text-xs underline text-[#ffb700] hover:text-black transition-colors duration-200"
-    >
-      {fileKey}
-    </a>
+    <>
+      {/* --- Small preview inside chat --- */}
+      <div className="flex flex-col items-start gap-1">
+        {isImage && (
+          <img
+            src={url}
+            alt="attachment"
+            onClick={() => setOpen(true)}
+            className="w-32 h-32 object-cover rounded-lg border cursor-pointer hover:opacity-80"
+          />
+        )}
+
+        {isPdf && (
+          <div
+            onClick={() => setOpen(true)}
+            className="w-32 h-32 flex items-center justify-center border rounded-lg bg-gray-100 cursor-pointer hover:bg-gray-200 text-xs text-black">
+            📄 View PDF
+          </div>
+        )}
+
+        {/* --- Download button --- */}
+        <button
+          onClick={() => handleDownload(url, fileKey, setDownloading, setDownloadError)}
+          disabled={downloading}
+          className="flex items-center gap-1 text-xs text-blue-600 hover:text-black underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+          <Download className="w-3 h-3" />
+          {downloading ? "Downloading..." : "Download"}
+        </button>
+
+        {downloadError && (
+          <p className="text-xs text-red-500">{downloadError}</p>
+        )}
+      </div>
+
+      {/* --- Fullscreen modal --- */}
+      {open && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-lg max-w-5xl w-full h-[85vh] relative p-2 flex flex-col">
+            {/* Close button */}
+            <button
+              onClick={() => setOpen(false)}
+              className="absolute top-2 right-2 bg-black text-white rounded-full p-2 hover:bg-gray-800">
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Loading spinner */}
+            {loadingPreview && (
+              <div className="flex-1 flex items-center justify-center">
+                <p className="text-gray-500 text-sm">Loading preview...</p>
+              </div>
+            )}
+
+            {/* Large preview */}
+            {isImage && (
+              <img
+                src={url}
+                alt="full"
+                onLoad={() => setLoadingPreview(false)}
+                className={`w-full h-full object-contain rounded-lg ${
+                  loadingPreview ? "hidden" : "block"
+                }`}
+              />
+            )}
+
+            {isPdf && (
+              <iframe
+                src={url}
+                onLoad={() => setLoadingPreview(false)}
+                className={`w-full h-full rounded-lg ${loadingPreview ? "hidden" : "block"}`}
+              />
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 }

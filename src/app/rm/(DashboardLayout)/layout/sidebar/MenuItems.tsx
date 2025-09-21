@@ -64,19 +64,6 @@ const Menuitems: MenuitemsType[] = [
 
 	{
 		navlabel: true,
-		subheader: "CONTACTS",
-	},
-	{
-		id: uniqueId(),
-		title: "Contacts",
-		chip: "0",
-		chipColor: "primary",
-		icon: "book-line-duotone",
-		href: "/rm/contacts",
-	},
-
-	{
-		navlabel: true,
 		subheader: "Others",
 	},
 	{

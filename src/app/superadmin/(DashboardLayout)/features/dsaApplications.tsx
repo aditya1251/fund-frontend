@@ -266,12 +266,14 @@ export default function DSAApplications({
                           </span>
                           <span>{phone}</span>
                         </p>
-                        <p className="text-gray-700 flex items-center">
-                          <span className="font-medium text-gray-900 w-16">
-                            Age:
-                          </span>
-                          <span>{age}</span>
-                        </p>
+                        {age && (
+                          <p className="text-gray-700 flex items-center">
+                            <span className="font-medium text-gray-900 w-16">
+                              Age:
+                            </span>
+                            <span>{age}</span>
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="space-y-3">

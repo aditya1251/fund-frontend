@@ -246,6 +246,9 @@ export default function ManageDSAs() {
                     Email
                   </th>
                   <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">
+                    Phone
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">
                     Plan
                   </th>
                   <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">
@@ -306,6 +309,9 @@ export default function ManageDSAs() {
                       </td>
                       <td className="px-4 py-4 text-sm text-gray-500">
                         {dsa.email}
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-500">
+                        {dsa.phone || "N/A"}
                       </td>
                       <td className="px-4 py-4 text-sm text-gray-500">
                         {dsa.planName || "N/A"}
