@@ -21,6 +21,7 @@ export default function Page() {
     email: "",
     password: "",
     planId: "",
+    phone: "",
     role: "DSA",
     rmId: "",
   });
@@ -91,6 +92,7 @@ export default function Page() {
         name: "",
         email: "",
         password: "",
+        phone: "",
         planId: "",
         role: "DSA",
         rmId: "",
@@ -153,6 +155,21 @@ export default function Page() {
               required
               className="w-full border-2 border-black rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
               placeholder="Enter password"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 text-sm font-medium text-gray-700">
+              Phone Number
+            </label>
+            <input
+              name="phone"
+              type="tel"
+              value={form.phone}
+              onChange={handleChange}
+              required
+              className="w-full border-2 border-black rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+              placeholder="Enter phone number"
             />
           </div>
 

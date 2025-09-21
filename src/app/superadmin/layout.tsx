@@ -15,7 +15,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/images/favicon.ico" />
+        <link rel="icon" href="/assets/favicon.ico" />
         <title>Super Admin</title>
       </head>
       <body>

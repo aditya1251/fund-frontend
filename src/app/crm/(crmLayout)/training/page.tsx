@@ -34,7 +34,7 @@ export default function TrainingSupportPage() {
           </p>
           <p className="text-gray-800 font-semibold mb-8">Thank you!</p>
           <button
-            onClick={() => router.push("/profile/rm-details")}
+            onClick={() => router.push("/crm/rm-details")}
             className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3 rounded-lg shadow transition-all"
           >
             View RM Details

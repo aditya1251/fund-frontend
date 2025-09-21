@@ -27,12 +27,12 @@ export const sendApprovalEmail = async (
   firstName: string, 
   credentials: { username: string; password: string; }
 ): Promise<boolean> => {
-  const subject = "Your Fund Raising Account Application Approved";
+  const subject = "Your Navi Mudra Account Application Approved";
   
   const body = `
 Dear ${firstName},
 
-We're pleased to inform you that your account application for our Fund Raising Platform has been approved!
+We're pleased to inform you that your account application for our Navi Mudra Platform has been approved!
 
 You can now log in to your account using the following credentials:
 
@@ -46,7 +46,7 @@ If you have any questions, please don't hesitate to contact our support team.
 Thank you for joining our platform!
 
 Best regards,
-The Fund Raising Team
+The Navi Mudra Team
   `;
   
   return sendEmail({ to, subject, body });
@@ -57,12 +57,12 @@ export const sendRejectionEmail = async (
   firstName: string, 
   reason: string
 ): Promise<boolean> => {
-  const subject = "Your Fund Raising Account Application Status";
+  const subject = "Your Navi Mudra Account Application Status";
   
   const body = `
 Dear ${firstName},
 
-Thank you for your interest in our Fund Raising Platform.
+Thank you for your interest in our Navi Mudra Platform.
 
 After careful review of your application, we regret to inform you that we are unable to approve your account request at this time.
 
@@ -73,7 +73,7 @@ You are welcome to submit a new application addressing the concerns mentioned ab
 If you have any questions, please feel free to contact our support team.
 
 Best regards,
-The Fund Raising Team
+The Navi Mudra Team
   `;
   
   return sendEmail({ to, subject, body });

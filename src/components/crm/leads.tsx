@@ -40,7 +40,7 @@ export default function LeadOverview({ data }) {
           return {
             ...card,
             user: session.data?.user?.name,
-            titleName: `Funds Raize's ${session.data?.user?.planName}`,
+            titleName: `Navi Mudra's ${session.data?.user?.planName}`,
           };
         }
         return card;

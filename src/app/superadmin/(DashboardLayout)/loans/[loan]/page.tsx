@@ -170,8 +170,7 @@ export default function LoanTemplateBuilder() {
       case "select":
         return (
           <select
-            className="w-full border border-gray-300 px-3 py-2 rounded bg-gray-50"
-            disabled>
+            className="w-full border border-gray-300 px-3 py-2 rounded bg-gray-50">
             <option>{field.placeholder || "Select an option"}</option>
             {field.options?.map((option, idx) => (
               <option key={idx} value={option}>

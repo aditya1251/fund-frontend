@@ -21,7 +21,7 @@ const EditUserPage = () => {
     severity: "success",
   });
 
-  const [form, setForm] = useState({ name: "", email: "", role: "", planId: "", rmId: "" });
+  const [form, setForm] = useState({ name: "", email: "", role: "", planId: "", rmId: "",phone: "" });
 
   useEffect(() => {
     if (user) {
@@ -29,6 +29,7 @@ const EditUserPage = () => {
         name: user.name,
         email: user.email,
         role: user.role,
+        phone: user.phone,
         planId: user.planId,
         rmId: user.rmId?._id || "",
       });
@@ -116,6 +117,18 @@ const EditUserPage = () => {
             />
           </div>
 
+          <div>
+            <label className="block mb-1 text-sm font-medium">Phone Number</label>
+            <input
+              name="phone"
+              type="tel"
+              value={form.phone}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+              placeholder="Enter phone number"
+              />
+          </div>
           <div>
             <label className="block mb-1 text-sm font-medium">Role</label>
             <select
