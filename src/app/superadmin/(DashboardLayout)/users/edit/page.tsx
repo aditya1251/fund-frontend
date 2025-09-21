@@ -60,6 +60,7 @@ const EditUserPage = () => {
       if (form.name !== user.name) update.name = form.name;
       if (form.email !== user.email) update.email = form.email;
       if (form.role !== user.role) update.role = form.role;
+      if (form.phone !== user.phone) update.phone = form.phone;
       if (form.planId !== user.planId) update.planId = form.planId;
       
       // Only include rmId if role is DSA
